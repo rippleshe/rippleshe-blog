@@ -14,6 +14,17 @@ const tagCounts = new Map<string, number>();
 entries.flatMap((entry) => entry.data.tags).forEach((tag) => tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1));
 const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'zh-CN'));
 const pinnedEntry = entries.find((entry) => entry.data.featured);
+const searchIndex = entries.map((entry) => ({
+  href: gardenUrl(entry),
+  title: titleOf(entry),
+  kind: entry.data.kind,
+  tags: entry.data.tags,
+  body: String(entry.body ?? '')
+    .replace(/\[([^\]]+)\]\([^\)]+\)/g, '$1')
+    .replace(/[#>*_`~]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim(),
+}));
 ---
 <BaseLayout title="芳洲" description="Rippleshe 的数字花园。小札、诗、信和一些不一定长成文章的东西。">
   <div class="shell garden-page-v2">
@@ -56,6 +67,26 @@ const pinnedEntry = entries.find((entry) => entry.data.featured);
       <i aria-hidden="true">↗</i>
     </a>
 
+    <section class="garden-find" aria-label="在芳洲中寻找">
+      <div class="garden-find-copy">
+        <p class="eyebrow">Find or wander · 拾句</p>
+        <h2>找一句，也可以随风走。</h2>
+        <p>搜索标题、标签和正文；不想找时，就让风替你翻一页。</p>
+      </div>
+      <div class="garden-find-controls">
+        <label class="garden-search">
+          <span>拾句</span>
+          <input type="search" data-garden-search placeholder="标题、标签或正文里的一句话" autocomplete="off" />
+          <small>/</small>
+        </label>
+        <button class="garden-wander" type="button" data-garden-wander>
+          <span aria-hidden="true">↝</span>
+          <b>随风一页</b>
+          <small>不按热度</small>
+        </button>
+      </div>
+    </section>
+
     <HerbDivider label="岁时 · seasonal archive" />
 
     <div class="archive-filter-status" data-garden-filter-status hidden><span>沿着 <b data-filter-name></b> 找到 <i data-filter-count>0</i> 篇</span><button type="button" data-garden-reset>回到全部</button></div>
@@ -71,10 +102,10 @@ const pinnedEntry = entries.find((entry) => entry.data.featured);
           </aside>
           <div class="archive-list archive-list-v2">
             {entries.filter((entry) => entry.data.date.getFullYear() === year).map((entry, index) => (
-              <a class="archive-entry archive-entry-v2" href={gardenUrl(entry)} data-tags={JSON.stringify(entry.data.tags)}>
+              <a class="archive-entry archive-entry-v2" href={gardenUrl(entry)} data-href={gardenUrl(entry)} data-tags={JSON.stringify(entry.data.tags)}>
                 <span class="archive-floret" aria-hidden="true">{index % 2 === 0 ? '◇' : '·'}</span>
                 <time datetime={entry.data.date.toISOString()}>{String(entry.data.date.getMonth() + 1).padStart(2, '0')}.{String(entry.data.date.getDate()).padStart(2, '0')}</time>
-                <h2>{titleOf(entry)}</h2>
+                <span class="archive-title-block"><h2>{titleOf(entry)}</h2><small data-search-hit hidden></small></span>
                 <span class="archive-kind">{entry.data.kind}</span>
                 <span class="archive-arrow" aria-hidden="true">↗</span>
               </a>
@@ -109,16 +140,24 @@ const pinnedEntry = entries.find((entry) => entry.data.featured);
   </div>
 </BaseLayout>
 
-<script is:inline>
+<script is:inline define:vars={{ searchIndex }}>
   (() => {
     const archive = document.querySelector('.archive-v2');
-    const rows = [...document.querySelectorAll('.archive-entry-v2[data-tags]')];
+    const rows = [...document.querySelectorAll('.archive-entry-v2[data-href]')];
     const years = [...document.querySelectorAll('[data-archive-year]')];
     const buttons = [...document.querySelectorAll('[data-garden-tag]')];
     const extras = [...document.querySelectorAll('[data-extra-tag]')];
     const toggle = document.querySelector('[data-tag-toggle]');
     const status = document.querySelector('[data-garden-filter-status]');
+    const search = document.querySelector('[data-garden-search]');
+    const wander = document.querySelector('[data-garden-wander]');
+    const byHref = new Map(searchIndex.map((item) => [item.href, item]));
     if (!archive || rows.length === 0 || buttons.length === 0) return;
+
+    const normalize = (value) => String(value || '').normalize('NFKC').toLocaleLowerCase('zh-CN').trim();
+    const params = new URL(location.href).searchParams;
+    let activeTag = params.get('tag') || '';
+    let activeQuery = params.get('q') || '';
 
     function showExtraTags(expanded) {
       extras.forEach((button) => { button.hidden = !expanded; });
@@ -129,45 +168,117 @@ const pinnedEntry = entries.find((entry) => entry.data.featured);
       }
     }
 
-    function apply(tag, move = false, updateUrl = true) {
+    function termsOf(query) {
+      return normalize(query).split(/\s+/).filter(Boolean);
+    }
+
+    function searchMatch(item, query) {
+      const terms = termsOf(query);
+      if (!terms.length) return true;
+      const haystack = normalize([item?.title, item?.kind, ...(item?.tags || []), item?.body].join(' '));
+      return terms.every((term) => haystack.includes(term));
+    }
+
+    function snippetOf(item, query) {
+      const body = String(item?.body || '');
+      const term = termsOf(query)[0];
+      if (!body || !term) return '';
+      const lower = normalize(body);
+      const at = lower.indexOf(term);
+      if (at < 0) return '';
+      const start = Math.max(0, at - 34);
+      const end = Math.min(body.length, at + term.length + 54);
+      return (start > 0 ? '…' : '') + body.slice(start, end).trim() + (end < body.length ? '…' : '');
+    }
+
+    function apply(move = false, updateUrl = true) {
       let count = 0;
       rows.forEach((row) => {
         let rowTags = [];
         try { rowTags = JSON.parse(row.dataset.tags || '[]'); } catch {}
-        const show = !tag || rowTags.includes(tag);
+        const item = byHref.get(row.dataset.href || '');
+        const show = (!activeTag || rowTags.includes(activeTag)) && searchMatch(item, activeQuery);
         row.hidden = !show;
+        const hit = row.querySelector('[data-search-hit]');
+        if (hit) {
+          const snippet = show && activeQuery ? snippetOf(item, activeQuery) : '';
+          hit.textContent = snippet;
+          hit.hidden = !snippet;
+        }
         if (show) count += 1;
       });
       years.forEach((year) => { year.hidden = !year.querySelector('.archive-entry-v2:not([hidden])'); });
       buttons.forEach((button) => {
-        const active = (button.dataset.gardenTag || '') === tag;
+        const active = (button.dataset.gardenTag || '') === activeTag;
         button.classList.toggle('is-active', active);
         button.setAttribute('aria-pressed', String(active));
       });
       if (status) {
-        status.hidden = !tag;
-        status.querySelector('[data-filter-name]').textContent = tag ? '#' + tag : '';
+        const filters = [activeTag ? '#' + activeTag : '', activeQuery ? '“' + activeQuery + '”' : ''].filter(Boolean);
+        status.hidden = filters.length === 0;
+        status.querySelector('[data-filter-name]').textContent = filters.join(' · ');
         status.querySelector('[data-filter-count]').textContent = String(count);
       }
+      if (wander) wander.disabled = count === 0;
       if (updateUrl) {
         const url = new URL(location.href);
-        if (tag) url.searchParams.set('tag', tag); else url.searchParams.delete('tag');
+        if (activeTag) url.searchParams.set('tag', activeTag); else url.searchParams.delete('tag');
+        if (activeQuery) url.searchParams.set('q', activeQuery); else url.searchParams.delete('q');
         history.replaceState(null, '', url);
       }
       if (move) archive.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    const initial = new URL(location.href).searchParams.get('tag') || '';
-    const initialButton = buttons.find((button) => (button.dataset.gardenTag || '') === initial);
+    const initialButton = buttons.find((button) => (button.dataset.gardenTag || '') === activeTag);
     showExtraTags(Boolean(initialButton?.hasAttribute('data-extra-tag')));
-    apply(initial, false, false);
-    buttons.forEach((button) => button.addEventListener('click', () => apply(button.dataset.gardenTag || '', true)));
+    if (search) search.value = activeQuery;
+    apply(false, false);
+
+    buttons.forEach((button) => button.addEventListener('click', () => {
+      activeTag = button.dataset.gardenTag || '';
+      apply(true);
+    }));
+    search?.addEventListener('input', () => {
+      activeQuery = search.value.trim();
+      apply(false);
+    });
     toggle?.addEventListener('click', () => showExtraTags(toggle.getAttribute('aria-expanded') !== 'true'));
-    document.querySelector('[data-garden-reset]')?.addEventListener('click', () => apply('', false));
+    document.querySelector('[data-garden-reset]')?.addEventListener('click', () => {
+      activeTag = '';
+      activeQuery = '';
+      if (search) search.value = '';
+      apply(false);
+    });
+    wander?.addEventListener('click', () => {
+      const visible = rows.filter((row) => !row.hidden);
+      if (!visible.length) return;
+      const last = sessionStorage.getItem('garden-wander-last') || '';
+      const choices = visible.filter((row) => row.dataset.href !== last);
+      const pool = choices.length ? choices : visible;
+      const row = pool[Math.floor(Math.random() * pool.length)];
+      const href = row?.dataset.href;
+      if (!href) return;
+      sessionStorage.setItem('garden-wander-last', href);
+      location.href = href;
+    });
+    addEventListener('keydown', (event) => {
+      const target = event.target;
+      const typing = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement || target?.isContentEditable;
+      if (event.key === '/' && !typing && !event.metaKey && !event.ctrlKey && !event.altKey) {
+        event.preventDefault();
+        search?.focus();
+      }
+    });
   })();
 </script>
 
 <style>
 .garden-pinned-leaf{margin:0 0 22px;padding:17px 20px;display:grid;grid-template-columns:160px 1fr auto;gap:8px 22px;align-items:center;border:1px solid var(--line);background:rgba(248,245,237,.42);transition:background .2s ease,border-color .2s ease}.garden-pinned-leaf:hover{background:rgba(125,146,120,.06);border-color:var(--line-strong)}.garden-pinned-leaf>small{grid-row:1/3;color:var(--sage);font-size:7px;letter-spacing:.13em}.garden-pinned-leaf>b{font:400 20px var(--serif);color:var(--ink)}.garden-pinned-leaf>span{color:var(--mist);font-size:8px}.garden-pinned-leaf>i{grid-column:3;grid-row:1/3;color:var(--seal);font:18px var(--serif);font-style:normal}@media(max-width:650px){.garden-pinned-leaf{grid-template-columns:1fr 24px}.garden-pinned-leaf>small,.garden-pinned-leaf>b,.garden-pinned-leaf>span{grid-column:1}.garden-pinned-leaf>i{grid-column:2;grid-row:1/4}}
-.poetry-corridor-entry{margin:10px 0 74px;min-height:150px;padding:22px 26px;display:grid;grid-template-columns:170px 1fr 42px;gap:12px 28px;align-items:center;border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line);background:linear-gradient(90deg,rgba(125,146,120,.045),transparent 58%);transition:background .22s ease}.poetry-corridor-entry:hover{background:linear-gradient(90deg,rgba(125,146,120,.085),rgba(125,146,120,.015) 68%)}.poetry-corridor-entry>span{color:var(--sage);font-size:7px;letter-spacing:.13em}.poetry-corridor-entry>b{font:400 28px var(--serif);color:var(--moss)}.poetry-corridor-entry>p{grid-column:2;max-width:36rem;margin:0;color:var(--ink-soft);font:13px/1.75 var(--serif)}.poetry-corridor-entry>i{grid-column:3;grid-row:1/3;justify-self:end;color:var(--seal);font:20px var(--serif);font-style:normal}@media(max-width:650px){.poetry-corridor-entry{grid-template-columns:1fr 30px}.poetry-corridor-entry>span,.poetry-corridor-entry>b,.poetry-corridor-entry>p{grid-column:1}.poetry-corridor-entry>i{grid-column:2;grid-row:1/4}}
+.poetry-corridor-entry{margin:10px 0 74px;min-height:150px;padding:22px 26px;display:grid;grid-template-columns:170px 1fr 42px;gap:12px 28px;align-items:center;border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line);background:linear-gradient(90deg,rgba(125,146,120,.045),transparent 58%);transition:background .22s ease}.poetry-corridor-entry:hover{background:linear-gradient(90deg,rgba(125,146,120,.085),rgba(125,146,120,.015) 68%)}.poetry-corridor-entry>span{color:var(--sage);font-size:7px;letter-spacing:.13em}.poetry-corridor-entry>b{font:400 28px var(--serif);color:var(--moss)}.poetry-corridor-entry>p{grid-column:2;max-width:36rem;margin:0;color:var(--ink-soft);font:13px/1.75 var(--serif)}.poetry-corridor-entry>i{grid-column:3;grid-row:1/3;justify-self:end;color:var(--seal);font:20px var(--serif);font-style:normal}
+.garden-find{margin:0 0 66px;padding:24px 0;display:grid;grid-template-columns:minmax(210px,.62fr) minmax(0,1.38fr);gap:48px;align-items:end;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}.garden-find-copy h2{margin:5px 0 8px;font:400 27px/1.3 var(--serif);letter-spacing:-.025em}.garden-find-copy>p:last-child{max-width:27rem;margin:0;color:var(--mist);font:11px/1.75 var(--serif)}
+.garden-find-controls{display:grid;grid-template-columns:minmax(0,1fr) 142px;gap:10px;align-items:stretch}.garden-search{min-height:76px;display:grid;grid-template-columns:50px 1fr 22px;gap:10px;align-items:center;padding:0 14px;border:1px solid var(--line-strong);background:rgba(248,245,237,.25)}.garden-search>span{color:var(--seal);font:11px var(--serif)}.garden-search input{min-width:0;width:100%;border:0;border-bottom:1px solid var(--line);padding:10px 2px;background:transparent;color:var(--ink);font:14px var(--serif);outline:none}.garden-search input:focus{border-bottom-color:var(--moss)}.garden-search>small{width:18px;height:18px;display:grid;place-items:center;border:1px solid var(--line);color:var(--mist);font:9px var(--sans)}
+.garden-wander{min-height:76px;display:grid;grid-template-columns:26px 1fr;grid-template-rows:1fr 1fr;align-items:end;gap:0 7px;padding:12px 13px;border:1px solid var(--line);background:transparent;color:var(--ink);text-align:left;cursor:pointer}.garden-wander>span{grid-row:1/3;align-self:center;color:var(--seal);font:22px var(--serif)}.garden-wander>b{font:400 14px var(--serif)}.garden-wander>small{align-self:start;color:var(--mist);font-size:8px;letter-spacing:.06em}.garden-wander:hover{border-color:var(--line-strong);background:rgba(125,146,120,.04)}.garden-wander:disabled{opacity:.38;cursor:not-allowed}
+.archive-title-block{min-width:0}.archive-title-block h2{overflow-wrap:anywhere}.archive-title-block small{display:block;margin-top:6px;max-width:54rem;color:var(--mist);font:9px/1.55 var(--serif);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:760px){.garden-find{grid-template-columns:1fr;gap:18px}.garden-find-controls{grid-template-columns:1fr}.garden-wander{min-height:64px}.archive-title-block small{white-space:normal;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}}
+@media(max-width:650px){.poetry-corridor-entry{grid-template-columns:1fr 30px}.poetry-corridor-entry>span,.poetry-corridor-entry>b,.poetry-corridor-entry>p{grid-column:1}.poetry-corridor-entry>i{grid-column:2;grid-row:1/4}}
 </style>
