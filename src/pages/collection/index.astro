@@ -1,0 +1,133 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BotanicalSprig from '../../components/BotanicalSprig.astro';
+import HerbDivider from '../../components/HerbDivider.astro';
+import GardenWayfinder from '../../components/GardenWayfinder.astro';
+import ChuciGlyph from '../../components/ChuciGlyph.astro';
+import { galleryPhotos as photos, documents, formatLibraryDate } from '../../lib/library';
+const dev = import.meta.env.DEV;
+const fallbackGallerySizes = ['wide', 'narrow', 'standard', 'narrow', 'wide', 'standard', 'standard'] as const;
+const galleryRatioOf = (item: (typeof photos)[number]) => {
+  if (item.galleryRatio) return item.galleryRatio;
+  const ratio = item.width && item.height ? item.width / item.height : 1;
+  return ratio > 1.8 ? 'cinematic' : ratio > 1.12 ? 'landscape' : ratio < .82 ? 'portrait' : 'square';
+};
+---
+<BaseLayout title="藏册" description="照片、文档与愿意留下来的东西。">
+  <div class="shell collection-page">
+    <header class="collection-hero">
+      <div>
+        <p class="eyebrow">Collected matter · archive room</p>
+        <h1>藏册</h1>
+        <p class="collection-lead">把走过的路、见过的光和舍不得丢的纸页收在一处。翻到哪一页，哪一页就是当时。</p>
+        <div class="collection-counts"><span><b>{photos.length}</b> 影像</span><span><b>{documents.length}</b> 文档</span></div>
+        {dev && <div class="collection-owner-tools"><a class="collection-add-button" href="http://127.0.0.1:4175#record" target="_blank" rel="noreferrer"><span>＋</span><div><b>添一页</b><small>影像 · 纸页 · 小札</small></div></a><a class="collection-add-button collection-layout-button" href="http://127.0.0.1:4175#layout" target="_blank" rel="noreferrer"><span>↔</span><div><b>排画廊</b><small>顺序 · 格幅 · 画幅</small></div></a></div>}
+      </div>
+      <div class="collection-bouquet" aria-hidden="true">
+        <BotanicalSprig variant="lan" />
+        <BotanicalSprig variant="ruo" />
+        <BotanicalSprig variant="hui" />
+        <ChuciGlyph variant="lotus" compact={true} class="collection-chuci-lotus" />
+        <i></i><i></i><i></i>
+      </div>
+    </header>
+
+    <HerbDivider label="花间陈列 · photographs" />
+
+    <section class="collection-section" aria-labelledby="photo-gallery-title">
+      <div class="collection-section-head"><div><p class="eyebrow">Light cabinet</p><h2 id="photo-gallery-title">影像</h2></div><p>光落下来，日子便有了形状。这里不替你决定次序：哪一张靠前、占多大、留什么画幅，都由你自己排。</p></div>
+      <div class="collection-gallery">
+        {photos.map((item, index) => (
+          <figure id={`media-${item.id}`} class={`collection-photo collection-photo-${item.gallerySize || fallbackGallerySizes[index % fallbackGallerySizes.length]} collection-ratio-${galleryRatioOf(item)} collection-photo-${item.display || 'cover'}`}>
+            <a class="collection-photo-link" href={item.src} target="_blank" rel="noreferrer" data-gallery-index={index} data-title={item.title} data-date={formatLibraryDate(item.date)} data-tags={item.tags.join(' · ')}>
+              <img src={item.thumb || item.src} alt={item.title} loading={index < 4 ? 'eager' : 'lazy'} />
+              <span class="collection-photo-index">{String(index + 1).padStart(2, '0')}</span>
+              <span class="collection-photo-view">细看</span>
+            </a>
+            <figcaption><div><b>{item.title}</b><time>{formatLibraryDate(item.date)}</time></div>{item.tags.length > 0 && <span>{item.tags.join(' · ')}</span>}</figcaption>
+          </figure>
+        ))}
+      </div>
+    </section>
+
+    <HerbDivider label="纸页与附件 · documents" quiet={true} />
+
+    <section class="collection-section document-section" aria-labelledby="document-title">
+      <div class="collection-section-head"><div><p class="eyebrow">Paper shelf</p><h2 id="document-title">文档</h2></div><p>手稿、小册、表格和偶尔舍不得关掉的一页纸，都可以在这一层书架上歇一歇。</p></div>
+      {documents.length ? (
+        <div class="document-shelf">
+          {documents.map((item, index) => (
+            <a class="document-card" href={item.src} target="_blank" rel="noreferrer">
+              <span class="document-card-no">D.{String(index + 1).padStart(2, '0')}</span>
+              <div class="document-card-mark"><i></i><b>{item.ext || 'FILE'}</b></div>
+              <div><h3>{item.title}</h3><p>{formatLibraryDate(item.date)}{item.tags.length ? ` · ${item.tags.join(' / ')}` : ''}</p></div>
+              <span class="document-open">打开 ↗</span>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <div class="document-empty"><BotanicalSprig variant="hui" /><div><strong>这一格还空着。</strong><p>等第一张纸页落进来，它就有了自己的页码。</p></div></div>
+      )}
+    </section>
+    <GardenWayfinder current="collection" />
+  </div>
+
+  <dialog class="photo-viewer" id="photo-viewer" aria-label="影像查看器">
+    <div class="photo-viewer-shell">
+      <div class="photo-viewer-top"><span>RIPPLESHE · LIGHT CABINET</span><button type="button" data-viewer-close aria-label="关闭影像">关闭 ×</button></div>
+      <button class="photo-viewer-nav photo-viewer-prev" type="button" data-viewer-prev aria-label="上一张">←</button>
+      <figure class="photo-viewer-figure">
+        <img id="viewer-image" src="" alt="" />
+        <figcaption><div><span id="viewer-number">01</span><div><b id="viewer-title"></b><time id="viewer-date"></time></div></div><p id="viewer-tags"></p></figcaption>
+      </figure>
+      <button class="photo-viewer-nav photo-viewer-next" type="button" data-viewer-next aria-label="下一张">→</button>
+      <div class="photo-viewer-ripple" aria-hidden="true"><i></i><i></i><i></i></div>
+    </div>
+  </dialog>
+
+  <script is:inline>
+    const galleryLinks = [...document.querySelectorAll('.collection-photo-link')];
+    const viewer = document.querySelector('#photo-viewer');
+    const viewerImage = document.querySelector('#viewer-image');
+    const viewerTitle = document.querySelector('#viewer-title');
+    const viewerDate = document.querySelector('#viewer-date');
+    const viewerTags = document.querySelector('#viewer-tags');
+    const viewerNumber = document.querySelector('#viewer-number');
+    let activeIndex = 0;
+
+    function showPhoto(index) {
+      if (!galleryLinks.length) return;
+      activeIndex = (index + galleryLinks.length) % galleryLinks.length;
+      const link = galleryLinks[activeIndex];
+      const thumb = link.querySelector('img');
+      viewerImage.src = link.href;
+      viewerImage.alt = thumb?.alt || link.dataset.title || '生活影像';
+      viewerTitle.textContent = link.dataset.title || '未题名';
+      viewerDate.textContent = link.dataset.date || '';
+      viewerTags.textContent = link.dataset.tags || 'ordinary days / ripple';
+      viewerNumber.textContent = String(activeIndex + 1).padStart(2, '0');
+    }
+
+    galleryLinks.forEach((link, index) => link.addEventListener('click', (event) => {
+      if (!viewer?.showModal) return;
+      event.preventDefault();
+      showPhoto(index);
+      viewer.showModal();
+      document.documentElement.classList.add('viewer-open');
+    }));
+    document.querySelector('[data-viewer-close]')?.addEventListener('click', () => viewer.close());
+    document.querySelector('[data-viewer-prev]')?.addEventListener('click', () => showPhoto(activeIndex - 1));
+    document.querySelector('[data-viewer-next]')?.addEventListener('click', () => showPhoto(activeIndex + 1));
+    viewer?.addEventListener('close', () => document.documentElement.classList.remove('viewer-open'));
+    viewer?.addEventListener('click', (event) => { if (event.target === viewer) viewer.close(); });
+    window.addEventListener('keydown', (event) => {
+      if (!viewer?.open) return;
+      if (event.key === 'ArrowLeft') showPhoto(activeIndex - 1);
+      if (event.key === 'ArrowRight') showPhoto(activeIndex + 1);
+    });
+  </script>
+  <style>
+    .collection-photo{scroll-margin-top:34px;transition:box-shadow .35s ease,background .35s ease}
+    .collection-photo:target{background:rgba(125,146,120,.055);box-shadow:0 0 0 1px rgba(63,86,65,.24),0 18px 44px rgba(53,55,42,.07)}
+  </style>
+</BaseLayout>

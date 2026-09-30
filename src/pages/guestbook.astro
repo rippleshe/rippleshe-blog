@@ -1,0 +1,143 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BotanicalSprig from '../components/BotanicalSprig.astro';
+import HerbDivider from '../components/HerbDivider.astro';
+import GardenWayfinder from '../components/GardenWayfinder.astro';
+import ChuciGlyph from '../components/ChuciGlyph.astro';
+import '../styles/guestbook.css';
+
+const apiBase = import.meta.env.PUBLIC_GUESTBOOK_API || (import.meta.env.DEV ? 'http://127.0.0.1:4185' : '');
+const edgeReady = Boolean(import.meta.env.CLOUDBASE_ENV_ID && import.meta.env.CLOUDBASE_PUBLISH_KEY);
+const guestbookProvider = import.meta.env.DEV ? 'local' : (edgeReady ? 'edgeone' : 'closed');
+---
+<BaseLayout title="留字" description="来过的话，留一个字也很好。">
+  <div
+    class="shell guestbook-page-v3"
+    id="guestbook-app"
+    data-provider={guestbookProvider}
+    data-api-base={apiBase}
+  >
+    <header class="guestbook-hero guestbook-hero-v3">
+      <div class="guestbook-title-side">
+        <p class="eyebrow">Guestbook · 水边来客簿</p>
+        <h1>留字</h1>
+        <p class="guestbook-english">A NOTE LEFT BY THE WATER</p>
+        <div class="guestbook-counts" aria-label="来客簿计数">
+          <span><b id="guestbook-visitor-count">—</b><small>来客</small></span>
+          <i></i>
+          <span><b id="guestbook-message-count">—</b><small>留字</small></span>
+        </div>
+      </div>
+      <div class="guestbook-intro guestbook-intro-v3">
+        <BotanicalSprig variant="lan" class="guestbook-herb" />
+        <BotanicalSprig variant="hui" class="guestbook-herb guestbook-herb-small" />
+        <span class="guestbook-door-no">R/S · 04</span>
+        <p>水边留着一本薄薄的来客簿。先认一认彼此，往后再回来，这里还能记得你的名字。</p>
+        <small>EMAIL · USERNAME · NICKNAME · HELLO</small>
+        <div class="guestbook-rings" aria-hidden="true"><i></i><i></i><i></i></div>
+      </div>
+    </header>
+
+    <HerbDivider label="先敲门，再落笔 · knock before writing" />
+
+    <section class="guestbook-entry" aria-labelledby="guestbook-entry-title">
+      <aside class="guestbook-entry-aside">
+        <div class="guestbook-pass guestbook-pass-a">
+          <span>VISITOR PASS</span>
+          <b>来</b>
+          <small>有名字的人，<br />会在这里留下回声。</small>
+        </div>
+        <div class="guestbook-pass guestbook-pass-b" aria-hidden="true">
+          <span>RIPPLE / SHE</span>
+          <p>风从水面过。<br />有人恰好来。</p>
+        </div>
+        <BotanicalSprig variant="ruo" class="guestbook-side-herb" />
+        <ChuciGlyph variant="vine" compact={true} class="guestbook-chuci-vine" />
+      </aside>
+
+      <div class="guestbook-entry-main">
+        <div class="guestbook-entry-head">
+          <div><p class="eyebrow">At the little gate</p><h2 id="guestbook-entry-title">先认一个名字</h2></div>
+          <span id="guestbook-session-mark">GUEST / UNKNOWN</span>
+        </div>
+
+        <div id="guestbook-signed-out" class="guestbook-signed-out">
+          <p>用邮箱登记一次。用户名是你在这里的门牌，昵称是别人看见你的方式；如果愿意，再留一句初见时的招呼。</p>
+          <div class="guestbook-entry-actions">
+            <button class="guestbook-primary" id="guestbook-register-open" type="button">第一次来 · 登记</button>
+            <button class="guestbook-secondary" id="guestbook-login-open" type="button">回来看看 · 登录</button>
+          </div>
+          <small>邮箱只写进来客簿，不会挂在墙上。</small>
+        </div>
+
+        <div id="guestbook-signed-in" class="guestbook-signed-in" hidden>
+          <div class="guestbook-profile-strip">
+            <span class="guestbook-avatar" id="guestbook-avatar">R</span>
+            <div><small>WELCOME BACK</small><b id="guestbook-profile-name">来客</b><p id="guestbook-profile-greeting"></p></div>
+            <button id="guestbook-logout" type="button">轻轻离开</button>
+          </div>
+          <form id="guestbook-message-form" class="guestbook-composer">
+            <label for="guestbook-message">写在这一页</label>
+            <textarea id="guestbook-message" name="message" maxlength="600" rows="5" placeholder="一句问候，一点近况，或者恰好想到的一句话……"></textarea>
+            <div><span id="guestbook-message-status">墨水已经备好。</span><button class="guestbook-primary" type="submit">把这张笺放上墙</button></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <section class="guestbook-wall-section" aria-labelledby="guestbook-wall-title">
+      <div class="guestbook-wall-head">
+        <div><p class="eyebrow">Notes by the water</p><h2 id="guestbook-wall-title">水边的字</h2></div>
+        <p>来客的字不排成队。像夹在书里的纸片，后来的人翻到哪一张，就读哪一张。</p>
+      </div>
+      <div class="guestbook-wall" id="guestbook-wall" aria-live="polite">
+        <div class="guestbook-wall-empty guestbook-wall-awaiting">
+          <div class="guestbook-awaiting-slip guestbook-awaiting-slip-1"><small>BLANK / 01</small><p>风还没有写字。</p><i></i></div>
+          <div class="guestbook-awaiting-slip guestbook-awaiting-slip-2"><small>BLANK / 02</small><p>第一张笺仍是空白。</p><i></i></div>
+          <div class="guestbook-awaiting-slip guestbook-awaiting-slip-3"><small>BLANK / 03</small><p>等一个名字落在这里。</p><i></i></div>
+          <span class="guestbook-awaiting-caption">留白也算水边的一部分。</span>
+        </div>
+      </div>
+      <div class="guestbook-wall-tail" aria-hidden="true"><span>R/S</span><i></i><small>someone was here</small></div>
+    </section>
+
+    <GardenWayfinder current="guestbook" />
+
+    <dialog class="guestbook-auth" id="guestbook-auth-dialog">
+      <div class="guestbook-auth-sheet">
+        <button class="guestbook-auth-close" id="guestbook-auth-close" type="button" aria-label="关闭">×</button>
+        <div class="guestbook-auth-title">
+          <span class="seal-mark">客</span>
+          <div><p class="eyebrow">Visitor registry</p><h2 id="guestbook-auth-heading">来客登记</h2><small>RIPPLESHE · WATER-SIDE REGISTER</small></div>
+        </div>
+
+        <div class="guestbook-auth-tabs" role="tablist">
+          <button id="guestbook-tab-register" type="button" class="active">第一次来</button>
+          <button id="guestbook-tab-login" type="button">已经来过</button>
+        </div>
+
+        <form id="guestbook-register-form" class="guestbook-auth-form">
+          <label><span>邮箱</span><input name="email" type="email" autocomplete="email" required placeholder="you@example.com" /></label>
+          {guestbookProvider === 'edgeone' && <label data-code-field hidden><span>邮件验证码</span><input name="code" type="text" inputmode="numeric" autocomplete="one-time-code" pattern="[0-9]{6}" minlength="6" maxlength="6" placeholder="6 位数字" /></label>}
+          <div class="guestbook-auth-pair">
+            <label><span>用户名</span><input name="username" type="text" minlength="2" maxlength="24" autocomplete="username" required placeholder="你的门牌" /></label>
+            <label><span>昵称</span><input name="nickname" type="text" maxlength="30" required placeholder="想被怎样称呼" /></label>
+          </div>
+          <label><span>初见的一句话 <small>optional</small></span><input name="greeting" type="text" maxlength="80" placeholder="比如：今天风很好。" /></label>
+          {guestbookProvider !== 'closed' && <label data-password-field><span>密码</span><input name="password" type="password" minlength="8" maxlength="64" autocomplete="new-password" required placeholder="至少 8 个字符，包含字母和数字" /></label>}
+          <p class="guestbook-auth-status" id="guestbook-register-status"></p>
+          <button class="guestbook-primary" type="submit">把名字写进来客簿</button>
+        </form>
+
+        <form id="guestbook-login-form" class="guestbook-auth-form" hidden>
+          <label><span>邮箱</span><input name="email" type="email" autocomplete="email" required placeholder="you@example.com" /></label>
+          {guestbookProvider !== 'closed' && <label data-password-field><span>密码</span><input name="password" type="password" minlength="8" maxlength="64" autocomplete="current-password" required /></label>}
+          <p class="guestbook-auth-status" id="guestbook-login-status"></p>
+          <button class="guestbook-primary" type="submit">回来这一页</button>
+        </form>
+      </div>
+    </dialog>
+  </div>
+  <script src="../scripts/guestbook-client.ts"></script>
+</BaseLayout>
+

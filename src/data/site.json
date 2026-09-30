@@ -1,0 +1,18 @@
+{
+  "manifesto": [
+    "喜欢把东西拆开，再慢慢做成自己的样子。",
+    "也喜欢花草、散步，和那些忽然想写下来的句子。",
+    "于是这里一半是造物，一半是日子，水纹从中间轻轻经过。"
+  ],
+  "now": [
+    {"label":"GROWING","title":"把自己的互联网小院子搭起来","note":"水纹、草木、字与光，正在一点点有自己的位置。"},
+    {"label":"MAKING","title":"继续折腾手边的工具与项目","note":"有些是代码，有些是图，有些只是刚冒头的想法。"},
+    {"label":"KEEPING","title":"把普通日子也留下来","note":"散步、朋友、饭桌、晚风，都是值得收进一页的东西。"}
+  ],
+  "featuredWork": {
+    "name":"SciPlot Academic",
+    "href":"/works/sciplot/",
+    "description":"一套我一直在折腾的科研绘图库。随手画，也应该有足够高的下限。",
+    "media":["/media/works/sciplot/01_multi_line.png"]
+  }
+}

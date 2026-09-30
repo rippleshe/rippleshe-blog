@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BotanicalSprig from '../components/BotanicalSprig.astro';
+import HerbDivider from '../components/HerbDivider.astro';
+import PageHerbariumHeader from '../components/PageHerbariumHeader.astro';
+---
+<BaseLayout title="器物" description="Rippleshe 长期使用、愿意留下来的工具与器物。">
+  <div class="shell folio-page uses-page-v2">
+    <PageHerbariumHeader
+      eyebrow="Uses · 器物册"
+      title="器物"
+      english="THINGS THAT STAY WITH ME"
+      variant="lan"
+      folio="OBJECTS / DAILY COMPANIONS"
+      intro="有些东西用久了，会沾上手的习惯，也沾上一点日子的气味。这里收的是这些陪伴。"
+    />
+
+    <HerbDivider label="器物册 · kept, not collected" />
+
+    <section class="object-cabinet" aria-label="器物分类">
+      <article class="object-drawer">
+        <span class="object-no">01</span>
+        <div><small>WRITING / THINKING</small><h2>写字与思考</h2><p>笔、纸、屏幕和一块安静的地方。想法常常就是从这些小东西旁边冒出来。</p></div>
+        <i aria-hidden="true">⌁</i>
+      </article>
+      <article class="object-drawer">
+        <span class="object-no">02</span>
+        <div><small>MAKING / SOFTWARE</small><h2>做东西</h2><p>编辑器、终端和那些越用越顺手的小工具，像桌面上总在原位的几件器物。</p></div>
+        <i aria-hidden="true">◇</i>
+      </article>
+      <article class="object-drawer">
+        <span class="object-no">03</span>
+        <div><small>SEEING / KEEPING</small><h2>看见与记录</h2><p>相机、手机、耳机，或者任何帮助我把某个时刻留下来的东西。</p></div>
+        <i aria-hidden="true">○</i>
+      </article>
+      <article class="object-drawer object-drawer-herb">
+        <span class="object-no">04</span>
+        <div><small>GROWING / LIVING</small><h2>草木与日常</h2><p>植物、香气、杯子、窗边的一点绿——器物不只属于桌面，也属于生活。</p></div>
+        <BotanicalSprig variant="hui" class="object-herb" />
+      </article>
+    </section>
+
+    <section class="uses-note-card">
+      <span class="seal-mark" aria-hidden="true">器</span>
+      <div>
+        <p class="eyebrow">Things that stay</p>
+        <strong>器物要相处久一点，才会有故事。</strong>
+        <p>等某件东西真正沾上日常的手感，再给它一小格位置。</p>
+      </div>
+    </section>
+  </div>
+</BaseLayout>

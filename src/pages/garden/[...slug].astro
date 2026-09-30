@@ -1,0 +1,112 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import GardenLayout from '../../layouts/GardenLayout.astro';
+import { titleOf, gardenUrl, formatDate, type GardenEntry } from '../../lib/content';
+import { libraryItems, formatLibraryDate } from '../../lib/library';
+import { publicFolios, folioUrl } from '../../lib/folios';
+
+type RelatedLeaf = { entry: GardenEntry; sharedTags: string[] };
+
+export async function getStaticPaths() {
+  const entries = await getCollection('garden', ({ data }) => data.publish);
+  return entries.map((entry) => {
+    const ownTags = new Set(entry.data.tags);
+    const related: RelatedLeaf[] = entries
+      .filter((other) => other.id !== entry.id)
+      .map((other) => ({ entry: other, sharedTags: other.data.tags.filter((tag) => ownTags.has(tag)) }))
+      .filter((item) => item.sharedTags.length > 0)
+      .sort((a, b) => {
+        const shared = b.sharedTags.length - a.sharedTags.length;
+        if (shared) return shared;
+        return Math.abs(a.entry.data.date.valueOf() - entry.data.date.valueOf()) - Math.abs(b.entry.data.date.valueOf() - entry.data.date.valueOf());
+      })
+      .slice(0, 3);
+    return { params: { slug: entry.id.replace(/\.mdx?$/, '') }, props: { entry, related } };
+  });
+}
+
+interface Props { entry: CollectionEntry<'garden'>; related: RelatedLeaf[]; }
+const { entry, related } = Astro.props;
+const { Content } = await render(entry);
+
+function dayKey(value: Date | string) {
+  const date = new Date(value);
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+const entryRef = entry.id.replace(/\.mdx?$/, '');
+const sameDayMedia = libraryItems.filter((item) => dayKey(item.date) === dayKey(entry.data.date)).slice(0, 2);
+const relatedShown = related.slice(0, Math.max(0, 3 - sameDayMedia.length));
+const boundFolio = publicFolios.find((folio) => folio.items.some((item) => item.source === 'garden' && item.ref === entryRef));
+const hasEchoes = Boolean(boundFolio || sameDayMedia.length || relatedShown.length);
+---
+<GardenLayout
+  title={titleOf(entry)}
+  date={entry.data.date}
+  kind={entry.data.kind}
+  tags={entry.data.tags}
+  description={entry.data.description}
+  lang={entry.data.lang}
+>
+  <Content />
+  {hasEchoes && (
+    <Fragment slot="after-prose">
+      <section class="reading-echoes" aria-labelledby="reading-echoes-title">
+        <header class="reading-echoes-head">
+          <div><p class="eyebrow">Nearby leaves · 旁页</p><h2 id="reading-echoes-title">这一页之外</h2></div>
+          <p>同日，或同一个旧标签。</p>
+        </header>
+
+        {boundFolio && (
+          <a class="reading-folio-backlink" href={folioUrl(boundFolio)}>
+            <span>装订于</span>
+            <div><b>《{boundFolio.title}》</b><small>{boundFolio.date} · {boundFolio.items.length} 项内容</small></div>
+            <i>打开册页 ↗</i>
+          </a>
+        )}
+
+        <div class="reading-echo-grid">
+          {sameDayMedia.map((item) => (
+            item.type === 'photo' ? (
+              <a class="reading-echo reading-echo-photo" href={`/collection/#media-${item.id}`}>
+                <img src={item.thumb || item.src} alt={item.title} loading="lazy" />
+                <span><small>同日影像 · {formatLibraryDate(item.date)}</small><b>{item.title}</b></span>
+              </a>
+            ) : (
+              <a class="reading-echo reading-echo-paper" href={item.src} target="_blank" rel="noreferrer">
+                <span class="reading-paper-mark">{item.ext || 'DOC'}</span>
+                <span><small>同日纸页 · {formatLibraryDate(item.date)}</small><b>{item.title}</b></span>
+              </a>
+            )
+          ))}
+          {relatedShown.map(({ entry: other, sharedTags }) => (
+            <a class="reading-echo reading-echo-word" href={gardenUrl(other)}>
+              <span class="reading-word-mark">文</span>
+              <span><small>同题 · {sharedTags.slice(0, 2).map((tag) => `#${tag}`).join(' · ')}</small><b>{titleOf(other)}</b><em>{other.data.kind} · {formatDate(other.data.date)}</em></span>
+            </a>
+          ))}
+        </div>
+      </section>
+    </Fragment>
+  )}
+</GardenLayout>
+
+<style>
+  .reading-echoes{margin:92px 0 8px;padding-top:30px;border-top:1px solid var(--line-strong)}
+  .reading-echoes-head{display:grid;grid-template-columns:1fr minmax(190px,280px);gap:30px;align-items:end;margin-bottom:22px}
+  .reading-echoes-head h2{margin:4px 0 0;font:400 30px/1.2 var(--serif);letter-spacing:-.025em}
+  .reading-echoes-head>p{margin:0;color:var(--mist);font:11px/1.7 var(--serif);text-align:right}
+  .reading-folio-backlink{display:grid;grid-template-columns:74px 1fr auto;gap:16px;align-items:center;padding:16px 18px;margin-bottom:14px;border:1px solid var(--line-strong);background:rgba(125,146,120,.055)}
+  .reading-folio-backlink>span{color:var(--seal);font:10px var(--serif);letter-spacing:.08em}
+  .reading-folio-backlink b{display:block;font:400 18px var(--serif)}.reading-folio-backlink small{display:block;margin-top:2px;color:var(--mist);font-size:9px}.reading-folio-backlink i{color:var(--moss);font:10px var(--serif);font-style:normal}
+  .reading-echo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.reading-echo-grid>.reading-echo:last-child:nth-child(odd){grid-column:1/-1}
+  .reading-echo{min-height:112px;border:1px solid var(--line);background:rgba(248,245,237,.3);transition:border-color .18s ease,transform .18s ease}
+  .reading-echo:hover{border-color:var(--line-strong);transform:translateY(-1px)}
+  .reading-echo-photo{display:grid;grid-template-columns:108px 1fr;align-items:stretch}.reading-echo-photo img{width:108px;height:100%;min-height:110px;object-fit:cover;filter:saturate(.78) contrast(.98)}
+  .reading-echo-photo>span,.reading-echo-paper>span:last-child,.reading-echo-word>span:last-child{padding:15px;align-self:center}
+  .reading-echo small{display:block;color:var(--sage);font-size:8px;letter-spacing:.06em}.reading-echo b{display:block;margin-top:5px;font:400 16px/1.35 var(--serif)}
+  .reading-echo-paper,.reading-echo-word{display:grid;grid-template-columns:68px 1fr;align-items:stretch}
+  .reading-paper-mark,.reading-word-mark{display:grid;place-items:center;border-right:1px solid var(--line);color:var(--seal);font:11px var(--serif);letter-spacing:.08em}
+  .reading-word-mark{font-size:19px;color:var(--moss)}.reading-echo em{display:block;margin-top:8px;color:var(--mist);font:normal 8px var(--sans);letter-spacing:.05em}
+  @media(max-width:620px){.reading-echoes-head{grid-template-columns:1fr}.reading-echoes-head>p{text-align:left}.reading-echo-grid{grid-template-columns:1fr}.reading-folio-backlink{grid-template-columns:56px 1fr}.reading-folio-backlink i{grid-column:2}.reading-echo-photo{grid-template-columns:92px 1fr}.reading-echo-photo img{width:92px}}
+</style>

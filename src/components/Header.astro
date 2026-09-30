@@ -1,0 +1,56 @@
+---
+import RippleMark from './RippleMark.astro';
+import { getCollection } from 'astro:content';
+import { gardenUrl } from '../lib/content';
+const path = Astro.url.pathname;
+const aboutSidePaths = ['/now/', '/uses/', '/resume/'];
+const isNavCurrent = (href: string) => href === '/about/'
+  ? path.startsWith('/about/') || aboutSidePaths.some((side) => path.startsWith(side))
+  : path.startsWith(href);
+const nav = [
+  ['/garden/', '芳洲', '01'],
+  ['/collection/', '藏册', '02'],
+  ['/works/', '造物', '03'],
+  ['/scenes/', '小景', '04'],
+  ['/about/', '关于', '05'],
+  ['/guestbook/', '留字', '06'],
+] as const;
+const randomPages = (await getCollection('garden', ({ data }) => data.publish)).map(gardenUrl);
+const dev = import.meta.env.DEV;
+---
+<header class="site-header">
+  <div class="shell header-inner">
+    <a class="brand" href="/" aria-label="Rippleshe 首页">
+      <RippleMark size={34} />
+      <span class="brand-word">
+        <b>Rippleshe</b>
+        <small>水边植物志</small>
+      </span>
+    </a>
+    <nav aria-label="主导航">
+      {nav.map(([href, label, index]) => (
+        <a href={href} aria-current={isNavCurrent(href) ? 'page' : undefined}>
+          <small>{index}</small><span>{label}</span>
+        </a>
+      ))}
+    </nav>
+    <div class="header-tools">
+      {dev && <a class="header-studio" href="http://127.0.0.1:4175#record" target="_blank" rel="noreferrer" title="打开私人内容台"><i>＋</i><span>添</span></a>}
+      <button class="header-random" type="button" data-random-pages={JSON.stringify(randomPages)} title="随手翻一页"><i>◇</i><span>拾一页</span></button>
+      <span class="header-folio" aria-hidden="true">R/S · 2026</span>
+    </div>
+  </div>
+</header>
+
+<script>
+  document.querySelectorAll<HTMLButtonElement>('[data-random-pages]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const pages = JSON.parse(button.dataset.randomPages || '[]') as string[];
+      if (!pages.length) return;
+      const current = location.pathname;
+      const choices = pages.filter((page) => page !== current);
+      const pool = choices.length ? choices : pages;
+      location.href = pool[Math.floor(Math.random() * pool.length)];
+    });
+  });
+</script>

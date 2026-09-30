@@ -1,0 +1,15 @@
+import fs from 'node:fs';
+import path from 'node:path';
+const root=process.cwd();
+const envFile=path.join(root,'.env.production.local');
+const env=Object.fromEntries(fs.readFileSync(envFile,'utf8').split(/\r?\n/).filter(Boolean).map(line=>{const i=line.indexOf('='); return [line.slice(0,i),line.slice(i+1)]}));
+const envId=env.CLOUDBASE_ENV_ID;
+const key=env.CLOUDBASE_PUBLISH_KEY;
+if(!envId||!key) throw new Error('EdgeOne packaging requires CLOUDBASE_ENV_ID and CLOUDBASE_PUBLISH_KEY');
+const src=fs.readFileSync(path.join(root,'edge-functions-src','guestbook.js'),'utf8');
+const output=src.replace('__CLOUDBASE_ENV_ID__',envId).replace('__CLOUDBASE_PUBLISH_KEY__',key);
+if(output.includes('__CLOUDBASE_')) throw new Error('EdgeOne function placeholder replacement incomplete');
+const dest=path.join(root,'dist','edge-functions','api','guestbook','[[path]].js');
+fs.mkdirSync(path.dirname(dest),{recursive:true});
+fs.writeFileSync(dest,output,'utf8');
+console.log(JSON.stringify({ok:true,edgeFunction:'edge-functions/api/guestbook/[[path]].js'}));

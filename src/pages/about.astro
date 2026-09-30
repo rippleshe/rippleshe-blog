@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BotanicalSprig from '../components/BotanicalSprig.astro';
+import HerbDivider from '../components/HerbDivider.astro';
+import PageHerbariumHeader from '../components/PageHerbariumHeader.astro';
+import GardenWayfinder from '../components/GardenWayfinder.astro';
+import ChuciGlyph from '../components/ChuciGlyph.astro';
+---
+<BaseLayout title="关于" description="关于 Rippleshe。">
+  <div class="shell folio-page about-page-v2">
+    <PageHerbariumHeader
+      eyebrow="About · 人物小志"
+      title="关于"
+      english="NOT A LABEL, JUST A PERSON"
+      variant="ruo"
+      folio="PERSON / RIPPLE · SHE"
+      intro="Ripple 是我的英文名，She 是我的姓。于是 Rippleshe 既是名字，也像一圈从水面慢慢散开的波纹。"
+    />
+
+    <HerbDivider label="人物小志 · a few traces" />
+
+    <section class="portrait-notes" aria-labelledby="about-self">
+      <aside class="portrait-index">
+        <p>PERSON<br />MAKER<br />WRITER<br />CURIOUS MIND</p>
+        <BotanicalSprig variant="lan" label={true} />
+        <ChuciGlyph variant="ruo" compact={true} class="about-chuci-ruo" />
+      </aside>
+      <div class="portrait-copy">
+        <p class="portrait-lead" id="about-self">我喜欢折腾东西，也喜欢那些和“效率”没什么关系的事情。</p>
+        <div class="portrait-columns">
+          <p>软件、科研工具、奇怪的小项目，想到什么常常就想把它做出来。技术对我来说更像一种手艺：先拆开看看，再试着把它重新搭好。</p>
+          <p>另一边是花草、散步、现代诗、小短文，还有某一天并不起眼的天气。它们没有明确的产出，但会让日子留下自己的纹理。</p>
+        </div>
+        <p>这个网站不是为了把自己归纳成几个标签。它更像一个慢慢生长的个人档案：我做过什么，也包括我怎样生活。</p>
+      </div>
+    </section>
+
+    <section class="name-origin" aria-labelledby="name-origin-title">
+      <div class="name-origin-head">
+        <p class="eyebrow">Name origin · 名字从哪里来</p>
+        <h2 id="name-origin-title">Rippleshe</h2>
+        <p>一个名字里刚好有水，也刚好有姓。</p>
+      </div>
+      <div class="name-origin-grid">
+        <div class="name-origin-ripple">
+          <small>01 / RIPPLE</small>
+          <strong>ripple</strong>
+          <p>英文名。也是水面被轻轻碰过以后，一圈一圈往外走的纹。</p>
+          <div class="name-rings" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        </div>
+        <div class="name-origin-she">
+          <small>02 / SHE</small>
+          <strong>佘</strong>
+          <p>姓。名字的后半截，不是一个英文代词，而是一枚留在纸上的小印。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="about-index-cards" aria-label="关于我的三个侧院">
+      <a href="/now/" class="about-index-card">
+        <small>01 / NOW</small><b>此刻</b><span>最近正在做什么、想着什么。它是一张会继续变化的近况札。</span><i>↗</i>
+      </a>
+      <a href="/uses/" class="about-index-card">
+        <small>02 / OBJECTS</small><b>器物</b><span>真正长期使用、慢慢沾上习惯的工具与日常物件。</span><i>↗</i>
+      </a>
+      <a href="/resume/" class="about-index-card">
+        <small>03 / TRACE</small><b>履历</b><span>需要认真说明经历时，再从这里翻开一张较正式的折页。</span><i>↗</i>
+      </a>
+      <a href="/scenes/" class="about-index-card">
+        <small>04 / CURIOS</small><b>小景</b><span>那些最能暴露个人偏好的网页机关、花草、水纹和小实验。</span><i>↗</i>
+      </a>
+    </section>
+
+    <section class="about-contact-strip">
+      <div>
+        <p class="eyebrow">Elsewhere · 水面之外</p>
+        <strong>偶尔也在别处留下些什么。</strong>
+      </div>
+      <a class="rule-link" href="https://github.com/rippleshe">GitHub ↗</a>
+    </section>
+    <GardenWayfinder current="about" />
+  </div>
+</BaseLayout>

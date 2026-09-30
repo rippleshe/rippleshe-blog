@@ -1,0 +1,33 @@
+---
+interface Props { title: string; tags?: string[]; index?: number; }
+const { title, tags = [], index = 0 } = Astro.props;
+const thematicTags = tags.filter((tag) => tag !== '美雨浪漫' && tag !== '知识库');
+const text = `${title} ${thematicTags.join(' ')}`;
+let h = 2166136261;
+for (const ch of title) h = Math.imul(h ^ ch.charCodeAt(0), 16777619) >>> 0;
+const seed = (h + index * 97) >>> 0;
+const n = (shift:number, min:number, max:number) => min + (((seed >> shift) & 255) / 255) * (max - min);
+const theme = /月|夜|中秋/.test(text) ? 'moon' : /雨|晴|露/.test(text) ? 'rain' : /花|玫瑰|春/.test(text) ? 'flower' : /水|江|潇|蒸|湖|河/.test(text) ? 'water' : /风|归途|游|山/.test(text) ? 'wind' : 'ink';
+const x1 = n(0, 28, 84), x2 = n(4, 112, 188), x3 = n(8, 198, 282);
+const y1 = n(12, 32, 102), y2 = n(16, 108, 190), y3 = n(20, 54, 154);
+const r1 = n(3, 16, 38), r2 = n(11, 8, 23);
+---
+<svg class={`poem-scene poem-scene-${theme}`} viewBox="0 0 320 220" role="img" aria-label={`${title} 的抽象小景`} data-seed={seed}>
+  <defs>
+    <linearGradient id={`mist-${seed}`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".03"/><stop offset="1" stop-color="currentColor" stop-opacity=".12"/></linearGradient>
+    <filter id={`blur-${seed}`} x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="7"/></filter>
+  </defs>
+  <rect width="320" height="220" fill="transparent"/>
+  <g class="scene-ghost" opacity=".45"><circle cx={x2} cy={y3} r={r1*1.8} fill={`url(#mist-${seed})`} filter={`url(#blur-${seed})`}/></g>
+  {theme === 'moon' && <g class="scene-moon"><circle cx={x2} cy={y1+12} r={r1}/><path d={`M18 ${166+y1*.08} C 96 ${142+y2*.08}, 212 ${184-y1*.12}, 304 ${154+y3*.08}`}/><path d={`M34 ${186-y1*.05} C 122 ${168+y3*.04}, 202 ${196-y2*.04}, 292 ${176+y1*.05}`}/><circle class="scene-star s1" cx={x1} cy={y1} r="2"/><circle class="scene-star s2" cx={x3} cy={y3} r="1.6"/></g>}
+  {theme === 'rain' && <g class="scene-rain">{Array.from({length:9}).map((_,i) => <line x1={24+i*34 + (seed%9)} y1={18+(i%3)*10} x2={10+i*34 + (seed%9)} y2={92+(i%3)*12}/>)}<ellipse cx={x2} cy="168" rx={r1*1.8} ry="11"/><ellipse cx={x1+38} cy="184" rx={r2*1.7} ry="7"/><path d={`M30 205 C ${x1} 181, ${x2} 204, 296 188`}/></g>}
+  {theme === 'flower' && <g class="scene-flower"><path d={`M${x2} 212 C ${x2-16} 158, ${x2+24} 112, ${x2-4} 45`}/><path d={`M${x2-4} 128 C ${x2-48} 112, ${x2-58} 84, ${x2-68} 65`}/><path d={`M${x2+3} 158 C ${x2+45} 148, ${x2+60} 119, ${x2+71} 96`}/><ellipse cx={x2-52} cy="90" rx="11" ry="24" transform={`rotate(-54 ${x2-52} 90)`}/><ellipse cx={x2+51} cy="129" rx="10" ry="22" transform={`rotate(57 ${x2+51} 129)`}/><g class="scene-blossom" transform={`translate(${x2-4} ${y1})`}><circle cx="0" cy="-9" r="8"/><circle cx="9" cy="-1" r="8"/><circle cx="5" cy="10" r="8"/><circle cx="-7" cy="9" r="8"/><circle cx="-10" cy="-2" r="8"/><circle class="scene-heart" r="3.5"/></g></g>}
+  {theme === 'water' && <g class="scene-waterlines"><path d={`M12 ${y2} C 70 ${y2-28}, 115 ${y2+22}, 172 ${y2-5} S 268 ${y2-16}, 308 ${y2+3}`}/><path d={`M20 ${y2+25} C 84 ${y2+4}, 141 ${y2+43}, 208 ${y2+17} S 276 ${y2+14}, 300 ${y2+31}`}/><ellipse cx={x1+18} cy={y1+54} rx={r1} ry={r2*.55}/><path d={`M${x3-22} 36 C ${x3-50} 84, ${x3-26} 119, ${x3-45} 165`}/><ellipse cx={x3-41} cy="96" rx="8" ry="20" transform={`rotate(-36 ${x3-41} 96)`}/></g>}
+  {theme === 'wind' && <g class="scene-wind"><path d={`M12 ${58+y1*.25} C 75 ${29+y3*.2}, 116 ${93-y1*.1}, 185 ${59+y2*.12} S 264 ${38+y3*.1}, 306 ${61+y1*.1}`}/><path d={`M20 ${101+y2*.1} C 95 ${71+y1*.1}, 130 ${132-y3*.08}, 201 ${102+y1*.05} S 266 ${84+y2*.04}, 298 ${103+y3*.02}`}/><path class="scene-stem" d={`M${x2} 214 C ${x2-9} 163, ${x2+18} 118, ${x2+6} 69`}/><ellipse cx={x2-7} cy="139" rx="8" ry="21" transform={`rotate(-48 ${x2-7} 139)`}/><ellipse cx={x2+12} cy="105" rx="8" ry="20" transform={`rotate(54 ${x2+12} 105)`}/></g>}
+  {theme === 'ink' && <g class="scene-ink"><path d={`M${x1} ${y2} Q ${x2} ${y1}, ${x3} ${y2-22}`}/><path d={`M${x1+16} ${y2+25} Q ${x2-15} ${y3+40}, ${x3-18} ${y2+12}`}/><circle cx={x2} cy={y1+12} r={r2}/><circle cx={x3-40} cy={y3+22} r="3"/></g>}
+  <text x="18" y="204" class="scene-index">{String(index+1).padStart(2,'0')} / {theme.toUpperCase()}</text>
+</svg>
+
+<style>
+.poem-scene{width:100%;height:100%;min-height:210px;color:#58705d;overflow:visible}.poem-scene g:not(.scene-ghost){fill:none;stroke:currentColor;stroke-width:1.15;stroke-linecap:round;stroke-linejoin:round}.poem-scene ellipse,.poem-scene .scene-flower circle{fill:rgba(111,139,114,.06)}.poem-scene .scene-heart{fill:#92574a!important;stroke:#92574a}.scene-index{fill:#8c968d;stroke:none!important;font:7px ui-sans-serif,system-ui;letter-spacing:.15em}.scene-moon>circle:first-child{fill:rgba(236,226,190,.34);stroke:#7b846e}.scene-star{fill:#92574a;stroke:none!important}.scene-rain line{stroke-dasharray:22 10;animation:poem-rain 3.6s linear infinite}.scene-rain line:nth-child(2n){animation-duration:4.4s;opacity:.65}.scene-waterlines path:first-child,.scene-moon path:first-of-type{stroke-dasharray:80 22;animation:poem-water 10s linear infinite}.scene-wind>path:not(.scene-stem){stroke-dasharray:52 20;animation:poem-wind 8s ease-in-out infinite alternate}.scene-flower .scene-blossom{transform-box:fill-box;transform-origin:center;animation:poem-bloom 7s ease-in-out infinite}.scene-wind .scene-stem,.scene-flower>path{transform-box:fill-box;transform-origin:bottom center;animation:poem-sway 6s ease-in-out infinite alternate}.scene-ghost{animation:poem-breathe 8s ease-in-out infinite}.poem-scene-moon{color:#5f6e65}.poem-scene-rain{color:#607b72}.poem-scene-flower{color:#63775e}.poem-scene-water{color:#55766f}.poem-scene-wind{color:#6d7864}.poem-scene-ink{color:#6f6d5f}@keyframes poem-rain{to{stroke-dashoffset:-64}}@keyframes poem-water{to{stroke-dashoffset:-102}}@keyframes poem-wind{to{stroke-dashoffset:-72}}@keyframes poem-bloom{50%{transform:scale(1.06) rotate(2deg)}}@keyframes poem-sway{to{transform:rotate(2.8deg)}}@keyframes poem-breathe{50%{opacity:.7;transform:scale(1.04)}}@media(prefers-reduced-motion:reduce){.poem-scene *{animation:none!important}}
+</style>

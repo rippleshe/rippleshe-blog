@@ -1,0 +1,173 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BotanicalSprig from '../../components/BotanicalSprig.astro';
+import HerbDivider from '../../components/HerbDivider.astro';
+import QuoteSlip from '../../components/QuoteSlip.astro';
+import GardenWayfinder from '../../components/GardenWayfinder.astro';
+import { getCollection } from 'astro:content';
+import { gardenUrl, seasonOf, titleOf } from '../../lib/content';
+
+const entries = (await getCollection('garden', ({ data }) => data.publish))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const years = [...new Set(entries.map((e) => e.data.date.getFullYear()))];
+const tagCounts = new Map<string, number>();
+entries.flatMap((entry) => entry.data.tags).forEach((tag) => tagCounts.set(tag, (tagCounts.get(tag) || 0) + 1));
+const tags = [...tagCounts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], 'zh-CN'));
+const pinnedEntry = entries.find((entry) => entry.data.featured);
+---
+<BaseLayout title="芳洲" description="Rippleshe 的数字花园。小札、诗、信和一些不一定长成文章的东西。">
+  <div class="shell garden-page-v2">
+    <header class="page-intro garden-intro-v2">
+      <div class="garden-title-block">
+        <p class="eyebrow">Digital garden · rippleshe</p>
+        <h1>芳洲</h1>
+        <p class="garden-title-aside">FANGZHOU / A SMALL ISLET OF WORDS</p>
+      </div>
+      <div class="garden-intro-panel">
+        <BotanicalSprig variant="lan" class="garden-intro-sprig" />
+        <p class="page-intro-copy">念头落在这里，各自长成自己的样子。诗、信、半夜的胡思乱想，和某天被蚊子叮了一口的生气，都有一小块岸。</p>
+        <div class="garden-intro-meta"><span>小札</span><span>诗</span><span>信</span><span>碎片</span></div>
+      </div>
+    </header>
+
+    <div class="garden-opening-composition">
+      <QuoteSlip quote="锁得住花的形，窃不来花的香。" source="芳洲 · 卷首" />
+      <div class="garden-field-note">
+        <span class="seal-mark" aria-hidden="true">芳</span>
+        <p><b>草木不必整齐。</b><br />有的开花，有的只是长了一片新叶；有的甚至只是被风吹歪了一点。</p>
+        <small>FIELD NOTE / 001</small>
+      </div>
+      <BotanicalSprig variant="ruo" label={true} class="garden-opening-herb" />
+    </div>
+
+    {pinnedEntry && (
+      <a class="garden-pinned-leaf" href={gardenUrl(pinnedEntry)}>
+        <small>PINNED LEAF / 留在岸边</small>
+        <b>{titleOf(pinnedEntry)}</b>
+        <span>{pinnedEntry.data.kind} · {pinnedEntry.data.date.toLocaleDateString('zh-CN')} {pinnedEntry.data.tags.length > 0 ? `· ${pinnedEntry.data.tags.slice(0, 3).join(' · ')}` : ''}</span>
+        <i aria-hidden="true">↗</i>
+      </a>
+    )}
+
+    <a class="poetry-corridor-entry" href="/garden/poetry/">
+      <span>POETRY GALLERY / 芳洲侧廊</span>
+      <b>去诗廊</b>
+      <p>把诗和词单独挂成一列。每一首旁边，都长着一幅自己的小景。</p>
+      <i aria-hidden="true">↗</i>
+    </a>
+
+    <HerbDivider label="岁时 · seasonal archive" />
+
+    <div class="archive-filter-status" data-garden-filter-status hidden><span>沿着 <b data-filter-name></b> 找到 <i data-filter-count>0</i> 篇</span><button type="button" data-garden-reset>回到全部</button></div>
+
+    <section class="archive-v2" aria-label="花园内容">
+      {years.map((year, yearIndex) => (
+        <div class="archive-year archive-year-v2" data-archive-year>
+          <aside class="archive-year-aside">
+            <span class="archive-year-index">{String(yearIndex + 1).padStart(2, '0')}</span>
+            <div class="year-label">{year}</div>
+            <p class="specimen-no">{[...new Set(entries.filter((e) => e.data.date.getFullYear() === year).map((e) => seasonOf(e.data.date)))].join(' · ')}</p>
+            <div class="season-glyph" aria-hidden="true"><i></i><i></i><i></i></div>
+          </aside>
+          <div class="archive-list archive-list-v2">
+            {entries.filter((entry) => entry.data.date.getFullYear() === year).map((entry, index) => (
+              <a class="archive-entry archive-entry-v2" href={gardenUrl(entry)} data-tags={JSON.stringify(entry.data.tags)}>
+                <span class="archive-floret" aria-hidden="true">{index % 2 === 0 ? '◇' : '·'}</span>
+                <time datetime={entry.data.date.toISOString()}>{String(entry.data.date.getMonth() + 1).padStart(2, '0')}.{String(entry.data.date.getDate()).padStart(2, '0')}</time>
+                <h2>{titleOf(entry)}</h2>
+                <span class="archive-kind">{entry.data.kind}</span>
+                <span class="archive-arrow" aria-hidden="true">↗</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      ))}
+    </section>
+
+    <section class="home-section tag-section-v2" aria-labelledby="tags-title">
+      <BotanicalSprig variant="hui" class="tag-section-herb" />
+      <div class="tag-section-head">
+        <p class="eyebrow">Index by scent · 香径</p>
+        <h2 class="section-heading" id="tags-title">循着标签走</h2>
+        <p>标签像草间的小径。循着一个词拐进去，也许会碰见另一段完全不同的天气。</p>
+      </div>
+      <div class="tag-herbarium">
+        <button class="tag-specimen tag-specimen-all is-active" type="button" data-garden-tag="" aria-pressed="true"><small>00</small><b>全部</b><i aria-hidden="true"></i></button>
+        {tags.map(([tag, count], index) => (
+          <button class="tag-specimen" type="button" data-garden-tag={tag} data-extra-tag={index >= 18 ? '' : undefined} hidden={index >= 18} aria-pressed="false" title={`${count} 篇`}>
+            <small>{String(index + 1).padStart(2, '0')}</small>
+            <b>#{tag}</b>
+            <i aria-hidden="true"></i>
+          </button>
+        ))}
+        {tags.length > 18 && <button class="tag-specimen tag-specimen-more" type="button" data-tag-toggle aria-expanded="false"><small>＋</small><b>更多香径 · {tags.length - 18}</b><i aria-hidden="true"></i></button>}
+      </div>
+    </section>
+
+    <HerbDivider label="沿水而行 · end of index" quiet={true} />
+    <GardenWayfinder current="garden" />
+  </div>
+</BaseLayout>
+
+<script is:inline>
+  (() => {
+    const archive = document.querySelector('.archive-v2');
+    const rows = [...document.querySelectorAll('.archive-entry-v2[data-tags]')];
+    const years = [...document.querySelectorAll('[data-archive-year]')];
+    const buttons = [...document.querySelectorAll('[data-garden-tag]')];
+    const extras = [...document.querySelectorAll('[data-extra-tag]')];
+    const toggle = document.querySelector('[data-tag-toggle]');
+    const status = document.querySelector('[data-garden-filter-status]');
+    if (!archive || rows.length === 0 || buttons.length === 0) return;
+
+    function showExtraTags(expanded) {
+      extras.forEach((button) => { button.hidden = !expanded; });
+      if (toggle) {
+        toggle.setAttribute('aria-expanded', String(expanded));
+        const label = toggle.querySelector('b');
+        if (label) label.textContent = expanded ? '收起香径' : `更多香径 · ${extras.length}`;
+      }
+    }
+
+    function apply(tag, move = false, updateUrl = true) {
+      let count = 0;
+      rows.forEach((row) => {
+        let rowTags = [];
+        try { rowTags = JSON.parse(row.dataset.tags || '[]'); } catch {}
+        const show = !tag || rowTags.includes(tag);
+        row.hidden = !show;
+        if (show) count += 1;
+      });
+      years.forEach((year) => { year.hidden = !year.querySelector('.archive-entry-v2:not([hidden])'); });
+      buttons.forEach((button) => {
+        const active = (button.dataset.gardenTag || '') === tag;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-pressed', String(active));
+      });
+      if (status) {
+        status.hidden = !tag;
+        status.querySelector('[data-filter-name]').textContent = tag ? '#' + tag : '';
+        status.querySelector('[data-filter-count]').textContent = String(count);
+      }
+      if (updateUrl) {
+        const url = new URL(location.href);
+        if (tag) url.searchParams.set('tag', tag); else url.searchParams.delete('tag');
+        history.replaceState(null, '', url);
+      }
+      if (move) archive.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    const initial = new URL(location.href).searchParams.get('tag') || '';
+    const initialButton = buttons.find((button) => (button.dataset.gardenTag || '') === initial);
+    showExtraTags(Boolean(initialButton?.hasAttribute('data-extra-tag')));
+    apply(initial, false, false);
+    buttons.forEach((button) => button.addEventListener('click', () => apply(button.dataset.gardenTag || '', true)));
+    toggle?.addEventListener('click', () => showExtraTags(toggle.getAttribute('aria-expanded') !== 'true'));
+    document.querySelector('[data-garden-reset]')?.addEventListener('click', () => apply('', false));
+  })();
+</script>
+
+<style>
+.garden-pinned-leaf{margin:0 0 22px;padding:17px 20px;display:grid;grid-template-columns:160px 1fr auto;gap:8px 22px;align-items:center;border:1px solid var(--line);background:rgba(248,245,237,.42);transition:background .2s ease,border-color .2s ease}.garden-pinned-leaf:hover{background:rgba(125,146,120,.06);border-color:var(--line-strong)}.garden-pinned-leaf>small{grid-row:1/3;color:var(--sage);font-size:7px;letter-spacing:.13em}.garden-pinned-leaf>b{font:400 20px var(--serif);color:var(--ink)}.garden-pinned-leaf>span{color:var(--mist);font-size:8px}.garden-pinned-leaf>i{grid-column:3;grid-row:1/3;color:var(--seal);font:18px var(--serif);font-style:normal}@media(max-width:650px){.garden-pinned-leaf{grid-template-columns:1fr 24px}.garden-pinned-leaf>small,.garden-pinned-leaf>b,.garden-pinned-leaf>span{grid-column:1}.garden-pinned-leaf>i{grid-column:2;grid-row:1/4}}
+.poetry-corridor-entry{margin:10px 0 74px;min-height:150px;padding:22px 26px;display:grid;grid-template-columns:170px 1fr 42px;gap:12px 28px;align-items:center;border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line);background:linear-gradient(90deg,rgba(125,146,120,.045),transparent 58%);transition:background .22s ease}.poetry-corridor-entry:hover{background:linear-gradient(90deg,rgba(125,146,120,.085),rgba(125,146,120,.015) 68%)}.poetry-corridor-entry>span{color:var(--sage);font-size:7px;letter-spacing:.13em}.poetry-corridor-entry>b{font:400 28px var(--serif);color:var(--moss)}.poetry-corridor-entry>p{grid-column:2;max-width:36rem;margin:0;color:var(--ink-soft);font:13px/1.75 var(--serif)}.poetry-corridor-entry>i{grid-column:3;grid-row:1/3;justify-self:end;color:var(--seal);font:20px var(--serif);font-style:normal}@media(max-width:650px){.poetry-corridor-entry{grid-template-columns:1fr 30px}.poetry-corridor-entry>span,.poetry-corridor-entry>b,.poetry-corridor-entry>p{grid-column:1}.poetry-corridor-entry>i{grid-column:2;grid-row:1/4}}
+</style>

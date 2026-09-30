@@ -1,0 +1,87 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HerbDivider from '../components/HerbDivider.astro';
+import PageHerbariumHeader from '../components/PageHerbariumHeader.astro';
+import site from '../data/site.json';
+---
+<BaseLayout title="此刻" description="Rippleshe 最近正在发生的事情。">
+  <div class="shell folio-page now-page-v2">
+    <PageHerbariumHeader
+      eyebrow="Now · 时令札"
+      title="此刻"
+      english="WHAT IS GROWING NOW"
+      variant="hui"
+      folio="CURRENT / RIPPLE"
+      intro="这里只记最近的天气：正在做什么、想着什么，哪几件事还在手边慢慢长。"
+    />
+
+    <HerbDivider label="近况札 · current notes" />
+
+    <section class="now-waterline" aria-labelledby="now-waterline-title">
+      <div class="now-waterline-copy">
+        <p class="eyebrow">The moment you arrived</p>
+        <h2 id="now-waterline-title">你读到这里的时刻</h2>
+        <p>这一小格属于读者。你从哪里来不重要，只记下这一分钟在今天的位置。</p>
+      </div>
+      <div class="now-waterline-clock">
+        <small>LOCAL / NOW</small>
+        <strong id="reader-clock">--:--</strong>
+        <span id="reader-date">----.--.--</span>
+      </div>
+      <div class="now-waterline-meter">
+        <div class="now-waterline-track"><i id="reader-day-progress"></i><b id="reader-day-dot"></b></div>
+        <div class="now-waterline-meta"><span>00:00</span><strong id="reader-day-percent">--%</strong><span>24:00</span></div>
+        <p>今天已经走过 <b id="reader-day-percent-copy">--%</b> · 今年第 <b id="reader-year-day">---</b> 天</p>
+      </div>
+    </section>
+
+    <section class="now-ledger" aria-label="近期状态">
+      {site.now.map((item, index) => (
+        <article class={`now-ledger-item ${index === 0 ? 'now-ledger-featured' : ''}`}>
+          <small>{String(index + 1).padStart(2, '0')} / {item.label}</small>
+          <span class="now-ledger-mark">{index === 0 ? '◇' : index === 1 ? '·' : '⌇'}</span>
+          <h2>{item.title}</h2>
+          <p>{item.note}</p>
+          <footer><span>rippleshe</span><i>ongoing</i></footer>
+        </article>
+      ))}
+    </section>
+
+    <section class="now-weather-note">
+      <div class="now-ripple-seal" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div>
+        <p class="eyebrow">A small weather report</p>
+        <strong id="now-season">此刻仍在生长。</strong>
+        <p>这一页只收眼前的风。再往前的日子，已经在日录里有了自己的页码。</p>
+      </div>
+      <time id="now-date" datetime="">--.--.--</time>
+    </section>
+  </div>
+  <script is:inline>
+    const d = new Date();
+    const m = d.getMonth() + 1;
+    const season = m >= 3 && m <= 5 ? '春日芳菲' : m >= 6 && m <= 8 ? '夏木成荫' : m >= 9 && m <= 11 ? '秋草有香' : '冬枝静默';
+    const date = `${d.getFullYear()}.${String(m).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')}`;
+    const dateNode = document.querySelector('#now-date');
+    dateNode.textContent = date;
+    dateNode.dateTime = `${d.getFullYear()}-${String(m).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+    document.querySelector('#now-season').textContent = `${season}，此刻仍在生长。`;
+
+    const updateReaderMoment = () => {
+      const now = new Date();
+      const minutes = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+      const progress = Math.max(0, Math.min(100, minutes / 1440 * 100));
+      const start = new Date(now.getFullYear(), 0, 0);
+      const yearDay = Math.floor((now.getTime() - start.getTime()) / 86400000);
+      document.querySelector('#reader-clock').textContent = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+      document.querySelector('#reader-date').textContent = `${now.getFullYear()}.${String(now.getMonth()+1).padStart(2,'0')}.${String(now.getDate()).padStart(2,'0')}`;
+      document.querySelector('#reader-day-progress').style.width = `${progress}%`;
+      document.querySelector('#reader-day-dot').style.left = `${progress}%`;
+      document.querySelector('#reader-day-percent').textContent = `${progress.toFixed(1)}%`;
+      document.querySelector('#reader-day-percent-copy').textContent = `${progress.toFixed(1)}%`;
+      document.querySelector('#reader-year-day').textContent = String(yearDay).padStart(3,'0');
+    };
+    updateReaderMoment();
+    setInterval(updateReaderMoment, 30000);
+  </script>
+</BaseLayout>

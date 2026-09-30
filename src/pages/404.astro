@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BotanicalSprig from '../components/BotanicalSprig.astro';
+---
+<BaseLayout title="走错水岸了" description="这里没有这一页。">
+  <div class="shell not-found-page">
+    <BotanicalSprig variant="ruo" class="not-found-herb not-found-herb-a" />
+    <BotanicalSprig variant="hui" class="not-found-herb not-found-herb-b" />
+    <div class="not-found-rings" aria-hidden="true"><i></i><i></i><i></i></div>
+    <p class="eyebrow">404 · lost by the water</p>
+    <h1>走错<br /><em>水岸</em>了。</h1>
+    <p>这一页没有长出来，或者已经顺着水纹漂走了。</p>
+    <div class="not-found-links">
+      <a class="rule-link" href="/">回到首页</a>
+      <a class="rule-link" href="/garden/">去芳洲走走</a>
+    </div>
+    <small>RIPPLE / SHE · MISSING FOLIO 404</small>
+  </div>
+</BaseLayout>

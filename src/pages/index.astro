@@ -1,0 +1,246 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BotanicalSprig from '../components/BotanicalSprig.astro';
+import HerbDivider from '../components/HerbDivider.astro';
+import WorkGlyph from '../components/WorkGlyph.astro';
+import SciPlotPlate from '../components/SciPlotPlate.astro';
+import WatersidePond from '../components/WatersidePond.astro';
+import GardenDrift from '../components/GardenDrift.astro';
+import SeasonalRails from '../components/SeasonalRails.astro';
+import GardenPlan from '../components/GardenPlan.astro';
+import ChuciGlyph from '../components/ChuciGlyph.astro';
+import { getCollection } from 'astro:content';
+import { gardenUrl, titleOf, formatDate } from '../lib/content';
+import { photos, documents, formatLibraryDate } from '../lib/library';
+import site from '../data/site.json';
+
+const entries = (await getCollection('garden', ({ data }) => data.publish))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const latestWords = entries.slice(0, 4);
+const latestPhotos = photos.slice(0, 7);
+const cabinetPhotos = [...photos.filter((item) => item.featured), ...photos.filter((item) => !item.featured)].slice(0, 7);
+const latestDocs = documents.slice(0, 3);
+const memoryPool = [
+  ...entries.map((entry) => ({ type:'word', title:titleOf(entry), kind:entry.data.kind, date:entry.data.date.toISOString(), href:gardenUrl(entry) })),
+  ...photos.map((item) => ({ type:'photo', title:item.title, kind:'影像', date:item.date, href:`/collection/#media-${item.id}`, thumb:item.thumb || item.src })),
+];
+const dev = import.meta.env.DEV;
+---
+<BaseLayout>
+  <div class="shell portal-page">
+    <GardenDrift />
+    <SeasonalRails
+      latestPhoto={latestPhotos[0] ? { title: latestPhotos[0].title, tags: latestPhotos[0].tags } : null}
+      latestWord={latestWords[0] ? { title: titleOf(latestWords[0]), kind: latestWords[0].data.kind, href: gardenUrl(latestWords[0]) } : null}
+      counts={{ words: entries.length, photos: photos.length, docs: documents.length }}
+    />
+
+    <section class="portal-hero" aria-labelledby="portal-title">
+      <div class="portal-copy">
+        <div class="portal-meta-line">
+          <span class="eyebrow">Private garden · Ripple / She</span>
+          <div class="portal-clock"><time id="home-clock">--:--</time><time id="home-today">--.--</time></div>
+        </div>
+        <h1 id="portal-title">Ripple<em>she</em><i>。</i></h1>
+        <div class="portal-manifesto">
+          <p>{site.manifesto.map((line) => <span>{line}</span>)}</p>
+        </div>
+        <div class="portal-actions" aria-label="主要入口">
+          <a class="garden-button garden-button-primary" href="/garden/"><span>01</span><b>走进芳洲</b><small>WORDS</small></a>
+          <a class="garden-button" href="/collection/"><span>02</span><b>翻藏册</b><small>LIGHT & PAPER</small></a>
+          <a class="garden-button" href="/works/"><span>03</span><b>看造物</b><small>MADE THINGS</small></a>
+          <a class="garden-button" href="/scenes/"><span>04</span><b>逛小景</b><small>CURIOUS DESIGNS</small></a>
+        </div>
+        {dev && <a class="portal-owner-studio" href="http://127.0.0.1:4175#record" target="_blank" rel="noreferrer"><span>＋</span><b>添一页</b><small>只在本地出现 · LOCAL STUDIO</small></a>}
+        <div class="portal-season-note">
+          <b id="home-season">岁时</b>
+          <p>风从水面来，草木各有自己的时辰。近来写下的、看见的，先在这里碰一碰面。</p>
+        </div>
+      </div>
+
+      <div class="portal-bouquet" aria-hidden="true">
+        <div class="bouquet-ripple"><i></i><i></i><i></i><i></i></div>
+        <BotanicalSprig variant="lan" class="bouquet-lan" />
+        <BotanicalSprig variant="ruo" class="bouquet-ruo" />
+        <BotanicalSprig variant="hui" class="bouquet-hui" />
+        <ChuciGlyph variant="ruo" compact={true} class="portal-chuci-mark" />
+        <span class="bouquet-label bouquet-label-a">兰芷 / 香草</span>
+        <span class="bouquet-label bouquet-label-b">水纹 / ripple</span>
+        <div class="bouquet-card">
+          <small>GARDEN INDEX</small>
+          <b>{entries.length + photos.length + documents.length}</b>
+          <span>pieces kept</span>
+        </div>
+      </div>
+    </section>
+
+    <GardenPlan />
+
+    <WatersidePond />
+
+    <HerbDivider label="新近所生 · recently added" />
+
+    <section class="portal-latest" aria-labelledby="latest-heading">
+      <div class="portal-section-title">
+        <div><p class="eyebrow">Recent growth</p><h2 id="latest-heading">最近发生</h2></div>
+        <p>近来的字与光，像水面上新起的纹路。先浮在眼前，再慢慢沉进各自的册页。</p>
+      </div>
+      <div class="recent-grid">
+        <div class="recent-words">
+          <div class="recent-column-head"><span>文字 / WORDS</span><a href="/garden/">全部 ↗</a></div>
+          {latestWords.map((entry, index) => (
+            <a class="recent-word" href={gardenUrl(entry)}>
+              <span>{String(index + 1).padStart(2, '0')}</span>
+              <div><small>{entry.data.kind} · {formatDate(entry.data.date)}</small><h3>{titleOf(entry)}</h3>{entry.data.tags.length > 0 && <p>{entry.data.tags.slice(0, 3).join(' · ')}</p>}</div>
+              <i>↗</i>
+            </a>
+          ))}
+        </div>
+        <div class="recent-media">
+          <div class="recent-column-head"><span>影像 / LIGHT</span><a href="/collection/#photo-gallery-title">全部 ↗</a></div>
+          <div class="recent-media-mosaic">
+            {latestPhotos.slice(0, 5).map((item, index) => (
+              <a class={`recent-media-card recent-media-card-${index + 1} media-fit-${item.display || 'cover'}`} href="/collection/#photo-gallery-title">
+                <img src={item.thumb || item.src} alt={item.title} loading={index < 2 ? 'eager' : 'lazy'} />
+                <span><b>{item.title}</b><small>{formatLibraryDate(item.date)}</small></span>
+              </a>
+            ))}
+            {latestPhotos.length === 0 && <div class="recent-empty"><BotanicalSprig variant="ruo" /><p>下一张照片会从这里长出来。</p></div>}
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="portal-memory" id="old-ripples" aria-labelledby="old-ripples-title" hidden>
+      <div class="portal-memory-copy">
+        <p class="eyebrow">Old ripples · calendar memory</p>
+        <h2 id="old-ripples-title">旧日水纹</h2>
+        <p>不按热度，也不猜你喜欢。只让日历偶尔把旧日送回来。</p>
+        <a class="rule-link" href="/life/">沿日录继续往前</a>
+      </div>
+      <div class="portal-memory-list" id="old-ripple-items"></div>
+    </section>
+
+    <section class="portal-now" aria-labelledby="portal-now-title">
+      <div class="portal-now-title"><p class="eyebrow">Now / current weather</p><h2 id="portal-now-title">此刻</h2><a class="rule-link" href="/now/">展开时令札</a></div>
+      <div class="portal-now-list">
+        {site.now.map((item, index) => (
+          <article><span>{String(index + 1).padStart(2, '0')}</span><small>{item.label}</small><h3>{item.title}</h3><p>{item.note}</p></article>
+        ))}
+      </div>
+    </section>
+
+    <HerbDivider label="花间展柜 · collection room" quiet={true} />
+
+    <section class="portal-cabinet" aria-labelledby="cabinet-title">
+      <div class="cabinet-aside">
+        <p class="eyebrow">Collection room</p>
+        <h2 id="cabinet-title">藏册</h2>
+        <p>有些日子适合写下来，有些只留下一束光。它们并肩躺在这里，等下一次翻页。</p>
+        <div class="cabinet-count"><span><b>{photos.length}</b>影像</span><span><b>{documents.length}</b>文档</span></div>
+        <a class="rule-link" href="/collection/">进入藏册</a>
+      </div>
+      <div class="cabinet-flowers">
+        {cabinetPhotos.map((item, index) => (
+          <a class={`cabinet-photo cabinet-photo-${index + 1} media-fit-${item.display || 'cover'}`} href="/collection/#photo-gallery-title"><img src={item.thumb || item.src} alt={item.title} loading="lazy" /><span>{String(index + 1).padStart(2, '0')}</span></a>
+        ))}
+        <BotanicalSprig variant="lan" class="cabinet-sprig-a" />
+        <BotanicalSprig variant="hui" class="cabinet-sprig-b" />
+      </div>
+    </section>
+
+    <section class="portal-work" aria-labelledby="work-title">
+      <div class="portal-work-glyph"><WorkGlyph variant="plot" /></div>
+      <div class="portal-work-copy"><p class="eyebrow">Made things · 造物</p><h2 id="work-title">{site.featuredWork.name}</h2><p>{site.featuredWork.description}</p><a class="rule-link" href={site.featuredWork.href}>打开项目</a></div>
+      <div class="portal-work-figures"><SciPlotPlate /></div>
+    </section>
+
+    {latestDocs.length > 0 && (
+      <section class="portal-docs" aria-labelledby="portal-doc-title">
+        <div><p class="eyebrow">Paper shelf</p><h2 id="portal-doc-title">新收纸页</h2></div>
+        <div>{latestDocs.map((doc, index) => <a href={doc.src} target="_blank" rel="noreferrer"><span>D.{String(index + 1).padStart(2, '0')}</span><b>{doc.title}</b><small>{doc.ext} · {formatLibraryDate(doc.date)}</small><i>↗</i></a>)}</div>
+      </section>
+    )}
+
+    <div class="portal-closing"><BotanicalSprig variant="ruo" /><div><p class="eyebrow">Keep growing</p><strong>水纹一圈圈散开，草木一季季换色。</strong><p>愿每一次路过，都还能捡起一点当时的风、光和心绪。</p></div></div>
+  </div>
+  <script is:inline define:vars={{ memoryPool }}>
+    function paintHomeClock() {
+      const d = new Date();
+      const m = d.getMonth() + 1;
+      const seasons = m >= 3 && m <= 5 ? '春日芳菲' : m >= 6 && m <= 8 ? '夏木成荫' : m >= 9 && m <= 11 ? '秋草有香' : '冬枝静默';
+      const clock = document.querySelector('#home-clock');
+      const today = document.querySelector('#home-today');
+      const season = document.querySelector('#home-season');
+      if (clock) clock.textContent = `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
+      if (today) today.textContent = `${String(m).padStart(2,'0')}.${String(d.getDate()).padStart(2,'0')} / ${d.getFullYear()}`;
+      if (season) season.textContent = seasons;
+    }
+
+    function paintOldRipples() {
+      const now = new Date();
+      const anchor = new Date(2000, now.getMonth(), now.getDate());
+      const candidates = memoryPool.flatMap((item) => {
+        const date = new Date(item.date);
+        if (!Number.isFinite(date.valueOf()) || date.getFullYear() >= now.getFullYear()) return [];
+        const probe = new Date(2000, date.getMonth(), date.getDate());
+        const raw = Math.abs(probe.valueOf() - anchor.valueOf()) / 86400000;
+        const distance = Math.min(raw, 366 - raw);
+        if (distance === 0) return [{ ...item, date, score:0, note:'往年今日' }];
+        if (distance <= 7) return [{ ...item, date, score:10 + distance, note:'旧日近旁' }];
+        if (date.getMonth() === now.getMonth()) return [{ ...item, date, score:30 + Math.abs(date.getDate() - now.getDate()), note:'同月旧页' }];
+        return [];
+      }).sort((a,b) => a.score - b.score || b.date.valueOf() - a.date.valueOf());
+
+      const chosen = [];
+      for (const item of candidates) {
+        if (chosen.length >= 2) break;
+        if (!chosen.some((x) => x.href === item.href)) chosen.push(item);
+      }
+      if (!chosen.length) return;
+
+      const host = document.querySelector('#old-ripple-items');
+      const section = document.querySelector('#old-ripples');
+      chosen.forEach((item) => {
+        const link = document.createElement('a');
+        link.className = 'portal-memory-item';
+        link.href = item.href;
+        if (item.type === 'photo' && item.thumb) {
+          const img = document.createElement('img');
+          img.src = item.thumb;
+          img.alt = '';
+          img.loading = 'lazy';
+          link.appendChild(img);
+        } else {
+          const mark = document.createElement('span');
+          mark.className = 'portal-memory-mark';
+          mark.textContent = '文';
+          link.appendChild(mark);
+        }
+        const copy = document.createElement('span');
+        const small = document.createElement('small');
+        small.textContent = `${item.note} · ${item.date.getFullYear()}.${String(item.date.getMonth()+1).padStart(2,'0')}.${String(item.date.getDate()).padStart(2,'0')}`;
+        const title = document.createElement('b');
+        title.textContent = item.title;
+        const meta = document.createElement('i');
+        meta.textContent = item.kind;
+        copy.append(small, title, meta);
+        link.appendChild(copy);
+        host?.appendChild(link);
+      });
+      if (section instanceof HTMLElement) section.hidden = false;
+    }
+
+    paintHomeClock();
+    paintOldRipples();
+    setInterval(paintHomeClock, 30000);
+  </script>
+  <style is:global>
+    .portal-memory{margin:92px 0 28px;padding:30px 0;border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line);display:grid;grid-template-columns:minmax(220px,.7fr) minmax(0,1.3fr);gap:56px;align-items:start}
+    .portal-memory[hidden]{display:none}.portal-memory-copy h2{margin:6px 0 14px;font:400 clamp(34px,4vw,52px)/1 var(--serif);letter-spacing:-.04em}.portal-memory-copy>p:not(.eyebrow){max-width:26rem;margin:0 0 18px;color:var(--ink-soft);font:14px/1.8 var(--serif)}
+    .portal-memory-list{display:grid;gap:9px}.portal-memory-item{min-height:104px;display:grid;grid-template-columns:112px 1fr;align-items:stretch;border:1px solid var(--line);background:rgba(248,245,237,.3);transition:transform .18s ease,border-color .18s ease}.portal-memory-item:hover{transform:translateY(-1px);border-color:var(--line-strong)}
+    .portal-memory-item img{width:112px;height:100%;min-height:102px;object-fit:cover;filter:saturate(.78) contrast(.98)}.portal-memory-mark{display:grid;place-items:center;border-right:1px solid var(--line);color:var(--moss);font:22px var(--serif)}
+    .portal-memory-item>span:last-child{padding:14px 16px;align-self:center}.portal-memory-item small{display:block;color:var(--sage);font-size:8px;letter-spacing:.07em}.portal-memory-item b{display:block;margin:5px 0 7px;font:400 18px/1.35 var(--serif)}.portal-memory-item i{color:var(--mist);font:normal 9px var(--sans)}
+    @media(max-width:760px){.portal-memory{grid-template-columns:1fr;gap:24px}.portal-memory-item{grid-template-columns:92px 1fr}.portal-memory-item img{width:92px}}
+  </style>
+</BaseLayout>

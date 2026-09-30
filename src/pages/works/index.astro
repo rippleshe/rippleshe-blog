@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WorkGlyph from '../../components/WorkGlyph.astro';
+import RippleMark from '../../components/RippleMark.astro';
+import SciPlotPlate from '../../components/SciPlotPlate.astro';
+import GardenWayfinder from '../../components/GardenWayfinder.astro';
+import ChuciGlyph from '../../components/ChuciGlyph.astro';
+
+const projects = [
+  { no: '01', name: 'SciPlot Academic', desc: '科研绘图工具。把高下限的排版、配色和图表类型收进一个 Python 包。', year: '2026', href: '/works/sciplot/', kind: 'VISUALIZATION', glyph: 'plot' as const },
+  { no: '02', name: 'PanView', desc: '给 Pandoc 做的一层跨平台图形界面，让文档转换不必从背命令开始。', year: '2026', href: 'https://github.com/rippleshe/PanView', kind: 'DESKTOP TOOL', glyph: 'window' as const },
+  { no: '03', name: 'NeteaseDL', desc: '一个小而完整的音乐链接解析与下载 Web 工具。', year: '2026', href: 'https://github.com/rippleshe/NeteaseDL', kind: 'WEB UTILITY', glyph: 'signal' as const },
+  { no: '04', name: 'IM Training Agent', desc: '围绕个性化训练、多智能体协同和可解释验证做的一套系统。', year: '2026', href: 'https://github.com/rippleshe/IM', kind: 'MULTI-AGENT', glyph: 'agents' as const },
+];
+---
+<BaseLayout title="造物" description="Rippleshe 做过的一些东西。">
+  <div class="shell works-page-v2">
+    <header class="works-hero works-hero-v2">
+      <div class="works-title-block">
+        <p class="eyebrow">Things I made · 造物簿</p>
+        <h1>造物</h1>
+        <p class="works-english">SELECTED THINGS BUILT, BROKEN, AND BUILT AGAIN</p>
+      </div>
+      <div class="works-intro-panel">
+        <div class="works-ripple"><RippleMark size={88} /></div>
+        <span>WORKS / 2026</span>
+        <p>有些想法在纸上停一会儿，有些会被我反复拆开、重做，最后真的长成一个可以用的东西。</p>
+        <small>design · code · research · curiosity</small>
+      </div>
+    </header>
+
+    <section class="works-featured" aria-labelledby="featured-work-title">
+      <div class="works-featured-copy">
+        <div class="works-featured-topline"><span>01 / FEATURED</span><i>PYTHON · VISUALIZATION</i></div>
+        <h2 id="featured-work-title">SciPlot<br /><em>Academic</em></h2>
+        <p>把科研绘图里那些“每次都要重新修”的细节，慢慢做成默认就正确的东西。</p>
+        <a class="rule-link" href="/works/sciplot/">进入项目页</a>
+      </div>
+      <div class="works-featured-board">
+        <span class="works-board-code">PLATE / 01</span>
+        <SciPlotPlate />
+        <div class="works-board-grid" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <div class="works-register-head">
+      <span>REGISTER / OTHER WORKS</span>
+      <span>03 ENTRIES</span>
+    </div>
+    <div class="project-list project-list-v2">
+      {projects.slice(1).map((project) => (
+        <a class="project-row project-row-v2" href={project.href}>
+          <span class="project-no">{project.no}</span>
+          <div class="project-glyph-wrap"><WorkGlyph variant={project.glyph} /></div>
+          <div class="project-main">
+            <span class="project-kind">{project.kind}</span>
+            <span class="project-name">{project.name}</span>
+          </div>
+          <span class="project-desc">{project.desc}</span>
+          <span class="project-year">{project.year} ↗</span>
+        </a>
+      ))}
+    </div>
+
+    <section class="works-closing-note">
+      <div class="works-closing-ripple" aria-hidden="true"><i></i><i></i><i></i><ChuciGlyph variant="pepper" compact={true} class="works-chuci-pepper" /></div>
+      <div>
+        <p class="eyebrow">A note on making</p>
+        <strong>我喜欢“做出来”这件事本身。</strong>
+        <p>大的、小的、长期的、偶然的，都有各自的手感。做过一遍，世界上就多了一样原先没有的东西。</p>
+      </div>
+    </section>
+    <GardenWayfinder current="works" />
+  </div>
+</BaseLayout>

@@ -1,0 +1,16 @@
+---
+interface Props {
+  quote: string;
+  source?: string;
+  class?: string;
+}
+const { quote, source = '芳洲摘句', class: className = '' } = Astro.props;
+---
+<aside class={`quote-slip ${className}`}>
+  <span class="quote-slip-pin" aria-hidden="true"></span>
+  <p>{quote}</p>
+  <footer>
+    <span>{source}</span>
+    <i aria-hidden="true">R/S</i>
+  </footer>
+</aside>

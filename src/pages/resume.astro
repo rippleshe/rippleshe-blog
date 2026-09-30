@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HerbDivider from '../components/HerbDivider.astro';
+import PageHerbariumHeader from '../components/PageHerbariumHeader.astro';
+---
+<BaseLayout title="履历" description="Rippleshe 的网页履历。">
+  <div class="shell folio-page resume-page-v2">
+    <PageHerbariumHeader
+      eyebrow="Resume · 履历折页"
+      title="履历"
+      english="A FEW THINGS I HAVE MADE AND LEARNED"
+      variant="ruo"
+      folio="RESUME / WEB EDITION"
+      intro="把一路做过、学过、在意过的事折在一张纸里。如今还轻，往后的页角会慢慢有字。"
+    />
+
+    <HerbDivider label="履历折页 · selected traces" />
+
+    <section class="resume-fold" aria-label="履历结构">
+      <aside class="resume-sidebar">
+        <div class="resume-monogram">R/S</div>
+        <dl>
+          <div><dt>name</dt><dd>Ripple She</dd></div>
+          <div><dt>based</dt><dd>—</dd></div>
+          <div><dt>interests</dt><dd>making · writing · research</dd></div>
+        </dl>
+        <p>这张折页暂且留白几处，像信纸上未落墨的地方。等合适的时候，再把名字与经历认真写上。</p>
+      </aside>
+
+      <div class="resume-main">
+        <section class="resume-section">
+          <span class="resume-section-no">01</span>
+          <div><small>PROFILE</small><h2>喜欢把想法做出来的人</h2><p>软件、科研工具、个人项目与文字记录并行存在。比起把自己压成一个职业标签，我更愿意让做过的东西自己说话。</p></div>
+        </section>
+        <section class="resume-section">
+          <span class="resume-section-no">02</span>
+          <div><small>SELECTED WORK</small><h2>造物</h2><p>SciPlot Academic、PanView、NeteaseDL、IM-Training-Agent……做过的东西各有一页，也各有自己的脾气。</p><a class="rule-link" href="/works/">查看项目</a></div>
+        </section>
+        <section class="resume-section resume-section-open">
+          <span class="resume-section-no">03</span>
+          <div><small>EDUCATION / EXPERIENCE</small><h2>尚未展开的几页</h2><p>教育、比赛、研究与途中遇见的事，等到值得写的时候，再一页页展开。</p></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="resume-print-note">
+      <span>PRINT NOTE</span>
+      <p>若有一天需要把它递给别人，就把这张折页收得更薄一些，只留下最要紧的几行。</p>
+    </section>
+  </div>
+</BaseLayout>

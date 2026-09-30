@@ -1,0 +1,502 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rippleshe · 私人内容台</title>
+<style>
+:root{--paper:#f5f0e5;--paper-soft:#fbf8f0;--paper-deep:#e9e2d3;--ink:#273027;--soft:#687066;--mist:#979b90;--sage:#7e9279;--moss:#405b44;--seal:#8c5145;--line:rgba(60,80,61,.16);--line-strong:rgba(60,80,61,.28);--shadow:0 22px 70px rgba(55,58,45,.07)}
+*{box-sizing:border-box}
+html{background:#eee8dc}
+body{margin:0;min-height:100vh;color:var(--ink);font:14px/1.7 system-ui,"PingFang SC","Microsoft YaHei",sans-serif;background:radial-gradient(circle at 11% -4%,rgba(126,146,121,.16),transparent 30rem),repeating-linear-gradient(0deg,rgba(60,80,61,.012) 0 1px,transparent 1px 5px),linear-gradient(180deg,#faf7ef,#f1eadf 72%,#ece4d6)}
+button,input,select,textarea{font:inherit}button{color:inherit}a{color:inherit;text-decoration:none}
+.wrap{width:min(1180px,calc(100% - 36px));margin:0 auto;padding:40px 0 90px}
+.masthead{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:48px;align-items:end;padding:26px 0 28px;border-bottom:1px solid var(--line-strong)}
+.kicker{color:var(--sage);font-size:9px;letter-spacing:.18em;text-transform:uppercase}
+h1,h2,h3,p{margin-top:0}h1{margin:10px 0 17px;font:400 clamp(54px,8vw,92px)/.9 Georgia,"Songti SC",serif;letter-spacing:-.055em}h1 i{font-style:italic;color:var(--moss)}
+.lead{max-width:45rem;margin:0;color:var(--soft);font:17px/1.85 Georgia,"Songti SC",serif}
+.quick-links{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.quick-links a{padding:8px 11px;border-bottom:1px solid var(--line-strong);color:var(--soft);font:11px Georgia,"Songti SC",serif}
+.summary{display:grid;grid-template-columns:repeat(3,minmax(86px,1fr));gap:1px;margin-top:24px;background:var(--line);border:1px solid var(--line)}.summary div{min-width:104px;padding:13px 14px;background:rgba(249,246,238,.86)}.summary b{display:block;font:400 24px/1 Georgia,"Songti SC",serif;color:var(--moss)}.summary span{color:var(--mist);font-size:8px;letter-spacing:.11em}.release-box{margin-top:10px;padding-top:11px;border-top:1px solid var(--line);display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.release-copy{display:grid;gap:2px}.release-copy b{font:400 12px Georgia,"Songti SC",serif;color:var(--moss)}.release-copy small{color:var(--mist);font-size:8px;line-height:1.45}.release-button{white-space:nowrap}.release-button[disabled]{opacity:.5;cursor:wait}
+.tabs{position:sticky;top:0;z-index:30;display:flex;margin:28px 0 0;border-bottom:1px solid var(--line-strong);background:rgba(245,240,229,.92);backdrop-filter:blur(12px)}
+.tab{border:0;border-bottom:2px solid transparent;background:none;padding:13px 20px 11px;cursor:pointer;color:var(--soft);font:13px Georgia,"Songti SC",serif}.tab[aria-selected="true"]{color:var(--moss);border-bottom-color:var(--moss)}
+.panel{display:none;padding-top:38px}.panel.is-active{display:block}
+.section-head{display:grid;grid-template-columns:1fr minmax(270px,430px);gap:36px;align-items:end;margin-bottom:24px}.section-head h2{margin:5px 0 0;font:400 42px/1 Georgia,"Songti SC",serif;letter-spacing:-.03em}.section-head p{margin:0;color:var(--soft);font-family:Georgia,"Songti SC",serif}
+.record-echo{display:grid;grid-template-columns:92px 1fr auto;gap:18px;align-items:center;margin:-4px 0 18px;padding:13px 15px;border:1px solid var(--line);background:rgba(125,146,120,.045)}.record-echo>time{color:var(--seal);font:italic 12px Georgia,"Songti SC",serif}.record-echo-copy{min-width:0}.record-echo-copy small{display:block;color:var(--sage);font-size:8px;letter-spacing:.1em}.record-echo-copy b{display:block;margin:2px 0 1px;font:400 15px Georgia,"Songti SC",serif}.record-echo-copy p{margin:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--mist);font:9px Georgia,"Songti SC",serif}.record-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(320px,.8fr);gap:18px}
+.sheet{border:1px solid var(--line);background:rgba(250,247,239,.68);box-shadow:0 1px 0 rgba(255,255,255,.65)}
+.sheet-head{display:flex;justify-content:space-between;gap:20px;padding:17px 20px;border-bottom:1px solid var(--line)}.sheet-head b{font:400 20px Georgia,"Songti SC",serif}.sheet-head small{color:var(--mist);font-size:8px;letter-spacing:.1em}
+.note-form{display:grid;grid-template-columns:210px 1fr;min-height:520px}.note-meta{padding:20px;border-right:1px solid var(--line)}.note-paper{display:flex;flex-direction:column;padding:20px;background:repeating-linear-gradient(180deg,transparent 0 37px,rgba(64,91,68,.055) 37px 38px)}
+.field{display:grid;gap:6px;margin-bottom:15px}.field label,.field>span{font-size:8px;letter-spacing:.12em;color:var(--sage);text-transform:uppercase}
+.field input,.field select,.library-row input,.library-row select,.dialog input,.dialog select{width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;padding:8px 2px;color:var(--ink);outline:none}
+.note-paper textarea,.dialog textarea{width:100%;flex:1;min-height:370px;resize:vertical;border:0;outline:none;background:rgba(252,250,244,.62);padding:16px;font:17px/2 Georgia,"Songti SC",serif;color:var(--ink)}
+.checks{display:grid;gap:9px;margin:18px 0;color:var(--soft);font-size:11px}.checks label{display:flex;align-items:center;gap:8px}
+.form-actions{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-top:15px}.form-actions small{color:var(--mist);font-family:Georgia,"Songti SC",serif}
+.primary,.quiet,.danger{border:1px solid var(--moss);background:var(--moss);color:#f8f4ea;padding:9px 15px;cursor:pointer}.quiet{background:transparent;color:var(--moss);border-color:var(--line-strong)}.danger{background:transparent;color:var(--seal);border-color:rgba(140,81,69,.28)}
+.upload-box{padding:20px}.drop{min-height:225px;position:relative;display:grid;place-items:center;text-align:center;padding:28px;border:1px dashed rgba(64,91,68,.34);background:rgba(255,255,255,.26);transition:.18s}.drop.is-over{background:rgba(126,146,121,.11);border-color:var(--moss)}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}.drop-mark{width:62px;height:62px;display:grid;place-items:center;margin:0 auto 15px;border:1px solid var(--line-strong);border-radius:50%;color:var(--seal);font:28px Georgia,serif}
+.drop strong{display:block;font:400 21px Georgia,"Songti SC",serif}.drop small{color:var(--mist)}
+.file-queue{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:13px 0 18px}.file-chip{min-width:0;display:grid;gap:6px;color:var(--soft);font-size:9px}.file-chip img{width:100%;height:74px;object-fit:cover;border:1px solid var(--line);background:var(--paper-deep)}.file-chip span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.upload-meta{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.upload-meta .field.tags{grid-column:1/-1}
+.layout-toolbar{position:sticky;top:47px;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:12px 0;background:rgba(245,240,229,.94);border-bottom:1px solid var(--line);backdrop-filter:blur(12px)}.layout-toolbar p{margin:0;color:var(--soft);font-family:Georgia,"Songti SC",serif}.layout-actions{display:flex;gap:8px}
+.layout-board{display:grid;grid-template-columns:repeat(12,1fr);grid-auto-flow:dense;gap:12px;padding:24px 0 12px;align-items:start}
+.layout-card{grid-column:span 4;min-width:0;position:relative;border:1px solid transparent;padding:5px 5px 9px;background:rgba(250,247,239,.45);cursor:grab;transition:opacity .16s,border-color .16s,transform .16s}.layout-card:hover{border-color:var(--line-strong)}.layout-card.is-dragging{opacity:.32;transform:scale(.985)}
+.layout-card[data-size="narrow"]{grid-column:span 3}.layout-card[data-size="standard"]{grid-column:span 4}.layout-card[data-size="wide"]{grid-column:span 5}.layout-card[data-size="hero"]{grid-column:span 8}
+.layout-image{position:relative;background:var(--paper-deep);overflow:hidden}.layout-image img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;filter:saturate(.82)}.layout-card[data-display="contain"] .layout-image img{object-fit:contain;background:var(--paper-soft)}.layout-card[data-ratio="portrait"] .layout-image img{aspect-ratio:4/5}.layout-card[data-ratio="square"] .layout-image img{aspect-ratio:1/1}.layout-card[data-ratio="landscape"] .layout-image img{aspect-ratio:4/3}.layout-card[data-ratio="cinematic"] .layout-image img{aspect-ratio:16/9}
+.layout-grip{position:absolute;left:8px;top:8px;padding:4px 7px;background:rgba(248,245,237,.9);color:var(--moss);font-size:10px;letter-spacing:.06em}.layout-private{position:absolute;right:8px;top:8px;padding:4px 7px;background:rgba(140,81,69,.86);color:#faf6ed;font-size:9px;letter-spacing:.08em}.layout-card.is-private{opacity:.82}
+.layout-card h3{margin:9px 2px 7px;font:400 14px/1.4 Georgia,"Songti SC",serif}.control-set{display:grid;grid-template-columns:32px 1fr;align-items:center;gap:5px;margin-top:3px}.control-set>small{color:var(--mist);font-size:8px;letter-spacing:.08em}.size-row{display:flex;gap:5px;flex-wrap:wrap}.size-row button{border:0;border-bottom:1px solid var(--line);background:none;padding:4px 6px;color:var(--mist);font-size:10px;cursor:pointer}.size-row button.is-on{color:var(--seal);border-bottom-color:var(--seal)}
+.dirty{color:var(--seal)!important}
+.folio-shelf{margin:0 0 30px;border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line)}.folio-shelf-head{display:flex;justify-content:space-between;gap:20px;align-items:end;padding:15px 0}.folio-shelf-head h3{margin:0;font:400 28px Georgia,"Songti SC",serif}.folio-shelf-head p{margin:0;color:var(--mist);font:11px Georgia,"Songti SC",serif}.folio-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;padding:0 0 16px}.folio-card{min-width:0;padding:14px;border:1px solid var(--line);background:rgba(250,247,239,.42)}.folio-card small{color:var(--seal);font-size:8px}.folio-card b{display:block;margin:5px 0 7px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:400 17px Georgia,"Songti SC",serif}.folio-card p{margin:0 0 10px;color:var(--mist);font-size:9px;line-height:1.6}.folio-card-actions{display:flex;gap:7px}.folio-hints{display:flex;gap:8px;flex-wrap:wrap;padding:0 0 16px}.folio-hints:empty{display:none}.folio-hint{border:1px solid var(--line);background:transparent;padding:7px 10px;color:var(--soft);font:10px Georgia,"Songti SC",serif;cursor:pointer}.folio-hint:hover{border-color:var(--line-strong);color:var(--moss)}.folio-hint b{color:var(--seal);font-weight:400}.folio-builder{position:sticky;top:48px;z-index:24;margin:0 0 20px;padding:11px 14px;display:flex;justify-content:space-between;align-items:center;gap:16px;border:1px solid var(--line-strong);background:rgba(247,243,233,.96);box-shadow:0 12px 34px rgba(55,58,45,.05);backdrop-filter:blur(10px)}.folio-builder[hidden]{display:none}.folio-builder b{font:400 14px Georgia,"Songti SC",serif}.folio-builder small{color:var(--mist);font-size:9px}.pick-button.is-on{color:var(--seal);border-bottom-color:var(--seal)}.folio-compose-list{display:grid;gap:7px;margin:10px 0 0}.folio-compose-item{display:grid;grid-template-columns:26px 1fr auto;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid var(--line)}.folio-compose-item small{color:var(--mist);font-size:8px}.folio-compose-item b{font:400 13px Georgia,"Songti SC",serif}.folio-compose-move{display:flex;gap:4px}.organize-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px}.organize-pane{min-width:0;border-top:1px solid var(--line-strong)}
+.pane-head{display:flex;justify-content:space-between;align-items:end;gap:16px;padding:18px 0 13px;border-bottom:1px solid var(--line)}.pane-head h3{margin:0;font:400 28px Georgia,"Songti SC",serif}.pane-head h3 small{margin-left:7px;color:var(--mist);font:9px system-ui,sans-serif}.pane-head input{width:min(220px,48%);border:0;border-bottom:1px solid var(--line);background:transparent;padding:7px 2px;outline:none}
+.note-list,.library-list{display:grid}.note-row{display:grid;grid-template-columns:78px minmax(0,1fr) auto;gap:14px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}.note-row>div:nth-child(2){min-width:0}.note-row time{color:var(--mist);font-size:9px}.note-row b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:400 15px Georgia,"Songti SC",serif}.note-row p{margin:2px 0 0;color:var(--mist);font-size:9px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.note-row small{color:var(--sage);font-size:8px}
+.row-actions{display:flex;gap:6px}.icon-button{border:0;border-bottom:1px solid var(--line);background:none;padding:5px 6px;cursor:pointer;color:var(--soft);font-size:9px}
+.library-row{display:grid;grid-template-columns:72px 1fr;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}.library-thumb{width:72px;height:92px;display:grid;place-items:center;overflow:hidden;background:var(--paper-deep);color:var(--moss);font:12px Georgia,serif}.library-thumb img{width:100%;height:100%;object-fit:cover}
+.library-edit{min-width:0;display:grid;gap:6px}.library-line{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}.library-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap}.library-actions label{display:flex;gap:5px;align-items:center;color:var(--mist);font-size:9px}.library-actions .danger{margin-left:auto}
+.empty{padding:34px 0;color:var(--mist);font:16px Georgia,"Songti SC",serif}.more-row{padding:14px 0;text-align:center;border-bottom:1px solid var(--line)}.more-row button{border:0;border-bottom:1px solid var(--line-strong);background:none;color:var(--moss);padding:5px 9px;font:10px Georgia,"Songti SC",serif;cursor:pointer}
+.toast{position:fixed;right:24px;bottom:22px;z-index:80;max-width:min(430px,calc(100vw - 48px));padding:12px 16px;border:1px solid var(--line-strong);background:rgba(250,247,239,.96);box-shadow:var(--shadow);color:var(--soft);font:13px Georgia,"Songti SC",serif;opacity:0;transform:translateY(8px);pointer-events:none;transition:.2s}.toast.show{opacity:1;transform:none}.toast.error{color:var(--seal)}
+.dialog{width:min(880px,calc(100% - 30px));max-height:92vh;border:1px solid var(--line-strong);padding:0;background:var(--paper-soft);color:var(--ink);box-shadow:0 30px 90px rgba(36,43,35,.18)}.dialog::backdrop{background:rgba(35,42,34,.2);backdrop-filter:blur(3px)}
+.dialog-head{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--line)}.dialog-head h3{margin:0;font:400 25px Georgia,"Songti SC",serif}.dialog-close{border:0;background:none;cursor:pointer;color:var(--soft)}
+.dialog-body{display:grid;grid-template-columns:200px 1fr;min-height:560px}.dialog-meta{padding:20px;border-right:1px solid var(--line)}.dialog-paper{display:flex;flex-direction:column;padding:20px}.dialog-paper textarea{min-height:430px}.dialog-foot{display:flex;justify-content:space-between;gap:10px;margin-top:14px}
+@media(max-width:860px){.masthead,.section-head,.record-grid,.organize-grid{grid-template-columns:1fr}.folio-list{grid-template-columns:1fr 1fr}.quick-links{justify-content:flex-start}.summary{width:min(100%,420px)}.note-form{grid-template-columns:1fr}.note-meta{border-right:0;border-bottom:1px solid var(--line)}.layout-card[data-size]{grid-column:span 6}.layout-card[data-size="hero"]{grid-column:1/-1}.dialog-body{grid-template-columns:1fr}.dialog-meta{border-right:0;border-bottom:1px solid var(--line)}}
+@media(max-width:560px){.wrap{width:min(100% - 22px,1180px);padding-top:18px}.record-echo{grid-template-columns:1fr;gap:7px}.record-echo button{justify-self:start}.folio-list{grid-template-columns:1fr}.folio-builder{top:46px;align-items:flex-start;flex-direction:column}.folio-builder .row-actions{width:100%;justify-content:flex-end}.tabs{overflow:auto}.tab{padding-inline:14px;white-space:nowrap}.summary{grid-template-columns:repeat(3,1fr)}.summary div{min-width:0}.upload-meta{grid-template-columns:1fr}.upload-meta .field.tags{grid-column:auto}.file-queue{grid-template-columns:repeat(2,1fr)}.layout-board{grid-template-columns:1fr 1fr}.layout-card[data-size]{grid-column:auto}.layout-card[data-size="wide"],.layout-card[data-size="hero"]{grid-column:1/-1}.note-row{grid-template-columns:60px 1fr}.note-row .row-actions{grid-column:2}.library-row{grid-template-columns:58px 1fr}.library-thumb{width:58px;height:76px}.library-line{grid-template-columns:1fr}.dialog-paper textarea{min-height:320px}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<header class="masthead">
+<div><div class="kicker">private desk · local only · rippleshe</div><h1>拾页<i>。</i></h1><p class="lead">不是后台，也不是仪表盘。这里只做三件事：把东西留下来，把画面排成你想要的样子，再把旧东西慢慢整理好。</p></div>
+<div><nav class="quick-links" aria-label="本地预览"><a href="http://127.0.0.1:4173/" target="_blank">看网站 ↗</a><a href="http://127.0.0.1:4173/collection/" target="_blank">看藏册 ↗</a><a href="http://127.0.0.1:4173/garden/" target="_blank">看芳洲 ↗</a></nav>
+<div class="summary"><div><b id="count-notes">–</b><span>文字</span></div><div><b id="count-photos">–</b><span>影像</span></div><div><b id="count-docs">–</b><span>文档</span></div></div><div class="release-box"><div class="release-copy"><b id="release-title">线上是 rippleshe.cyou</b><small id="release-state">发布会先构建、审计，再推送到 EdgeOne。</small></div><button class="quiet release-button" id="publish-site" type="button">把这一轮送出去</button></div></div>
+</header>
+<nav class="tabs" aria-label="内容台"><button class="tab" type="button" data-tab="record" aria-selected="true">记录</button><button class="tab" type="button" data-tab="layout" aria-selected="false">编排</button><button class="tab" type="button" data-tab="organize" aria-selected="false">整理</button></nav>
+<section class="panel is-active" data-panel="record">
+<div class="section-head"><div><div class="kicker">capture first · friction later</div><h2>先留下来</h2></div><p>一段字、一首诗、一张照片都应该在几十秒内收进去。是否精选、怎么陈列，可以之后再慢慢决定。</p></div>
+<div class="record-echo" id="record-echo"><time id="record-echo-date"></time><div class="record-echo-copy"><small>DATE MEMORY · 这一日</small><b id="record-echo-title">正在翻这一天的旧页</b><p id="record-echo-detail"></p></div><button class="quiet" id="record-echo-gather" type="button" hidden>去整理</button></div>
+<div class="record-grid">
+<section class="sheet">
+<div class="sheet-head"><b>写一笺</b><small>MARKDOWN · 芳洲</small></div>
+<form class="note-form" id="note-create-form">
+<div class="note-meta">
+<div class="field"><label>日期</label><input name="date" type="date"></div>
+<div class="field"><label>标题</label><input name="title" type="text" placeholder="写一个能认出来的名字"></div>
+<div class="field"><label>是什么</label><select name="kind"><option>小札</option><option>诗</option><option>词</option><option>短文</option><option>信</option><option>摘记</option></select></div>
+<div class="field"><label>标签</label><input name="tags" type="text" placeholder="夜晚, 花草, 散步"></div>
+<div class="checks"><label><input name="publish" type="checkbox" checked> 收进去后公开</label><label><input name="featured" type="checkbox"> 留在芳洲卷首</label></div>
+</div>
+<div class="note-paper"><textarea name="body" placeholder="写在这里。短到一句也可以，长到一封信也可以。"></textarea><div class="form-actions"><small>保存后仍可在“整理”里继续改。</small><button class="primary" type="submit">收入芳洲</button></div></div>
+</form>
+</section>
+<section class="sheet">
+<div class="sheet-head"><b>收一页</b><small>IMAGE · DOCUMENT</small></div>
+<form id="upload-form" class="upload-box">
+<label class="drop" id="drop-zone"><input id="file-input" name="files" type="file" multiple accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,.md,.zip"><div><div class="drop-mark">＋</div><strong>拖进来，或点这里</strong><small>图片自动转 WebP、去 EXIF，并生成缩略图。</small></div></label>
+<div class="file-queue" id="file-queue"></div>
+<div class="upload-meta"><div class="field"><label>日期</label><input name="date" type="date"></div><div class="field"><label>单文件标题</label><input name="title" type="text" placeholder="多文件时用各自文件名"></div><div class="field tags"><label>共同标签</label><input name="tags" type="text" placeholder="朋友, 夜晚, 随手拍"></div><div class="field"><label>图片呈现</label><select name="display"><option value="cover">照片 · 适度裁切</option><option value="contain">纸页 · 完整保留</option></select></div></div>
+<div class="checks"><label><input name="publish" type="checkbox" checked> 收入后在站内展示</label><label><input name="featured" type="checkbox"> 放进首页展柜</label></div>
+<div class="form-actions"><small id="upload-hint">还没有选择文件。</small><button class="primary" type="submit" disabled>收入藏册</button></div>
+</form>
+</section>
+</div>
+</section>
+<section class="panel" data-panel="layout">
+<div class="section-head"><div><div class="kicker">curate the light cabinet</div><h2>把画廊排成自己的样子</h2></div><p>拖动卡片改变顺序；“窄 / 常 / 宽 / 主”决定它在桌面画廊里的分量。手机端会自动收束，不需要单独维护第二套布局。</p></div>
+<div class="layout-toolbar"><p id="layout-state">当前编排尚未改动。</p><div class="layout-actions"><button class="quiet" id="layout-by-date" type="button">按日期重排</button><button class="primary" id="save-layout" type="button">保存编排</button></div></div>
+<div class="layout-board" id="layout-board"></div>
+</section>
+<section class="panel" data-panel="organize">
+<div class="section-head"><div><div class="kicker">return and revise</div><h2>旧东西也能继续长</h2></div><p>文字不是发出去就封存；照片也不该因为进了库就再也碰不到。这里负责改、找、撤下和回看。</p></div>
+<section class="folio-shelf">
+<div class="folio-shelf-head"><div><div class="kicker">bound memories</div><h3>册页</h3></div><p>不复制内容，只把真正属于同一段经历的东西装订在一起。</p></div>
+<div class="folio-list" id="folio-list"></div>
+<div class="folio-hints" id="folio-hints"></div>
+</section>
+<div class="folio-builder" id="folio-builder" hidden><div><b id="folio-selected-count">已选 0 项</b><small>按你点选的顺序装订，之后还能上下调整。</small></div><div class="row-actions"><button class="quiet" id="folio-clear" type="button">清空</button><button class="primary" id="folio-create" type="button">收成一页</button></div></div>
+<div class="organize-grid">
+<section class="organize-pane"><div class="pane-head"><h3>文字 <small id="note-count"></small></h3><input id="note-search" type="search" placeholder="搜标题、标签、正文"></div><div class="note-list" id="note-list"></div></section>
+<section class="organize-pane"><div class="pane-head"><h3>素材 <small id="media-count"></small></h3><input id="media-search" type="search" placeholder="搜标题、标签"></div><div class="library-list" id="library-list"></div></section>
+</div>
+</section>
+</main>
+<dialog class="dialog" id="note-dialog">
+<form method="dialog" id="note-edit-form">
+<div class="dialog-head"><h3>继续写这页</h3><button class="dialog-close" value="cancel" aria-label="关闭">关闭 ×</button></div>
+<div class="dialog-body">
+<div class="dialog-meta">
+<input name="id" type="hidden">
+<div class="field"><label>日期</label><input name="date" type="date"></div>
+<div class="field"><label>标题</label><input name="title" type="text"></div>
+<div class="field"><label>是什么</label><select name="kind"><option>小札</option><option>诗</option><option>词</option><option>短文</option><option>信</option><option>摘记</option></select></div>
+<div class="field"><label>标签</label><input name="tags" type="text"></div>
+<div class="checks"><label><input name="publish" type="checkbox"> 公开</label><label><input name="featured" type="checkbox"> 留在芳洲卷首</label></div>
+</div>
+<div class="dialog-paper"><textarea name="body"></textarea><div class="dialog-foot"><button class="danger" id="delete-note" type="button">移出这篇文字</button><button class="primary" type="submit">保存修改</button></div></div>
+</div>
+</form>
+</dialog>
+<dialog class="dialog" id="folio-dialog">
+<form method="dialog" id="folio-form">
+<div class="dialog-head"><h3 id="folio-dialog-title">收成一页</h3><button class="dialog-close" value="cancel" aria-label="关闭">关闭 ×</button></div>
+<div class="dialog-body">
+<div class="dialog-meta">
+<input name="id" type="hidden">
+<div class="field"><label>日期</label><input name="date" type="date"></div>
+<div class="field"><label>册页名字</label><input name="title" type="text" placeholder="不是分类名，是这一段记忆的名字"></div>
+<div class="checks"><label><input name="publish" type="checkbox" checked> 在日录中展示</label></div>
+</div>
+<div class="dialog-paper">
+<div class="field"><label>引子</label><textarea name="intro" style="min-height:120px" placeholder="留一两句话就够了。为什么这些东西属于同一页？"></textarea></div>
+<div class="field"><label>装订顺序</label><div class="folio-compose-list" id="folio-compose-list"></div></div>
+<div class="dialog-foot"><button class="danger" id="folio-delete" type="button" hidden>拆掉这张册页</button><button class="primary" type="submit">保存册页</button></div>
+</div>
+</div>
+</form>
+</dialog>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+var state={library:{items:[]},notes:[],folios:{folios:[]},selected:[],folioHints:[],echoDate:'',echoFree:[],noteLimit:12,mediaLimit:8,layoutDirty:false};
+var fallbackSizes=['wide','narrow','standard','narrow','wide','standard','standard'];
+var sizeNames={narrow:'窄',standard:'常',wide:'宽',hero:'主'};
+var ratioNames={portrait:'竖',square:'方',landscape:'横',cinematic:'阔'};
+var today=new Date().toISOString().slice(0,10);
+var toastTimer=0;
+function esc(value){return String(value==null?'':value).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function tags(value){return String(value||'').split(/[,，]/).map(function(x){return x.trim()}).filter(Boolean)}
+async function request(url,options){var res=await fetch(url,options);var data=await res.json().catch(function(){return {}});if(!res.ok)throw new Error(data.error||'操作没有完成');return data}
+function toast(message,error){var el=document.querySelector('#toast');el.textContent=message;el.className='toast show'+(error?' error':'');clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.className='toast'},2600)}
+function setToday(){document.querySelectorAll('input[type=date]').forEach(function(input){if(!input.value)input.value=today})}
+function setTab(name,updateHash){document.querySelectorAll('[data-tab]').forEach(function(btn){btn.setAttribute('aria-selected',String(btn.dataset.tab===name))});document.querySelectorAll('[data-panel]').forEach(function(panel){panel.classList.toggle('is-active',panel.dataset.panel===name)});if(updateHash!==false&&location.hash!=='#'+name)history.replaceState(null,'','#'+name)}
+document.querySelectorAll('[data-tab]').forEach(function(btn){btn.addEventListener('click',function(){setTab(btn.dataset.tab)})});
+var releaseButton=document.querySelector('#publish-site');
+var releaseTitle=document.querySelector('#release-title');
+var releaseState=document.querySelector('#release-state');
+var releasePoll=0;
+function paintRelease(job){
+var status=job&&job.status||'idle';
+releaseButton.disabled=status==='running';
+releaseButton.textContent=status==='running'?'正在送出去…':status==='success'?'再发布一次':'把这一轮送出去';
+if(status==='running'){releaseTitle.textContent='正在发布到 rippleshe.cyou';releaseState.textContent='构建、审计和 EdgeOne 部署正在进行，通常需要一分多钟。';}
+else if(status==='success'){releaseTitle.textContent='这一轮已经在线';releaseState.innerHTML='已通过公网验收 · <a href="https://rippleshe.cyou/" target="_blank">打开 rippleshe.cyou ↗</a>';}
+else if(status==='failed'){releaseTitle.textContent='这次没有发布成功';releaseState.textContent=(job.lines&&job.lines.slice(-1)[0])||'可以检查最后一段发布日志后再试。';}
+else{releaseTitle.textContent='线上是 rippleshe.cyou';releaseState.textContent='发布会先构建、审计，再推送到 EdgeOne。';}
+}
+async function refreshRelease(){try{var job=await request('/api/release');paintRelease(job);if(job.status==='running'){clearTimeout(releasePoll);releasePoll=setTimeout(refreshRelease,1800)}}catch{}}
+releaseButton.addEventListener('click',async function(){
+if(!confirm('把当前内容与页面发布到 https://rippleshe.cyou/ ？\n会先执行完整构建与公网验收。'))return;
+try{var job=await request('/api/release',{method:'POST'});paintRelease(job);refreshRelease();}catch(error){toast(error.message,true);refreshRelease()}
+});
+function paintRecordEcho(date){
+date=date||today;state.echoDate=date;
+var items=[];
+state.notes.filter(function(note){return note.publish&&note.date===date}).forEach(function(note){items.push({source:'garden',ref:noteRef(note.id),title:note.title,type:note.kind})});
+state.library.items.filter(function(item){return item.publish!==false&&String(item.date).slice(0,10)===date}).forEach(function(item){items.push({source:'library',ref:item.id,title:item.title,type:item.type==='photo'?'影像':'文档'})});
+state.echoFree=items.filter(function(item){return !boundFolioFor(item.source,item.ref)});
+document.querySelector('#record-echo-date').textContent=date.replaceAll('-','.');
+var title=document.querySelector('#record-echo-title'),detail=document.querySelector('#record-echo-detail'),button=document.querySelector('#record-echo-gather');
+if(!items.length){title.textContent='这一日还没有别的页。';detail.textContent='继续留下来就好，关系可以以后再整理。';button.hidden=true;return}
+title.textContent='这一日已经留下 '+items.length+' 项';
+var names=items.slice(0,3).map(function(item){return item.title}).join(' · ');
+var bound=items.length-state.echoFree.length;
+detail.textContent=names+(items.length>3?' · …':'')+(bound?' · '+bound+' 项已经入册':'');
+button.hidden=state.echoFree.length<2;
+button.textContent=state.echoFree.length>=2?('选中 '+state.echoFree.length+' 项'):'去整理';
+}
+document.querySelector('#record-echo-gather').addEventListener('click',function(){
+if(state.echoFree.length<2)return;
+state.selected=state.echoFree.map(function(item){return {source:item.source,ref:item.ref}});
+setTab('organize');renderNotes();renderLibrary();paintFolioBuilder();
+document.querySelector('#folio-builder').scrollIntoView({behavior:'smooth',block:'center'});
+toast('已经把这一天尚未入册的内容选出来。');
+});
+async function loadAll(){
+var results=await Promise.all([request('/api/library'),request('/api/notes'),request('/api/folios')]);
+state.library=results[0];state.notes=results[1].notes||[];state.folios=results[2]||{folios:[]};
+document.querySelector('#count-notes').textContent=state.notes.length;
+document.querySelector('#count-photos').textContent=state.library.items.filter(function(x){return x.type==='photo'}).length;
+document.querySelector('#count-docs').textContent=state.library.items.filter(function(x){return x.type==='document'}).length;
+renderLayout();renderNotes();renderLibrary();renderFolios();paintFolioBuilder();paintRecordEcho(state.echoDate||today);
+}
+var noteCreate=document.querySelector('#note-create-form');
+var noteDraftKey='rippleshe:note-draft';
+var draftTimer=0;
+function saveNoteDraft(){
+clearTimeout(draftTimer);
+draftTimer=setTimeout(function(){
+var data=new FormData(noteCreate);
+var draft={date:data.get('date'),title:data.get('title'),kind:data.get('kind'),tags:data.get('tags'),publish:data.get('publish')==='on',featured:data.get('featured')==='on',body:data.get('body')};
+if(String(draft.body||'').trim()||String(draft.title||'').trim())localStorage.setItem(noteDraftKey,JSON.stringify(draft));
+else localStorage.removeItem(noteDraftKey);
+},250);
+}
+try{
+var savedDraft=JSON.parse(localStorage.getItem(noteDraftKey)||'null');
+if(savedDraft){
+['date','title','kind','tags','body'].forEach(function(key){if(savedDraft[key]!=null&&noteCreate.elements[key])noteCreate.elements[key].value=savedDraft[key]});
+noteCreate.elements.publish.checked=savedDraft.publish!==false;
+noteCreate.elements.featured.checked=Boolean(savedDraft.featured);
+}
+}catch{}
+noteCreate.addEventListener('input',saveNoteDraft);
+noteCreate.addEventListener('change',saveNoteDraft);
+noteCreate.addEventListener('submit',async function(event){
+event.preventDefault();var button=noteCreate.querySelector('button[type=submit]');var data=new FormData(noteCreate);button.disabled=true;button.textContent='正在收入…';
+try{await request('/api/note',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({date:data.get('date'),title:data.get('title'),kind:data.get('kind'),tags:tags(data.get('tags')),publish:data.get('publish')==='on',featured:data.get('featured')==='on',body:data.get('body')})});localStorage.removeItem(noteDraftKey);noteCreate.reset();setToday();noteCreate.querySelector('[name=publish]').checked=true;await loadAll();toast('已经收入芳洲。')}
+catch(error){toast(error.message,true)}finally{button.disabled=false;button.textContent='收入芳洲'}
+});
+var fileInput=document.querySelector('#file-input');
+var fileQueue=document.querySelector('#file-queue');
+var uploadForm=document.querySelector('#upload-form');
+var uploadButton=uploadForm.querySelector('button[type=submit]');
+[noteCreate.elements.date,uploadForm.elements.date].forEach(function(input){
+input.addEventListener('focus',function(){paintRecordEcho(input.value||today)});
+input.addEventListener('change',function(){paintRecordEcho(input.value||today)});
+});
+function paintFiles(){
+var list=Array.from(fileInput.files||[]);
+uploadButton.disabled=!list.length;
+document.querySelector('#upload-hint').textContent=list.length?('准备收入 '+list.length+' 项。'):'还没有选择文件。';
+fileQueue.innerHTML='';
+list.forEach(function(file){
+var chip=document.createElement('div');chip.className='file-chip';
+if(file.type&&file.type.startsWith('image/')){
+var img=document.createElement('img');img.src=URL.createObjectURL(file);img.onload=function(){URL.revokeObjectURL(img.src)};chip.appendChild(img);
+}else{
+var mark=document.createElement('div');mark.className='library-thumb';mark.textContent=(file.name.split('.').pop()||'FILE').toUpperCase();chip.appendChild(mark);
+}
+var name=document.createElement('span');name.textContent=file.name;chip.appendChild(name);fileQueue.appendChild(chip);
+});
+}
+fileInput.addEventListener('change',paintFiles);
+var drop=document.querySelector('#drop-zone');
+['dragenter','dragover'].forEach(function(name){drop.addEventListener(name,function(){drop.classList.add('is-over')})});
+['dragleave','drop'].forEach(function(name){drop.addEventListener(name,function(){drop.classList.remove('is-over')})});
+uploadForm.addEventListener('submit',async function(event){
+event.preventDefault();uploadButton.disabled=true;uploadButton.textContent='正在收入…';
+try{var result=await request('/upload',{method:'POST',body:new FormData(uploadForm)});uploadForm.reset();fileQueue.innerHTML='';setToday();paintFiles();await loadAll();toast(result.message||'已经收入藏册。');}
+catch(error){toast(error.message,true)}finally{uploadButton.textContent='收入藏册';uploadButton.disabled=!fileInput.files.length}
+});
+function sortedPhotos(){
+return state.library.items.filter(function(x){return x.type==='photo'}).sort(function(a,b){
+var ao=Number.isFinite(a.galleryOrder)?a.galleryOrder:Number.MAX_SAFE_INTEGER;
+var bo=Number.isFinite(b.galleryOrder)?b.galleryOrder:Number.MAX_SAFE_INTEGER;
+return ao-bo||new Date(b.date)-new Date(a.date);
+});
+}
+function naturalRatio(item){var ratio=item.width&&item.height?item.width/item.height:1;return ratio>1.8?'cinematic':ratio>1.12?'landscape':ratio<.82?'portrait':'square'}
+function renderLayout(){
+var board=document.querySelector('#layout-board');
+var photos=sortedPhotos();
+board.innerHTML=photos.length?photos.map(function(item,index){
+var size=item.gallerySize||fallbackSizes[index%fallbackSizes.length];
+var ratio=item.galleryRatio||naturalRatio(item);
+return '<article class="layout-card'+(item.publish===false?' is-private':'')+'" draggable="true" data-id="'+esc(item.id)+'" data-size="'+esc(size)+'" data-ratio="'+esc(ratio)+'" data-display="'+esc(item.display||'cover')+'">'+
+'<div class="layout-image"><img src="/preview'+esc(item.thumb||item.src)+'" alt=""><span class="layout-grip">⋮⋮ 拖动</span>'+(item.publish===false?'<span class="layout-private">未展示</span>':'')+'</div>'+
+'<h3>'+esc(item.title)+'</h3>'+
+'<div class="control-set"><small>格幅</small><div class="size-row">'+['narrow','standard','wide','hero'].map(function(key){return '<button type="button" data-size-pick="'+key+'" class="'+(size===key?'is-on':'')+'">'+sizeNames[key]+'</button>'}).join('')+'</div></div>'+
+'<div class="control-set"><small>画幅</small><div class="size-row">'+['portrait','square','landscape','cinematic'].map(function(key){return '<button type="button" data-ratio-pick="'+key+'" class="'+(ratio===key?'is-on':'')+'">'+ratioNames[key]+'</button>'}).join('')+'</div></div>'+
+'</article>';
+}).join(''):'<div class="empty">还没有照片。先去“记录”收一张。</div>';
+state.layoutDirty=false;paintLayoutState();
+}
+function paintLayoutState(){
+var el=document.querySelector('#layout-state');
+el.textContent=state.layoutDirty?'有尚未保存的编排。':'当前编排已经保存。';
+el.classList.toggle('dirty',state.layoutDirty);
+}
+var board=document.querySelector('#layout-board');
+board.addEventListener('click',function(event){
+var sizeButton=event.target.closest('[data-size-pick]');
+var ratioButton=event.target.closest('[data-ratio-pick]');
+var button=sizeButton||ratioButton;if(!button)return;
+var card=button.closest('.layout-card');
+if(sizeButton){card.dataset.size=sizeButton.dataset.sizePick;card.querySelectorAll('[data-size-pick]').forEach(function(x){x.classList.toggle('is-on',x===sizeButton)})}
+if(ratioButton){card.dataset.ratio=ratioButton.dataset.ratioPick;card.querySelectorAll('[data-ratio-pick]').forEach(function(x){x.classList.toggle('is-on',x===ratioButton)})}
+state.layoutDirty=true;paintLayoutState();
+});
+board.addEventListener('dragstart',function(event){
+var card=event.target.closest('.layout-card');if(!card)return;
+card.classList.add('is-dragging');event.dataTransfer.effectAllowed='move';
+});
+board.addEventListener('dragend',function(event){
+var card=event.target.closest('.layout-card');if(card)card.classList.remove('is-dragging');
+});
+board.addEventListener('dragover',function(event){
+event.preventDefault();
+var dragging=board.querySelector('.is-dragging');if(!dragging)return;
+var cards=Array.from(board.querySelectorAll('.layout-card:not(.is-dragging)'));
+var target=cards.reduce(function(best,card){var r=card.getBoundingClientRect();var dx=event.clientX-(r.left+r.width/2);var dy=event.clientY-(r.top+r.height/2);var score=dx*dx+dy*dy;return !best||score<best.score?{card:card,rect:r,score:score}:best},null);
+if(!target)return;
+var horizontal=Math.abs(event.clientY-(target.rect.top+target.rect.height/2))<target.rect.height*.34;
+var after=horizontal?event.clientX>target.rect.left+target.rect.width/2:event.clientY>target.rect.top+target.rect.height/2;
+target.card.parentNode.insertBefore(dragging,after?target.card.nextSibling:target.card);
+state.layoutDirty=true;paintLayoutState();
+});
+document.querySelector('#layout-by-date').addEventListener('click',function(){
+var cards=Array.from(board.querySelectorAll('.layout-card'));
+var dates=new Map(state.library.items.map(function(x){return [x.id,new Date(x.date).valueOf()]}));
+cards.sort(function(a,b){return (dates.get(b.dataset.id)||0)-(dates.get(a.dataset.id)||0)}).forEach(function(card){board.appendChild(card)});
+state.layoutDirty=true;paintLayoutState();
+});
+document.querySelector('#save-layout').addEventListener('click',async function(){
+var items=Array.from(board.querySelectorAll('.layout-card')).map(function(card){return {id:card.dataset.id,gallerySize:card.dataset.size,galleryRatio:card.dataset.ratio}});
+try{await request('/api/gallery',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({items:items})});await loadAll();toast('画廊编排已经保存。')}
+catch(error){toast(error.message,true)}
+});
+function noteRef(id){return String(id||'').replace(/\.md$/i,'')}
+function refInfo(ref){
+if(ref.source==='garden'){var note=state.notes.find(function(x){return noteRef(x.id)===ref.ref});return note?{title:note.title,date:note.date,type:note.kind}:null}
+var item=state.library.items.find(function(x){return x.id===ref.ref});return item?{title:item.title,date:String(item.date).slice(0,10),type:item.type==='photo'?'影像':'文档'}:null
+}
+function boundFolioFor(source,ref){return (state.folios.folios||[]).find(function(folio){return (folio.items||[]).some(function(item){return item.source===source&&item.ref===ref})})}
+function renderFolioHints(){
+var candidates=[];
+state.notes.filter(function(note){return note.publish}).forEach(function(note){var ref=noteRef(note.id);if(!boundFolioFor('garden',ref))candidates.push({source:'garden',ref:ref,date:note.date,tags:note.tags||[]})});
+state.library.items.filter(function(item){return item.publish!==false}).forEach(function(item){if(!boundFolioFor('library',item.id))candidates.push({source:'library',ref:item.id,date:String(item.date).slice(0,10),tags:item.tags||[]})});
+var dates=new Map(),tagGroups=new Map();
+candidates.forEach(function(item){
+dates.set(item.date,(dates.get(item.date)||[]).concat({source:item.source,ref:item.ref}));
+item.tags.forEach(function(tag){tagGroups.set(tag,(tagGroups.get(tag)||[]).concat({source:item.source,ref:item.ref}))});
+});
+var dateHints=[...dates.entries()].filter(function(x){return x[1].length>=2}).sort(function(a,b){return b[0].localeCompare(a[0])}).slice(0,4).map(function(x){return {kind:'同日',label:x[0],items:x[1]}});
+var tagHints=[...tagGroups.entries()].filter(function(x){return x[1].length>=2&&new Set(x[1].map(function(i){return i.source})).size>1}).sort(function(a,b){return b[1].length-a[1].length||a[0].localeCompare(b[0],'zh-CN')}).slice(0,4).map(function(x){return {kind:'同题',label:'#'+x[0],items:x[1]}});
+state.folioHints=dateHints.concat(tagHints);
+document.querySelector('#folio-hints').innerHTML=state.folioHints.length?'<small style="width:100%;color:var(--mist)">关系线索 · 日期与标签只负责提醒，不会替你决定关系</small>'+state.folioHints.map(function(hint,index){return '<button class="folio-hint" type="button" data-folio-hint-index="'+index+'"><b>'+esc(hint.kind)+' · '+esc(hint.label)+'</b> · '+hint.items.length+' 项</button>'}).join(''):'';
+}
+function toggleSelected(source,ref){
+var bound=boundFolioFor(source,ref);if(bound){toast('这项内容已经在《'+bound.title+'》里。',true);return}
+
+var index=state.selected.findIndex(function(x){return x.source===source&&x.ref===ref});
+if(index>=0)state.selected.splice(index,1);else state.selected.push({source:source,ref:ref});
+renderNotes();renderLibrary();paintFolioBuilder();
+}
+function paintFolioBuilder(){
+var box=document.querySelector('#folio-builder');box.hidden=state.selected.length===0;
+document.querySelector('#folio-selected-count').textContent='已选 '+state.selected.length+' 项';
+document.querySelector('#folio-create').disabled=state.selected.length<2;
+}
+function renderFolios(){
+var list=state.folios.folios||[];
+document.querySelector('#folio-list').innerHTML=list.length?list.map(function(folio){
+return '<article class="folio-card" data-folio-id="'+esc(folio.id)+'"><small>'+esc(folio.date)+(folio.publish===false?' · 未展示':' · 日录中')+'</small><b>'+esc(folio.title)+'</b><p>'+esc((folio.intro||'').slice(0,70) || (folio.items.length+' 项内容'))+'</p><div class="folio-card-actions"><button class="icon-button" type="button" data-edit-folio>整理</button>'+(folio.publish!==false?'<a class="icon-button" href="http://127.0.0.1:4173/life/'+encodeURIComponent(folio.id)+'/" target="_blank">看 ↗</a>':'')+'</div></article>'
+}).join(''):'<div class="empty">还没有册页。先从下面的文字与素材里点“收”，选两项以上。</div>';
+renderFolioHints();
+}
+var folioDialog=document.querySelector('#folio-dialog');
+var folioForm=document.querySelector('#folio-form');
+var folioDraftItems=[];
+function paintFolioCompose(){
+document.querySelector('#folio-compose-list').innerHTML=folioDraftItems.map(function(ref,index){
+var info=refInfo(ref)||{title:ref.ref,type:ref.source,date:''};
+return '<div class="folio-compose-item" data-folio-index="'+index+'"><small>'+String(index+1).padStart(2,'0')+'</small><div><b>'+esc(info.title)+'</b><small>'+esc(info.type)+(info.date?' · '+esc(info.date):'')+'</small></div><div class="folio-compose-move"><button class="icon-button" type="button" data-folio-up>↑</button><button class="icon-button" type="button" data-folio-down>↓</button><button class="icon-button" type="button" data-folio-remove>×</button></div></div>'
+}).join('');
+}
+function openFolio(folio){
+folioForm.reset();document.querySelector('#folio-dialog-title').textContent=folio?'整理这张册页':'收成一页';
+folioForm.elements.id.value=folio?folio.id:'';
+folioForm.elements.title.value=folio?folio.title:'';
+folioForm.elements.intro.value=folio?(folio.intro||''):'';
+folioForm.elements.publish.checked=folio?folio.publish!==false:true;
+folioDraftItems=(folio?folio.items:state.selected).map(function(x){return {source:x.source,ref:x.ref}});
+var dates=folioDraftItems.map(refInfo).filter(Boolean).map(function(x){return x.date}).filter(Boolean);
+folioForm.elements.date.value=folio?folio.date:(dates[0]||today);
+document.querySelector('#folio-delete').hidden=!folio;paintFolioCompose();folioDialog.showModal();
+}
+document.querySelector('#folio-clear').addEventListener('click',function(){state.selected=[];renderNotes();renderLibrary();paintFolioBuilder()});
+document.querySelector('#folio-create').addEventListener('click',function(){if(state.selected.length>=2)openFolio(null)});
+document.querySelector('#folio-list').addEventListener('click',function(event){if(!event.target.closest('[data-edit-folio]'))return;var card=event.target.closest('[data-folio-id]');var folio=(state.folios.folios||[]).find(function(x){return x.id===card.dataset.folioId});if(folio)openFolio(folio)});
+document.querySelector('#folio-hints').addEventListener('click',function(event){var button=event.target.closest('[data-folio-hint-index]');if(!button)return;var hint=state.folioHints[Number(button.dataset.folioHintIndex)];if(!hint)return;state.selected=hint.items.map(function(x){return {source:x.source,ref:x.ref}});renderNotes();renderLibrary();paintFolioBuilder();document.querySelector('#folio-builder').scrollIntoView({behavior:'smooth',block:'center'});toast(hint.kind+'只是一个线索，你仍然可以删掉不属于这段记忆的项。')});
+document.querySelector('#folio-compose-list').addEventListener('click',function(event){var row=event.target.closest('[data-folio-index]');if(!row)return;var i=Number(row.dataset.folioIndex);if(event.target.closest('[data-folio-up]')&&i>0){var x=folioDraftItems.splice(i,1)[0];folioDraftItems.splice(i-1,0,x)}else if(event.target.closest('[data-folio-down]')&&i<folioDraftItems.length-1){var x=folioDraftItems.splice(i,1)[0];folioDraftItems.splice(i+1,0,x)}else if(event.target.closest('[data-folio-remove]'))folioDraftItems.splice(i,1);paintFolioCompose()});
+folioForm.addEventListener('submit',async function(event){event.preventDefault();var data=new FormData(folioForm);if(folioDraftItems.length<2){toast('册页至少需要两项内容。',true);return}var id=data.get('id');try{await request(id?'/api/folio/update':'/api/folio',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:id,date:data.get('date'),title:data.get('title'),intro:data.get('intro'),publish:data.get('publish')==='on',items:folioDraftItems})});state.selected=[];folioDialog.close();await loadAll();toast(id?'册页已经重新装订。':'已经收成一页。')}catch(error){toast(error.message,true)}});
+document.querySelector('#folio-delete').addEventListener('click',async function(){var id=folioForm.elements.id.value;if(!id||!confirm('拆掉这张册页？原来的文字和照片不会删除。'))return;try{await request('/api/folio/delete',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:id})});folioDialog.close();await loadAll();toast('册页已经拆开，原内容仍在。')}catch(error){toast(error.message,true)}});
+function renderNotes(){
+var query=document.querySelector('#note-search').value.trim().toLowerCase();
+var list=state.notes.filter(function(note){return !query||[note.title,note.kind,(note.tags||[]).join(' '),note.body].join(' ').toLowerCase().includes(query)});
+document.querySelector('#note-count').textContent=query?('匹配 '+list.length):String(state.notes.length);
+var shown=query?list:list.slice(0,state.noteLimit);
+var html=shown.length?shown.map(function(note){
+var ref=noteRef(note.id);var picked=state.selected.some(function(x){return x.source==='garden'&&x.ref===ref});var bound=boundFolioFor('garden',ref);return '<article class="note-row" data-note-id="'+esc(note.id)+'"><time>'+esc(note.date)+'</time><div><small>'+esc(note.kind)+(note.publish?' · 公开':' · 草稿')+(bound?' · 已入《'+esc(bound.title)+'》':'')+'</small><b>'+esc(note.title)+'</b><p>'+esc(note.excerpt||'')+'</p></div><div class="row-actions">'+(bound?'<button class="icon-button" type="button" disabled>已入册</button>':'<button class="icon-button pick-button'+(picked?' is-on':'')+'" type="button" data-pick-note>收</button>')+'<button class="icon-button" type="button" data-edit-note>编辑</button><a class="icon-button" href="http://127.0.0.1:4173'+esc(note.href)+'" target="_blank">看 ↗</a></div></article>';
+}).join(''):'<div class="empty">没有找到文字。</div>';
+if(!query&&list.length>shown.length)html+='<div class="more-row"><button type="button" data-more-notes>再看 '+Math.min(12,list.length-shown.length)+' 篇 · 余 '+(list.length-shown.length)+'</button></div>';
+document.querySelector('#note-list').innerHTML=html;
+}
+document.querySelector('#note-search').addEventListener('input',renderNotes);
+var noteDialog=document.querySelector('#note-dialog');
+var noteEdit=document.querySelector('#note-edit-form');
+document.querySelector('#note-list').addEventListener('click',function(event){
+if(event.target.closest('[data-more-notes]')){state.noteLimit+=12;renderNotes();return}
+var row=event.target.closest('[data-note-id]');if(!row)return;
+if(event.target.closest('[data-pick-note]')){toggleSelected('garden',noteRef(row.dataset.noteId));return}
+if(!event.target.closest('[data-edit-note]'))return;
+var note=state.notes.find(function(x){return x.id===row.dataset.noteId});if(!note)return;
+noteEdit.elements.id.value=note.id;
+noteEdit.elements.date.value=note.date;
+noteEdit.elements.title.value=note.title;
+noteEdit.elements.kind.value=note.kind;
+noteEdit.elements.tags.value=(note.tags||[]).join(', ');
+noteEdit.elements.publish.checked=note.publish;
+noteEdit.elements.featured.checked=note.featured;
+noteEdit.elements.body.value=note.body;
+noteDialog.showModal();
+});
+noteEdit.addEventListener('submit',async function(event){
+event.preventDefault();var data=new FormData(noteEdit);
+try{await request('/api/note/update',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:data.get('id'),date:data.get('date'),title:data.get('title'),kind:data.get('kind'),tags:tags(data.get('tags')),publish:data.get('publish')==='on',featured:data.get('featured')==='on',body:data.get('body')})});noteDialog.close();await loadAll();toast('这页文字已经更新。');}
+catch(error){toast(error.message,true)}
+});
+document.querySelector('#delete-note').addEventListener('click',async function(){
+var id=noteEdit.elements.id.value;
+if(!id||!confirm('确定把这篇文字移出网站吗？文件会被删除。'))return;
+try{await request('/api/note/delete',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:id})});noteDialog.close();await loadAll();toast('已经移出这篇文字。');}
+catch(error){toast(error.message,true)}
+});
+function renderLibrary(){
+var query=document.querySelector('#media-search').value.trim().toLowerCase();
+var items=state.library.items.filter(function(item){return !query||[item.title,(item.tags||[]).join(' ')].join(' ').toLowerCase().includes(query)});
+document.querySelector('#media-count').textContent=query?('匹配 '+items.length):String(state.library.items.length);
+var shown=query?items:items.slice(0,state.mediaLimit);
+var html=shown.length?shown.map(function(item){
+var preview=item.type==='photo'?'<img src="/preview'+esc(item.thumb||item.src)+'" alt="">':'<span>'+esc(item.ext||'FILE')+'</span>';
+var bound=boundFolioFor('library',item.id);var picked=state.selected.some(function(x){return x.source==='library'&&x.ref===item.id});
+return '<article class="library-row" data-item-id="'+esc(item.id)+'"><div class="library-thumb">'+preview+'</div><div class="library-edit">'+
+'<input class="media-title" type="text" value="'+esc(item.title)+'"><div class="library-line"><input class="media-date" type="date" value="'+esc(String(item.date).slice(0,10))+'"><input class="media-tags" type="text" value="'+esc((item.tags||[]).join(', '))+'"></div>'+
+(item.type==='photo'?'<div class="library-line"><select class="media-display"><option value="cover"'+((item.display||'cover')==='cover'?' selected':'')+'>照片 · 裁切</option><option value="contain"'+(item.display==='contain'?' selected':'')+'>纸页 · 完整</option></select><span>'+(bound?'已入《'+esc(bound.title)+'》':'')+'</span></div>':'')+
+'<div class="library-actions"><label><input class="media-publish" type="checkbox"'+(item.publish!==false?' checked':'')+'>站内展示</label><label><input class="media-featured" type="checkbox"'+(item.featured?' checked':'')+'>首页展柜</label>'+(bound?'<button class="icon-button" type="button" disabled>已入册</button>':'<button class="icon-button pick-button'+(picked?' is-on':'')+'" type="button" data-pick-media>收</button>')+'<button class="quiet" type="button" data-save-media>保存</button><a class="icon-button" href="http://127.0.0.1:4173'+esc(item.src)+'" target="_blank">查看 ↗</a><button class="danger" type="button" data-delete-media>移出</button></div></div></article>';
+}).join(''):'<div class="empty">没有找到素材。</div>';
+if(!query&&items.length>shown.length)html+='<div class="more-row"><button type="button" data-more-media>再看 '+Math.min(8,items.length-shown.length)+' 项 · 余 '+(items.length-shown.length)+'</button></div>';
+document.querySelector('#library-list').innerHTML=html;
+}
+document.querySelector('#media-search').addEventListener('input',renderLibrary);
+window.addEventListener('paste',function(event){
+if(event.target.closest('input,textarea,[contenteditable="true"]'))return;
+var pasted=Array.from(event.clipboardData&&event.clipboardData.files||[]).filter(function(file){return file.type&&file.type.startsWith('image/')});
+if(!pasted.length||typeof DataTransfer==='undefined')return;
+var transfer=new DataTransfer();
+Array.from(fileInput.files||[]).forEach(function(file){transfer.items.add(file)});
+pasted.forEach(function(file){transfer.items.add(file)});
+fileInput.files=transfer.files;paintFiles();setTab('record');toast('已把剪贴板里的图片放进待收入区。');
+});
+window.addEventListener('beforeunload',function(event){
+if(!state.layoutDirty)return;
+event.preventDefault();event.returnValue='';
+});
+document.querySelector('#library-list').addEventListener('click',async function(event){
+if(event.target.closest('[data-more-media]')){state.mediaLimit+=8;renderLibrary();return}
+var row=event.target.closest('[data-item-id]');if(!row)return;
+var id=row.dataset.itemId;
+if(event.target.closest('[data-pick-media]')){toggleSelected('library',id);return}
+if(event.target.closest('[data-save-media]')){
+try{await request('/api/update',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:id,title:row.querySelector('.media-title').value,date:row.querySelector('.media-date').value,tags:tags(row.querySelector('.media-tags').value),publish:row.querySelector('.media-publish').checked,featured:row.querySelector('.media-featured').checked,display:row.querySelector('.media-display')?row.querySelector('.media-display').value:undefined})});await loadAll();toast('素材信息已经保存。');}
+catch(error){toast(error.message,true)}
+}
+if(event.target.closest('[data-delete-media]')){
+if(!confirm('确定把这项素材移出网站吗？生成的公开文件也会删除。'))return;
+try{await request('/api/delete',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:id})});await loadAll();toast('已经移出素材。');}
+catch(error){toast(error.message,true)}
+}
+});
+setToday();
+var initialTab=location.hash.slice(1);if(['record','layout','organize'].includes(initialTab))setTab(initialTab,false);
+refreshRelease();
+loadAll().catch(function(error){toast('内容台没有加载成功：'+error.message,true)});
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WorkGlyph from '../../components/WorkGlyph.astro';
+---
+<BaseLayout title="SciPlot Academic" description="Rippleshe 的科研绘图库。">
+  <div class="shell sciplot-page-v2">
+    <header class="sciplot-hero sciplot-hero-v2">
+      <div class="sciplot-title sciplot-title-v2">
+        <div>
+          <div class="sciplot-kicker-row">
+            <p class="eyebrow">Work 01 · Python / Visualization</p>
+            <span>R/S · PLATE 001</span>
+          </div>
+          <h1>SciPlot<br /><em>Academic</em></h1>
+          <p class="sciplot-subline">RESEARCH FIGURES / DEFAULTS WITH A HIGHER FLOOR</p>
+        </div>
+        <div class="sciplot-intro-note">
+          <WorkGlyph variant="plot" class="sciplot-intro-glyph" />
+          <p>科研绘图应该默认就很好看。SciPlot 把常用期刊尺寸、中文排版、色盲安全配色和大量图表类型收进一套统一 API，让“随手画”也有足够高的下限。</p>
+        </div>
+      </div>
+
+      <div class="sciplot-board sciplot-board-v2">
+        <span class="sciplot-axis-note sciplot-axis-note-a">FIG.01 / MULTI LINE</span>
+        <span class="sciplot-axis-note sciplot-axis-note-b">FIG.19 / RAINCLOUD</span>
+        <img src="/media/works/sciplot/01_multi_line.png" alt="SciPlot 多线对比图" />
+        <img src="/media/works/sciplot/19_raincloud.png" alt="SciPlot 雨云图" />
+        <div class="sciplot-board-coordinates" aria-hidden="true"><span>0,0</span><span>x</span><span>y</span></div>
+      </div>
+
+      <div class="project-facts project-facts-v2">
+        <div class="project-fact"><small>Role</small><span>Design / Development</span></div>
+        <div class="project-fact"><small>Stack</small><span>Python · Matplotlib</span></div>
+        <div class="project-fact"><small>Type</small><span>Open-source tool</span></div>
+        <div class="project-fact"><small>Repository</small><a href="https://github.com/rippleshe/sciplot-academic">GitHub ↗</a></div>
+      </div>
+    </header>
+
+    <section class="project-story project-story-v2">
+      <aside class="project-story-index">
+        <span>01</span>
+        <small>WHY</small>
+        <WorkGlyph variant="plot" />
+      </aside>
+      <div>
+        <p class="project-story-lead">很多科研绘图代码并不难，真正磨人的是那些每次都要重新处理的小事。</p>
+        <p>尺寸、字体、刻度、图例、配色和导出，本来应该是稳定的底层习惯，却常常散落在每一张图后面。与其一次次补一长串修饰，我更想把这些“应该默认正确”的东西放到底层。</p>
+        <p>于是它从几个常用函数，慢慢长成一个覆盖基础统计图、网络图、3D、复合面板和期刊样式的绘图库。</p>
+        <a class="rule-link" href="https://github.com/rippleshe/sciplot-academic">看源码与文档</a>
+      </div>
+    </section>
+
+    <section class="sciplot-principles" aria-labelledby="sciplot-principles-title">
+      <div class="sciplot-principles-head">
+        <span>02</span>
+        <div><p class="eyebrow">Principles</p><h2 id="sciplot-principles-title">我更在意默认值。</h2></div>
+      </div>
+      <div class="sciplot-principle-grid">
+        <article><small>A / DEFAULT</small><strong>随手画，也不能太难看。</strong><p>把常见排版决策提前做好，不要求每一张图都重新调教。</p></article>
+        <article><small>B / CONSISTENCY</small><strong>同一套图，应该像一家人。</strong><p>尺寸、字体、刻度、留白和导出方式保持统一，不让风格靠记忆维持。</p></article>
+        <article><small>C / RANGE</small><strong>常规图和复杂图都能留下来。</strong><p>既覆盖基础统计图，也允许网络图、复合面板和更特殊的科研可视化。</p></article>
+      </div>
+    </section>
+
+    <section class="project-gallery project-gallery-v2" aria-label="SciPlot 图表示例">
+      <figure class="sciplot-gallery-figure sciplot-gallery-a">
+        <span>FIG.31 / FLOW</span>
+        <img src="/media/works/sciplot/31_sankey.png" alt="SciPlot 桑基图" loading="lazy" />
+        <figcaption>Sankey / relation & flow</figcaption>
+      </figure>
+      <figure class="sciplot-gallery-figure sciplot-gallery-b">
+        <span>FIG.46 / HIERARCHY</span>
+        <img src="/media/works/sciplot/46_sunburst.png" alt="SciPlot 旭日图" loading="lazy" />
+        <figcaption>Sunburst / hierarchy</figcaption>
+      </figure>
+    </section>
+
+    <section class="sciplot-closing">
+      <div class="sciplot-closing-line" aria-hidden="true"></div>
+      <div>
+        <p class="eyebrow">Work note · 01</p>
+        <strong>工具真正好用的时候，最好让人忘记它在帮忙。</strong>
+        <p>SciPlot 对我来说也更接近这种东西：不是为了展示 API 多，而是减少下一张图开始之前的摩擦。</p>
+      </div>
+      <a class="rule-link" href="/works/">回到造物</a>
+    </section>
+  </div>
+</BaseLayout>

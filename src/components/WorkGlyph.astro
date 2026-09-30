@@ -1,0 +1,40 @@
+---
+interface Props {
+  variant?: 'plot' | 'window' | 'signal' | 'agents';
+  class?: string;
+}
+const { variant = 'plot', class: className = '' } = Astro.props;
+---
+<div class={`work-glyph work-glyph-${variant} ${className}`} aria-hidden="true">
+  <svg viewBox="0 0 240 150" role="img">
+    <path class="frame" d="M12 14H228V136H12Z" />
+    <path class="grid" d="M12 44H228M12 74H228M12 104H228M66 14V136M120 14V136M174 14V136" />
+    {variant === 'plot' && (
+      <>
+        <path class="accent" d="M24 111C44 104 53 83 72 88C91 93 97 54 116 60C137 66 148 44 166 49C185 53 194 31 217 34" />
+        <circle class="dot" cx="72" cy="88" r="3" /><circle class="dot" cx="116" cy="60" r="3" /><circle class="dot" cx="166" cy="49" r="3" />
+      </>
+    )}
+    {variant === 'window' && (
+      <>
+        <path class="accent" d="M32 38H208V118H32Z" />
+        <path class="accent thin" d="M32 55H208M83 55V118" />
+        <circle class="dot" cx="42" cy="47" r="2" /><circle class="dot" cx="50" cy="47" r="2" /><circle class="dot" cx="58" cy="47" r="2" />
+      </>
+    )}
+    {variant === 'signal' && (
+      <>
+        <path class="accent" d="M22 79C37 79 39 45 54 45S71 110 88 110S105 65 120 65S137 93 151 93S171 39 188 39S201 78 218 78" />
+        <path class="thin accent" d="M22 119H218" />
+      </>
+    )}
+    {variant === 'agents' && (
+      <>
+        <circle class="accent" cx="120" cy="74" r="18" />
+        <circle class="accent" cx="55" cy="42" r="11" /><circle class="accent" cx="188" cy="42" r="11" />
+        <circle class="accent" cx="55" cy="111" r="11" /><circle class="accent" cx="188" cy="111" r="11" />
+        <path class="accent thin" d="M65 47L103 66M177 47L137 66M65 106L103 82M177 106L137 82" />
+      </>
+    )}
+  </svg>
+</div>

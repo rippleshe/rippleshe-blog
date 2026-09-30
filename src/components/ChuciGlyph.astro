@@ -1,0 +1,32 @@
+---
+interface Props {
+  variant?: 'lan' | 'ruo' | 'lotus' | 'vine' | 'magnolia' | 'pepper' | 'chrys' | 'hui';
+  label?: string;
+  quote?: string;
+  class?: string;
+  compact?: boolean;
+}
+const { variant = 'lan', label = '', quote = '', class: className = '', compact = false } = Astro.props;
+const names = {
+  lan: '秋兰', ruo: '杜若', lotus: '芰荷', vine: '女萝', magnolia: '木兰', pepper: '申椒', chrys: '秋菊', hui: '蕙'
+};
+const display = label || names[variant];
+---
+<div class={`chuci-glyph chuci-glyph-${variant} ${compact ? 'is-compact' : ''} ${className}`} aria-hidden="true">
+  <svg viewBox="0 0 160 210" role="presentation">
+    <path class="ground" d="M22 186c37 5 79 5 116 0" />
+    {variant === 'lan' && <g class="ink"><path d="M80 186c-9-66-3-111 6-151M79 185c20-58 31-103 32-137M77 185c-31-47-41-85-41-115"/><path class="accent" d="M87 38c8-13 17-10 15 1 12-8 19 0 9 8 8 8 2 16-9 9-4 12-15 8-12-3-12 0-18-8-10-14 9-1 14-7 7-15Z"/></g>}
+    {variant === 'ruo' && <g class="ink"><path d="M80 186c-4-58-1-104 3-144M81 92L49 67M82 121l31-25M80 150l-28 18"/><ellipse cx="48" cy="67" rx="13" ry="25" transform="rotate(-48 48 67)"/><ellipse cx="114" cy="96" rx="12" ry="24" transform="rotate(47 114 96)"/><path class="accent" d="M83 44c-9-14-17-10-15 2-12-7-18 2-8 9-8 8 0 15 10 8 3 11 14 7 11-4 11 0 15-10 6-15Z"/></g>}
+    {variant === 'lotus' && <g class="ink"><path d="M80 187c4-47 2-91 0-128"/><path d="M80 132c-25-12-49-14-69-6 19 31 50 36 69 6ZM81 109c21-22 48-28 69-17-8 31-40 43-69 17Z"/><path class="accent" d="M81 61c-11-20-2-31 10-14 4-22 17-22 17-2 15-14 26-4 13 11 20-3 24 12 7 18-6 15-19 16-26 5-11 13-24 6-22-7-15-3-17-15 1-18Z"/></g>}
+    {variant === 'vine' && <g class="ink"><path d="M43 190c19-35 38-56 56-85 17-28 23-55 22-88M76 128c-25-11-41-27-46-49M101 102c22-9 38-24 45-45"/><ellipse cx="31" cy="80" rx="10" ry="23" transform="rotate(-52 31 80)"/><ellipse cx="146" cy="58" rx="10" ry="23" transform="rotate(48 146 58)"/></g>}
+    {variant === 'magnolia' && <g class="ink"><path d="M76 190c8-61 12-115 20-161M90 82L58 53M90 103l37-31M85 132l-38 21"/><ellipse cx="57" cy="52" rx="10" ry="22" transform="rotate(-52 57 52)"/><ellipse cx="128" cy="72" rx="10" ry="23" transform="rotate(49 128 72)"/><path class="accent" d="M97 31c-11-15-22-9-17 4-14-3-19 8-5 15-7 12 5 18 14 8 9 10 20 3 15-9 13-7 7-18-7-18Z"/></g>}
+    {variant === 'pepper' && <g class="ink"><path d="M80 188c4-56 0-105 6-148M84 80L56 57M83 105l33-24M81 136l-29 20"/>{[[55,55],[117,78],[51,156],[91,49],[101,123]].map(([x,y])=><circle class="berry" cx={x} cy={y} r="6"/>)}</g>}
+    {variant === 'chrys' && <g class="ink"><path d="M80 188c4-52 1-97 3-130M80 135l-30-18M81 155l31-23"/><g class="accent petals">{[0,45,90,135,180,225,270,315].map((r)=><ellipse cx="83" cy="52" rx="5" ry="19" transform={`rotate(${r} 83 52)`}/>)}</g><circle class="berry" cx="83" cy="52" r="7"/></g>}
+    {variant === 'hui' && <g class="ink"><path d="M78 188c-7-63-1-113 7-155M82 187c15-58 27-101 45-136M75 187c-24-47-35-85-36-117"/><ellipse cx="44" cy="109" rx="7" ry="26" transform="rotate(-28 44 109)"/><ellipse cx="120" cy="96" rx="7" ry="26" transform="rotate(32 120 96)"/><path class="accent" d="M86 35c7-10 13-9 14 0 9-6 15 0 8 7 6 7 0 12-8 7-2 9-10 7-10-2-9 1-13-6-7-11 8 0 11-5 5-12Z"/></g>}
+  </svg>
+  <div class="glyph-caption"><span>{display}</span>{quote && <small>{quote}</small>}</div>
+</div>
+
+<style>
+.chuci-glyph{--glyph-ink:rgba(62,88,68,.56);--glyph-accent:rgba(139,78,67,.42);width:190px;display:grid;justify-items:center;color:var(--moss);pointer-events:none}.chuci-glyph svg{width:100%;height:auto;overflow:visible}.chuci-glyph .ground{fill:none;stroke:rgba(63,86,65,.11);stroke-width:1}.chuci-glyph .ink{fill:rgba(111,139,111,.055);stroke:var(--glyph-ink);stroke-width:1.25;stroke-linecap:round;stroke-linejoin:round}.chuci-glyph .accent{fill:rgba(139,78,67,.045);stroke:var(--glyph-accent);stroke-width:1}.chuci-glyph .berry{fill:rgba(139,78,67,.18);stroke:rgba(139,78,67,.48);stroke-width:1}.glyph-caption{margin-top:-9px;display:grid;gap:4px;text-align:center}.glyph-caption span{color:rgba(63,86,65,.65);font:11px var(--serif);letter-spacing:.14em}.glyph-caption small{max-width:160px;color:var(--mist);font:8px/1.5 var(--serif)}.chuci-glyph.is-compact{width:116px}.chuci-glyph.is-compact .glyph-caption{display:none}.has-js .chuci-glyph .ink{animation:glyph-sway 8s ease-in-out infinite alternate;transform-origin:80px 188px}.has-js .chuci-glyph:nth-child(2n) .ink{animation-duration:10s;animation-direction:alternate-reverse}@keyframes glyph-sway{from{transform:rotate(-.7deg) translateY(1px)}to{transform:rotate(1deg) translateY(-2px)}}@media(prefers-reduced-motion:reduce){.chuci-glyph .ink{animation:none!important}}
+</style>

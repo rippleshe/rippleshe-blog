@@ -1,0 +1,32 @@
+---
+interface Props {
+  label?: string;
+  quiet?: boolean;
+  variant?: 'orchid' | 'lotus' | 'vine' | 'magnolia' | 'pepper';
+}
+const { label = '兰芷有芳', quiet = false, variant } = Astro.props;
+const route = Astro.url.pathname;
+const autoVariant: Props['variant'] = route.startsWith('/collection/') ? 'lotus'
+  : route.startsWith('/works/') ? 'magnolia'
+  : route.startsWith('/guestbook/') ? 'vine'
+  : route.startsWith('/scenes/') ? 'pepper'
+  : 'orchid';
+const herb = variant ?? autoVariant;
+---
+<div class:list={['herb-divider', `herb-divider-${herb}`, { 'herb-divider-quiet': quiet }]} aria-hidden="true">
+  <span class="herb-line"></span>
+  <svg viewBox="0 0 104 34" role="presentation">
+    <path class="divider-water" d="M7 24c19 0 23-8 43-8 22 0 26 8 47 8" />
+    {herb === 'orchid' && <g class="divider-plant"><path d="M52 23c-3-9-2-15 1-21M52 23c5-8 8-14 10-19M51 23c-7-6-10-11-11-16"/><path class="divider-accent" d="M54 4c4-5 7-3 6 1 5-3 8 1 4 4 3 3 0 6-4 3-2 5-6 3-5-1-5 0-7-4-4-6 4 0 6-2 3-5Z"/></g>}
+    {herb === 'lotus' && <g class="divider-plant"><path d="M52 23c1-8 1-13 0-18"/><path d="M52 15c-8-4-14-4-19-1 6 8 13 9 19 1ZM53 12c6-6 13-7 19-4-2 8-11 11-19 4Z"/></g>}
+    {herb === 'vine' && <g class="divider-plant"><path d="M44 28c4-7 8-11 12-17 4-6 5-11 4-16M52 18c-6-2-10-5-12-9M58 12c5-2 9-5 11-9"/><ellipse cx="39" cy="9" rx="3" ry="6" transform="rotate(-50 39 9)"/></g>}
+    {herb === 'magnolia' && <g class="divider-plant"><path d="M50 25c2-9 3-17 5-23M53 10l-8-6M54 14l9-7"/><path class="divider-accent" d="M56 3c-4-5-8-3-6 2-5-1-7 3-2 5-2 4 2 6 5 3 3 3 7 1 5-3 5-3 2-7-2-7Z"/></g>}
+    {herb === 'pepper' && <g class="divider-plant"><path d="M52 26c1-10 0-18 2-24M53 10l-8-5M53 15l9-5M52 20l-7 4"/><circle class="divider-accent" cx="44" cy="5" r="2"/><circle class="divider-accent" cx="63" cy="10" r="2"/><circle class="divider-accent" cx="45" cy="24" r="2"/></g>}
+  </svg>
+  <span class="herb-divider-label">{label}</span>
+  <span class="herb-line"></span>
+</div>
+
+<style>
+.herb-divider svg .divider-water{fill:none;stroke:rgba(63,86,65,.3);stroke-width:1;stroke-linecap:round}.herb-divider svg .divider-plant{fill:rgba(111,139,111,.04);stroke:rgba(63,86,65,.55);stroke-width:1;stroke-linecap:round;stroke-linejoin:round}.herb-divider svg .divider-accent{fill:rgba(139,78,67,.08);stroke:rgba(139,78,67,.5);stroke-width:1}.has-js .herb-divider svg .divider-plant{animation:divider-herb 7s ease-in-out infinite alternate;transform-origin:52px 25px}@keyframes divider-herb{from{transform:rotate(-.7deg)}to{transform:rotate(1deg)}}@media(prefers-reduced-motion:reduce){.herb-divider svg .divider-plant{animation:none!important}}
+</style>

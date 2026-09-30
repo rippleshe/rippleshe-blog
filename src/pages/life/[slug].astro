@@ -1,0 +1,121 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import HerbDivider from '../../components/HerbDivider.astro';
+import BotanicalSprig from '../../components/BotanicalSprig.astro';
+import { publicFolios } from '../../lib/folios';
+import { libraryItems, type LibraryItem } from '../../lib/library';
+import { gardenUrl, titleOf, type GardenEntry } from '../../lib/content';
+
+export function getStaticPaths() {
+  return publicFolios.map((folio) => ({ params: { slug: folio.id } }));
+}
+
+const folio = publicFolios.find((item) => item.id === Astro.params.slug)!;
+const garden = await getCollection('garden', ({ data }) => data.publish);
+const gardenById = new Map(garden.map((entry) => [entry.id.replace(/\.mdx?$/, ''), entry]));
+const libraryById = new Map(libraryItems.map((item) => [item.id, item]));
+type ResolvedPiece = { source: 'garden'; entry: GardenEntry } | { source: 'library'; item: LibraryItem };
+const resolved: ResolvedPiece[] = [];
+for (const ref of folio.items) {
+  if (ref.source === 'garden') {
+    const entry = gardenById.get(ref.ref.replace(/\.md$/i, ''));
+    if (entry) resolved.push({ source: 'garden', entry });
+  } else {
+    const item = libraryById.get(ref.ref);
+    if (item) resolved.push({ source: 'library', item });
+  }
+}
+const photoCount = resolved.filter((item) => item.source === 'library' && item.item.type === 'photo').length;
+const textCount = resolved.filter((item) => item.source === 'garden').length;
+function previewOf(entry: GardenEntry) {
+  const raw = String(entry.body || '').replace(/!\[[^\]]*\]\([^)]*\)/g, '').replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/^#{1,6}\s+/gm, '').replace(/[>*_`~]/g, '').trim();
+  if (entry.data.kind === '诗' || entry.data.kind === '词') return raw.split(/\r?\n/).map((line) => line.trim()).filter(Boolean).slice(0, 6).join('\n');
+  return raw.replace(/\s+/g, ' ').slice(0, 210) + (raw.replace(/\s+/g, ' ').length > 210 ? '…' : '');
+}
+const dateLabel = new Intl.DateTimeFormat('zh-CN', {
+  year: 'numeric', month: 'long', day: 'numeric',
+}).format(new Date(`${folio.date}T12:00:00`));
+---
+<BaseLayout title={folio.title} description={folio.intro || `${dateLabel} 的一张册页`}>
+  <main class="shell folio-page">
+    <header class="folio-hero">
+      <div>
+        <a class="rule-link" href="/life/">← 回到日录</a>
+        <p class="eyebrow">Folio · gathered memory</p>
+        <h1>{folio.title}</h1>
+        <p class="folio-intro">{folio.intro || '这一页把同一段日子里的文字与影像轻轻放在一起。'}</p>
+      </div>
+      <aside class="folio-ticket">
+        <BotanicalSprig variant="ruo" />
+        <time>{dateLabel}</time>
+        <p><span>{String(resolved.length).padStart(2,'0')}</span> 项内容</p>
+        <small>{textCount ? `${textCount} 篇文字` : ''}{textCount && photoCount ? ' · ' : ''}{photoCount ? `${photoCount} 张影像` : ''}</small>
+      </aside>
+    </header>
+
+    <HerbDivider label="这一页不是复制 · 只是重新相遇" />
+
+    <section class="folio-stream" aria-label={folio.title}>
+      {resolved.map((piece, index) => (
+        piece.source === 'garden' ? (
+          <a class="folio-piece folio-text" href={gardenUrl(piece.entry)}>
+            <span class="folio-no">{String(index + 1).padStart(2,'0')}</span>
+            <div>
+              <small>{piece.entry.data.kind} · {piece.entry.data.tags.slice(0,3).join(' · ')}</small>
+              <h2>{titleOf(piece.entry)}</h2>
+              <p class="folio-text-preview">{piece.entry.data.description || previewOf(piece.entry)}</p>
+            </div>
+            <i>读这一页 ↗</i>
+          </a>
+        ) : piece.item.type === 'photo' ? (
+          <figure class={`folio-piece folio-photo folio-photo-${index % 3}`}>
+            <div class="folio-photo-mat">
+              <img src={piece.item.src} alt={piece.item.title} loading="lazy" />
+            </div>
+            <figcaption>
+              <span>{String(index + 1).padStart(2,'0')}</span>
+              <div><b>{piece.item.title}</b>{piece.item.tags.length > 0 && <small>{piece.item.tags.join(' · ')}</small>}</div>
+            </figcaption>
+          </figure>
+        ) : (
+          <a class="folio-piece folio-document" href={piece.item.src} target="_blank">
+            <span class="folio-no">{String(index + 1).padStart(2,'0')}</span>
+            <div><small>纸页 · {piece.item.ext || 'document'}</small><h2>{piece.item.title}</h2></div>
+            <i>打开 ↗</i>
+          </a>
+        )
+      ))}
+    </section>
+
+    <footer class="folio-end">
+      <BotanicalSprig variant="lan" />
+      <p>同一天可以有许多东西，但只有真正属于同一段记忆的，才值得被装订在一起。</p>
+      <a class="rule-link" href="/life/">继续沿日录往前走</a>
+    </footer>
+  </main>
+  <style>
+    .folio-page{padding:76px 0 10px;position:relative}
+    .folio-hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(240px,.55fr);gap:70px;align-items:end;padding:30px 0 62px}
+    .folio-hero h1{margin:18px 0 24px;font:400 clamp(54px,8vw,104px)/.92 var(--serif);letter-spacing:-.055em}
+    .folio-intro{max-width:44rem;margin:0;color:var(--ink-soft);font:18px/1.9 var(--serif)}
+    .folio-ticket{min-height:330px;border-left:1px solid var(--line);padding:38px 0 16px 34px;display:flex;flex-direction:column;justify-content:flex-end}
+    .folio-ticket .botanical-sprig{width:138px;margin:0 0 auto auto;opacity:.44}.folio-ticket time{font:18px var(--serif);color:var(--moss)}
+    .folio-ticket p{margin:12px 0 0;color:var(--mist);font-size:10px}.folio-ticket p span{font:34px var(--serif);color:var(--seal);margin-right:6px}.folio-ticket small{color:var(--mist);font-size:9px}
+    .folio-stream{width:min(900px,100%);margin:78px auto 0;display:grid;gap:64px;position:relative}
+    .folio-stream:before{content:'';position:absolute;left:49px;top:-30px;bottom:-30px;width:1px;background:linear-gradient(transparent,var(--line-strong) 8%,var(--line) 92%,transparent)}
+    .folio-piece{position:relative}.folio-no{font:italic 11px var(--serif);color:var(--seal)}
+    .folio-text,.folio-document{display:grid;grid-template-columns:76px 1fr auto;gap:22px;align-items:center;padding:24px 18px 24px 16px;border:1px solid var(--line);background:rgba(248,245,237,.48)}
+    .folio-text h2,.folio-document h2{margin:4px 0 0;font:400 clamp(24px,3vw,34px)/1.2 var(--serif)}.folio-text small,.folio-document small{color:var(--sage);font-size:9px;letter-spacing:.08em}
+    .folio-text p{margin:10px 0 0;color:var(--ink-soft);font:14px/1.8 var(--serif)}.folio-text-preview{max-width:46rem;white-space:pre-line}.folio-text i,.folio-document i{color:var(--mist);font:11px var(--serif);font-style:normal}
+    .folio-text:hover,.folio-document:hover{border-color:var(--line-strong);background:rgba(125,146,120,.05)}
+    .folio-photo{margin:0 0 0 76px;display:grid;grid-template-columns:minmax(0,1fr) 180px;gap:20px;align-items:end}
+    .folio-photo-mat{padding:10px;background:#faf7ee;border:1px solid var(--line);box-shadow:0 18px 46px rgba(53,55,42,.07)}
+    .folio-photo img{width:100%;max-height:680px;object-fit:contain;background:var(--paper-deep);filter:saturate(.82) contrast(.98)}
+    .folio-photo figcaption{display:grid;grid-template-columns:26px 1fr;gap:8px;padding-bottom:8px}.folio-photo figcaption>span{color:var(--seal);font:italic 10px var(--serif)}
+    .folio-photo figcaption b{display:block;font:400 15px var(--serif)}.folio-photo figcaption small{display:block;margin-top:5px;color:var(--mist);font-size:9px}
+    .folio-photo-1{margin-left:118px;margin-right:44px}.folio-photo-2{margin-left:50px;margin-right:92px}
+    .folio-end{width:min(620px,100%);margin:110px auto 0;text-align:center;color:var(--ink-soft)}.folio-end .botanical-sprig{width:104px;margin:0 auto 22px;opacity:.38}.folio-end p{font:16px/1.9 var(--serif)}.folio-end .rule-link{justify-content:center;margin-top:12px}
+    @media(max-width:760px){.folio-hero{grid-template-columns:1fr;gap:24px}.folio-ticket{min-height:220px}.folio-stream:before{left:18px}.folio-text,.folio-document{grid-template-columns:38px 1fr}.folio-text i,.folio-document i{grid-column:2}.folio-photo,.folio-photo-1,.folio-photo-2{margin-left:38px;margin-right:0;grid-template-columns:1fr}.folio-photo figcaption{order:-1}}
+  </style>
+</BaseLayout>

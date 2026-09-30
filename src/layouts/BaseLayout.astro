@@ -1,0 +1,75 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import ChuciAmbient from '../components/ChuciAmbient.astro';
+import '../styles/global.css';
+import '../styles/portal.css';
+import '../styles/viewer.css';
+
+interface Props {
+  title?: string;
+  description?: string;
+  lang?: 'zh' | 'en';
+  className?: string;
+  noindex?: boolean;
+}
+const {
+  title = 'Rippleshe',
+  description = '一些字，一些日子，一些折腾。',
+  lang = 'zh',
+  className = '',
+  noindex = false,
+} = Astro.props;
+const pageTitle = title === 'Rippleshe' ? title : `${title} · Rippleshe`;
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="theme-color" content="#f3efe4" />
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex,nofollow,noarchive" />}
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <title>{pageTitle}</title>
+  </head>
+  <body class={className}>
+    <a class="skip-link" href="#content">跳到正文</a>
+    <ChuciAmbient />
+    <Header />
+    <main id="content"><slot /></main>
+    <Footer />
+    <div class="site-ripple-layer" aria-hidden="true"></div>
+    <script is:inline>
+      document.documentElement.classList.add('has-js');
+      function paintDayPhase() {
+        const now = new Date();
+        const hour = now.getHours();
+        const naturalPhase = hour >= 5 && hour < 8 ? 'dawn' : hour >= 8 && hour < 17 ? 'day' : hour >= 17 && hour < 20 ? 'dusk' : 'night';
+        const phase = document.documentElement.dataset.devPhaseOverride || naturalPhase;
+        const dayKey = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+        const changed = document.documentElement.dataset.dayPhase !== phase || document.documentElement.dataset.dayKey !== dayKey;
+        document.documentElement.dataset.dayPhase = phase;
+        document.documentElement.dataset.dayKey = dayKey;
+        if (changed) window.dispatchEvent(new CustomEvent('rippleshe:timechange', { detail: { phase, dayKey, naturalPhase } }));
+      }
+      paintDayPhase();
+      window.setInterval(paintDayPhase, 30000);
+      document.addEventListener('visibilitychange', () => { if (!document.hidden) paintDayPhase(); });
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+      const rippleLayer = document.querySelector('.site-ripple-layer');
+      document.addEventListener('pointerdown', (event) => {
+        if (reduceMotion.matches || !rippleLayer) return;
+        const target = event.target instanceof Element ? event.target.closest('a, button') : null;
+        if (!target) return;
+        const ring = document.createElement('i');
+        ring.style.left = `${event.clientX}px`;
+        ring.style.top = `${event.clientY}px`;
+        rippleLayer.append(ring);
+        ring.addEventListener('animationend', () => ring.remove(), { once: true });
+      }, { passive: true });
+    </script>
+  </body>
+</html>
+

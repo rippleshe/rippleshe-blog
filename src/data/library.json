@@ -1,0 +1,192 @@
+{
+  "version": 1,
+  "items": [
+    {
+      "id": "legacy-life-12",
+      "type": "photo",
+      "title": "夜路慢慢走",
+      "date": "2026-09-03T20:19:11+08:00",
+      "tags": [
+        "朋友",
+        "夜晚",
+        "散步"
+      ],
+      "src": "/media/life/life-12.webp",
+      "thumb": "/media/life/life-12-thumb.webp",
+      "display": "contain",
+      "featured": false,
+      "legacy": true
+    },
+    {
+      "id": "legacy-life-11",
+      "type": "photo",
+      "title": "山径合影",
+      "date": "2026-09-03T20:19:09+08:00",
+      "tags": [
+        "朋友",
+        "山径",
+        "旅行"
+      ],
+      "src": "/media/life/life-11.webp",
+      "thumb": "/media/life/life-11-thumb.webp",
+      "display": "contain",
+      "featured": false,
+      "legacy": true
+    },
+    {
+      "id": "legacy-life-10",
+      "type": "photo",
+      "title": "并肩去往夜色",
+      "date": "2026-09-03T20:19:07+08:00",
+      "tags": [
+        "朋友",
+        "夜晚",
+        "同行"
+      ],
+      "src": "/media/life/life-10.webp",
+      "thumb": "/media/life/life-10-thumb.webp",
+      "display": "contain",
+      "featured": false,
+      "legacy": true
+    },
+    {
+      "id": "legacy-life-09",
+      "type": "photo",
+      "title": "西瓜切开的时候",
+      "date": "2026-09-03T20:19:04+08:00",
+      "tags": [
+        "夏夜",
+        "西瓜",
+        "朋友"
+      ],
+      "src": "/media/life/life-09.webp",
+      "thumb": "/media/life/life-09-thumb.webp",
+      "featured": false,
+      "legacy": true
+    },
+    {
+      "id": "legacy-life-08",
+      "type": "photo",
+      "title": "向晚风举手",
+      "date": "2026-09-03T20:19:03+08:00",
+      "tags": [
+        "湖边",
+        "晚风",
+        "背影"
+      ],
+      "src": "/media/life/life-08.webp",
+      "thumb": "/media/life/life-08-thumb.webp",
+      "featured": false,
+      "legacy": true
+    },
+    {
+      "id": "legacy-life-07",
+      "type": "photo",
+      "title": "山在水那边",
+      "date": "2026-09-03T20:19:01+08:00",
+      "tags": [
+        "山水",
+        "湖泊",
+        "远望"
+      ],
+      "src": "/media/life/life-07.webp",
+      "thumb": "/media/life/life-07-thumb.webp",
+      "featured": false,
+      "legacy": true
+    },
+    {
+      "id": "legacy-life-06",
+      "type": "photo",
+      "title": "纸上地图",
+      "date": "2026-09-03T20:18:56+08:00",
+      "tags": [
+        "手稿",
+        "随笔",
+        "纸页"
+      ],
+      "src": "/media/life/life-06.webp",
+      "thumb": "/media/life/life-06-thumb.webp",
+      "display": "contain",
+      "featured": false,
+      "legacy": true
+    },
+    {
+      "id": "legacy-life-05",
+      "type": "photo",
+      "title": "湖山一页",
+      "date": "2026-09-03T20:18:55+08:00",
+      "tags": [
+        "手绘",
+        "湖山",
+        "纸页"
+      ],
+      "src": "/media/life/life-05.webp",
+      "thumb": "/media/life/life-05-thumb.webp",
+      "display": "contain",
+      "featured": false,
+      "legacy": true
+    },
+    {
+      "id": "legacy-life-04",
+      "type": "photo",
+      "title": "一桌热气",
+      "date": "2026-09-03T20:18:53+08:00",
+      "tags": [
+        "餐桌",
+        "烟火",
+        "日常"
+      ],
+      "src": "/media/life/life-04.webp",
+      "thumb": "/media/life/life-04-thumb.webp",
+      "featured": false,
+      "legacy": true
+    },
+    {
+      "id": "legacy-life-03",
+      "type": "photo",
+      "title": "三屏并亮的下午",
+      "date": "2026-09-03T20:18:50+08:00",
+      "tags": [
+        "屏幕",
+        "午后",
+        "玩乐"
+      ],
+      "src": "/media/life/life-03.webp",
+      "thumb": "/media/life/life-03-thumb.webp",
+      "featured": false,
+      "legacy": true
+    },
+    {
+      "id": "legacy-life-02",
+      "type": "photo",
+      "title": "好朋友们的合页",
+      "date": "2026-09-03T20:18:48+08:00",
+      "tags": [
+        "朋友",
+        "合影",
+        "手绘"
+      ],
+      "src": "/media/life/life-02.webp",
+      "thumb": "/media/life/life-02-thumb.webp",
+      "display": "contain",
+      "featured": false,
+      "legacy": true
+    },
+    {
+      "id": "legacy-life-01",
+      "type": "photo",
+      "title": "青苔猪与旧日回声",
+      "date": "2026-09-03T20:18:46+08:00",
+      "tags": [
+        "手绘",
+        "小兽",
+        "纸页"
+      ],
+      "src": "/media/life/life-01.webp",
+      "thumb": "/media/life/life-01-thumb.webp",
+      "display": "contain",
+      "featured": false,
+      "legacy": true
+    }
+  ]
+}

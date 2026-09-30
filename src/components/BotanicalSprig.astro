@@ -1,0 +1,56 @@
+---
+interface Props {
+  variant?: 'lan' | 'ruo' | 'hui';
+  label?: boolean;
+  class?: string;
+}
+const { variant = 'lan', label = false, class: className = '' } = Astro.props;
+const names = {
+  lan: ['兰芷', 'LAN · ZHI / FRAGRANT HERBS'],
+  ruo: ['杜若', 'DU RUO / BY THE WATER'],
+  hui: ['蕙草', 'HUI / FRAGRANT HERB'],
+};
+---
+<figure class={`botanical-sprig botanical-${variant} ${className}`} aria-hidden="true">
+  <svg viewBox="0 0 180 320" role="img">
+    {variant === 'lan' && (
+      <>
+        <path class="stem" d="M93 304C90 248 92 188 99 133C104 93 112 55 124 22" />
+        <path class="leaf" d="M96 250C62 232 40 201 31 161C66 178 90 207 96 250Z" />
+        <path class="leaf" d="M99 205C126 180 145 151 155 115C127 125 105 158 99 205Z" />
+        <path class="leaf" d="M101 155C71 138 55 112 47 80C76 90 95 119 101 155Z" />
+        <path class="petal" d="M115 70C100 56 102 38 122 29C133 46 131 60 115 70Z" />
+        <path class="petal" d="M119 72C134 58 150 62 157 80C139 88 126 84 119 72Z" />
+        <path class="petal" d="M115 70C104 84 107 99 123 108C136 93 133 79 115 70Z" />
+        <circle class="seed" cx="118" cy="72" r="3" />
+      </>
+    )}
+    {variant === 'ruo' && (
+      <>
+        <path class="stem" d="M86 306C91 253 83 208 74 163C66 120 67 77 81 28" />
+        <path class="leaf" d="M77 240C45 233 23 211 14 180C46 180 69 202 77 240Z" />
+        <path class="leaf" d="M79 210C111 198 134 174 145 142C111 144 88 171 79 210Z" />
+        <path class="leaf" d="M73 164C46 149 31 127 28 98C56 105 72 128 73 164Z" />
+        <path class="leaf" d="M73 128C98 115 117 95 129 68C102 68 81 91 73 128Z" />
+        <circle class="berry" cx="77" cy="73" r="7" />
+        <circle class="berry" cx="91" cy="64" r="6" />
+        <circle class="berry" cx="68" cy="58" r="5" />
+        <circle class="berry" cx="82" cy="48" r="4" />
+      </>
+    )}
+    {variant === 'hui' && (
+      <>
+        <path class="stem" d="M92 306C93 244 91 185 86 125C83 86 76 53 66 24" />
+        <path class="leaf thin" d="M90 260C57 228 46 192 51 151C78 181 91 217 90 260Z" />
+        <path class="leaf thin" d="M90 220C118 192 130 161 130 126C105 148 92 181 90 220Z" />
+        <path class="leaf thin" d="M87 171C61 145 51 116 53 87C77 106 87 137 87 171Z" />
+        <path class="bud" d="M83 119C72 107 75 94 89 87C98 99 96 111 83 119Z" />
+        <path class="bud" d="M80 92C68 81 70 68 83 61C94 73 92 84 80 92Z" />
+        <path class="bud" d="M75 66C64 56 65 45 77 39C88 49 86 60 75 66Z" />
+      </>
+    )}
+  </svg>
+  {label && (
+    <figcaption><span>{names[variant][0]}</span><small>{names[variant][1]}</small></figcaption>
+  )}
+</figure>

@@ -1,0 +1,68 @@
+---
+const plants = [
+  { name:'江离', en:'JIANG LI', shape:'grass', line:'扈江离与辟芷兮', note:'香草佩饰的开篇。' },
+  { name:'辟芷', en:'PI ZHI', shape:'broad', line:'扈江离与辟芷兮', note:'与江离并生的清芬。' },
+  { name:'秋兰', en:'AUTUMN ORCHID', shape:'orchid', line:'纫秋兰以为佩', note:'纫作佩饰，也纫进衣襟。' },
+  { name:'蕙', en:'HUI HERB', shape:'hui', line:'又树蕙之百亩', note:'与兰并植，成片成畦。' },
+  { name:'木兰', en:'MAGNOLIA', shape:'branch', line:'朝搴阰之木兰兮', note:'清晨采下的木兰枝。' },
+  { name:'宿莽', en:'SU MANG', shape:'tuft', line:'夕揽洲之宿莽', note:'傍晚洲渚上的宿莽。' },
+  { name:'留夷', en:'LIU YI', shape:'liuyi', line:'畦留夷与揭车兮', note:'被种进畦里的芳草。' },
+  { name:'揭车', en:'JIE CHE', shape:'jieche', line:'畦留夷与揭车兮', note:'与留夷并列的香草意象。' },
+  { name:'杜衡', en:'DU HENG', shape:'heng', line:'杂杜衡与芳芷', note:'低伏而有香，落在草木之间。' },
+  { name:'申椒', en:'PEPPER', shape:'pepper', line:'杂申椒与菌桂兮', note:'辛香与桂木并置。' },
+  { name:'菌桂', en:'CASSIA', shape:'cassia', line:'杂申椒与菌桂兮', note:'桂木气息，清而有骨。' },
+  { name:'芰荷', en:'WATER CALTROP', shape:'lotus', line:'制芰荷以为衣兮', note:'水上叶片，被裁成衣。' },
+  { name:'芙蓉', en:'LOTUS BLOOM', shape:'bloom', line:'集芙蓉以为裳', note:'把水上的花收作衣裳。' },
+  { name:'秋菊', en:'AUTUMN CHRYSANTHEMUM', shape:'chrys', line:'夕餐秋菊之落英', note:'黄昏食落英，清苦而明。' },
+  { name:'薜荔', en:'BILI VINE', shape:'vine', line:'被薜荔兮带女萝', note:'山林里的藤衣。' },
+  { name:'女萝', en:'NU LUO', shape:'droop', line:'被薜荔兮带女萝', note:'从枝头垂下来的细蔓。' },
+  { name:'杜若', en:'DU RUO', shape:'ruo', line:'采芳洲兮杜若', note:'芳洲之上，最适合留下名字。' },
+];
+---
+<div class="chuci-herbarium" aria-label="楚辞香草意象标本墙">
+  {plants.map((plant, index) => (
+    <article class="specimen" data-shape={plant.shape} style={`--i:${index}`}>
+      <div class="specimen-art" aria-hidden="true">
+        <svg viewBox="0 0 160 190">
+          <path class="ground" d="M24 166c34 5 74 5 112 0" />
+          {plant.shape === 'grass' && <g class="plant-lines grass"><path d="M81 166C71 125 67 88 75 36"/><path d="M83 166c11-38 24-69 42-96"/><path d="M77 118c-22-12-35-28-42-48"/><ellipse cx="45" cy="72" rx="8" ry="24" transform="rotate(-38 45 72)"/><ellipse cx="117" cy="80" rx="7" ry="22" transform="rotate(35 117 80)"/></g>}
+          {plant.shape === 'broad' && <g class="plant-lines broad"><path d="M82 165c-2-48 1-87 2-126"/><ellipse cx="61" cy="92" rx="14" ry="31" transform="rotate(-42 61 92)"/><ellipse cx="104" cy="71" rx="13" ry="28" transform="rotate(42 104 71)"/><ellipse cx="58" cy="132" rx="12" ry="25" transform="rotate(-51 58 132)"/></g>}
+          {plant.shape === 'orchid' && <g class="plant-lines orchid"><path d="M80 165c-8-58-3-94 6-126"/><path d="M79 164c19-50 29-91 30-120"/><path d="M77 164c-30-40-39-73-39-99"/><path class="flower" d="M87 42c8-13 17-10 15 1 12-8 19 0 9 8 8 8 2 16-9 9-4 12-15 8-12-3-12 0-18-8-10-14 9-1 14-7 7-15Z"/></g>}
+          {plant.shape === 'hui' && <g class="plant-lines hui"><path d="M78 166c-7-55-1-99 7-136"/><path d="M82 165c14-51 25-88 42-118"/><path d="M75 165c-23-41-34-74-35-102"/><ellipse cx="45" cy="101" rx="7" ry="24" transform="rotate(-28 45 101)"/><ellipse cx="117" cy="90" rx="7" ry="24" transform="rotate(32 117 90)"/><path class="flower" d="M86 31c7-10 13-9 14 0 9-6 15 0 8 7 6 7 0 12-8 7-2 9-10 7-10-2-9 1-13-6-7-11 8 0 11-5 5-12Z"/></g>}
+          {plant.shape === 'liuyi' && <g class="plant-lines liuyi"><path d="M80 166c-2-55 2-97 8-131"/><path d="M82 101l-29-22M83 126l30-20"/><ellipse cx="52" cy="79" rx="8" ry="21" transform="rotate(-47 52 79)"/><ellipse cx="114" cy="106" rx="8" ry="21" transform="rotate(48 114 106)"/><circle class="seed" cx="89" cy="44" r="5"/><circle class="seed" cx="98" cy="55" r="4"/></g>}
+          {plant.shape === 'jieche' && <g class="plant-lines jieche"><path d="M80 167c1-56 0-103 5-137"/><path d="M83 79l-33-21M82 105l35-23M81 132l-28 19"/><ellipse cx="50" cy="57" rx="10" ry="19" transform="rotate(-50 50 57)"/><ellipse cx="118" cy="82" rx="10" ry="19" transform="rotate(48 118 82)"/><path class="flower" d="M86 31l10 12 15-2-9 12 5 15-14-7-13 9 2-16-11-10 15-2Z"/></g>}
+          {plant.shape === 'heng' && <g class="plant-lines heng"><path d="M80 164c0-31 1-54 4-77"/><path d="M80 126c-25-14-46-12-59 4 19 20 42 20 59-4ZM84 111c20-18 43-21 60-9-12 25-37 30-60 9Z"/><ellipse cx="79" cy="75" rx="12" ry="19"/><path class="flower" d="M80 61c-7-10-13-6-10 3-9-3-12 5-5 10-5 7 2 12 9 7 4 8 11 4 9-5 9 1 12-7 5-11Z"/></g>}
+          {plant.shape === 'branch' && <g class="plant-lines branch"><path d="M76 168c8-54 11-102 18-141"/><path d="M88 76l-30-27M88 94l35-29M83 120l-35 19"/><ellipse cx="57" cy="48" rx="10" ry="21" transform="rotate(-52 57 48)"/><ellipse cx="124" cy="65" rx="10" ry="22" transform="rotate(49 124 65)"/><path class="flower" d="M95 29c-10-14-21-8-16 4-14-3-18 8-5 14-6 12 5 18 14 8 8 9 19 3 14-8 13-7 7-18-7-18Z"/></g>}
+          {plant.shape === 'tuft' && <g class="plant-lines tuft">{[42,58,73,87,103,118].map((x,j)=><path d={`M80 166Q${x} ${108-j*4} ${x-8} ${55+j*3}`}/>)}<circle class="seed" cx="33" cy="58" r="4"/><circle class="seed" cx="112" cy="68" r="4"/></g>}
+          {plant.shape === 'pepper' && <g class="plant-lines pepper"><path d="M80 166c4-49 0-91 6-130"/><path d="M84 73l-28-22M83 94l31-22M81 121l-27 19"/>{[[55,49],[114,69],[53,140],[90,45],[99,111]].map(([x,y])=><circle class="berry" cx={x} cy={y} r="6"/>)}</g>}
+          {plant.shape === 'cassia' && <g class="plant-lines cassia"><path d="M80 167c3-58 4-100 6-141"/><path d="M84 64l-31-25M84 86l34-25M83 111l-35 25M82 132l31 18"/>{[[54,40,-45],[117,60,45],[48,136,-45],[114,150,48]].map(([x,y,r])=><ellipse cx={x} cy={y} rx="10" ry="22" transform={`rotate(${r} ${x} ${y})`}/>)}</g>}
+          {plant.shape === 'lotus' && <g class="plant-lines lotus"><path d="M79 166c4-40 2-76 0-108"/><path d="M80 116c-23-11-45-13-63-5 17 27 46 32 63 5ZM81 97c19-20 44-25 63-15-7 28-36 39-63 15Z"/></g>}
+          {plant.shape === 'bloom' && <g class="plant-lines bloom"><path d="M80 167c3-44 2-78 1-105"/><path class="flower" d="M81 62C68 37 79 24 93 46C97 18 113 18 113 43C132 25 144 38 128 56C154 53 158 70 136 77C152 93 137 105 119 90C117 115 99 115 97 92C83 114 66 106 68 87C42 93 36 76 59 73C49 51 62 42 81 62Z"/></g>}
+          {plant.shape === 'chrys' && <g class="plant-lines chrys"><path d="M80 167c4-45 1-85 3-111"/><path d="M80 116l-29-17M81 134l29-21"/><g class="flower chrys-flower">{[0,45,90,135,180,225,270,315].map((r)=><ellipse cx="83" cy="49" rx="5" ry="18" transform={`rotate(${r} 83 49)`}/>)}</g><circle class="berry" cx="83" cy="49" r="7"/></g>}
+          {plant.shape === 'vine' && <g class="plant-lines vine"><path d="M42 168c18-30 35-48 52-73 16-24 22-48 21-73"/><path d="M73 117c-24-10-38-24-43-42M96 92c21-8 35-21 42-40"/><path d="M110 55c-8-19-3-30 11-39"/><ellipse cx="32" cy="76" rx="10" ry="21" transform="rotate(-52 32 76)"/><ellipse cx="137" cy="53" rx="10" ry="21" transform="rotate(48 137 53)"/></g>}
+          {plant.shape === 'droop' && <g class="plant-lines droop"><path d="M52 21c30 24 43 58 42 95-1 20 6 37 22 50"/><path d="M74 58c-21 6-34 17-39 34M94 101c19 4 31 14 37 29"/><ellipse cx="35" cy="91" rx="9" ry="19" transform="rotate(-42 35 91)"/><ellipse cx="132" cy="130" rx="9" ry="19" transform="rotate(46 132 130)"/></g>}
+          {plant.shape === 'ruo' && <g class="plant-lines ruo"><path d="M80 166c-4-51-1-92 3-126"/><path d="M81 86l-32-25M82 111l31-25M80 137l-28 18"/><ellipse cx="48" cy="61" rx="13" ry="25" transform="rotate(-48 48 61)"/><ellipse cx="114" cy="86" rx="12" ry="24" transform="rotate(47 114 86)"/><path class="flower" d="M83 42c-9-14-17-10-15 2-12-7-18 2-8 9-8 8 0 15 10 8 3 11 14 7 11-4 11 0 15-10 6-15Z"/></g>}
+        </svg>
+      </div>
+      <div class="specimen-copy">
+        <span>{String(index + 1).padStart(2,'0')} / 楚辞草木</span>
+        <h3>{plant.name}</h3>
+        <small>{plant.en}</small>
+        <blockquote>“{plant.line}”</blockquote>
+        <p>{plant.note}</p>
+      </div>
+    </article>
+  ))}
+</div>
+
+<style>
+.chuci-herbarium{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line-strong);border-left:1px solid var(--line)}
+.specimen{min-height:390px;display:grid;grid-template-rows:220px 1fr;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:linear-gradient(155deg,rgba(248,245,237,.5),rgba(223,231,220,.18));position:relative;overflow:hidden}
+.specimen::after{content:'';position:absolute;width:120px;height:120px;border:1px solid rgba(85,117,107,.08);border-radius:50%;right:-52px;top:-54px}
+.specimen-art{display:grid;place-items:center;padding:22px 20px 0}.specimen-art svg{width:150px;height:185px;overflow:visible}.ground{fill:none;stroke:rgba(63,86,65,.13);stroke-width:1}.plant-lines{fill:rgba(111,139,111,.08);stroke:rgba(62,88,68,.62);stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}.plant-lines ellipse{fill:rgba(111,139,111,.09)}.plant-lines .flower{fill:rgba(139,78,67,.08);stroke:rgba(139,78,67,.48)}.berry,.seed{fill:rgba(139,78,67,.19);stroke:rgba(139,78,67,.5)}
+.specimen-copy{padding:17px 20px 21px;border-top:1px solid rgba(63,86,65,.08)}.specimen-copy>span{color:var(--sage);font-size:7px;letter-spacing:.14em}.specimen-copy h3{margin:8px 0 0;color:var(--moss);font:400 28px/1 var(--serif)}.specimen-copy small{display:block;margin-top:4px;color:var(--mist);font-size:6px;letter-spacing:.12em}.specimen-copy blockquote{margin:14px 0 8px;padding:0;border:0;color:var(--ink-soft);font:15px/1.6 var(--serif)}.specimen-copy p{margin:0;color:var(--mist);font:10px/1.6 var(--serif)}
+.has-js .specimen:nth-child(3n+1) .plant-lines{animation:herb-sway-a 7s ease-in-out infinite alternate;transform-origin:80px 166px}.has-js .specimen:nth-child(3n+2) .plant-lines{animation:herb-sway-b 8.5s ease-in-out infinite alternate;transform-origin:80px 166px}.has-js .specimen:nth-child(3n) .plant-lines{animation:herb-sway-a 9.2s ease-in-out infinite alternate-reverse;transform-origin:80px 166px}
+@keyframes herb-sway-a{from{transform:rotate(-.8deg) translateY(1px)}to{transform:rotate(1.3deg) translateY(-2px)}}@keyframes herb-sway-b{from{transform:rotate(.7deg)}to{transform:rotate(-1.1deg) translateX(2px)}}
+@media(max-width:900px){.chuci-herbarium{grid-template-columns:repeat(2,1fr)}}@media(max-width:560px){.chuci-herbarium{grid-template-columns:1fr}.specimen{grid-template-columns:135px 1fr;grid-template-rows:1fr;min-height:220px}.specimen-art{padding:12px}.specimen-art svg{width:120px;height:160px}.specimen-copy{border-top:0;border-left:1px solid rgba(63,86,65,.08)}}
+@media(prefers-reduced-motion:reduce){.plant-lines{animation:none!important}}
+</style>

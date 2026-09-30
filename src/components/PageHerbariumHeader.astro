@@ -1,0 +1,26 @@
+---
+import BotanicalSprig from './BotanicalSprig.astro';
+
+interface Props {
+  eyebrow: string;
+  title: string;
+  english: string;
+  intro: string;
+  variant?: 'lan' | 'ruo' | 'hui';
+  folio?: string;
+}
+const { eyebrow, title, english, intro, variant = 'lan', folio = 'R/S · 2026' } = Astro.props;
+---
+<header class="folio-hero">
+  <div class="folio-title-block">
+    <p class="eyebrow">{eyebrow}</p>
+    <h1>{title}</h1>
+    <p class="folio-english">{english}</p>
+  </div>
+  <div class="folio-intro-panel">
+    <BotanicalSprig variant={variant} class="folio-intro-herb" />
+    <span class="folio-code">{folio}</span>
+    <p>{intro}</p>
+    <div class="folio-ripple" aria-hidden="true"><i></i><i></i><i></i></div>
+  </div>
+</header>

@@ -1,0 +1,42 @@
+---
+import HerbDivider from './HerbDivider.astro';
+import ChuciGlyph from './ChuciGlyph.astro';
+---
+<footer class="site-footer">
+  <div class="shell footer-bookend">
+    <HerbDivider label="水边植物志 · rippleshe" quiet={true} />
+    <ChuciGlyph variant="lotus" compact={true} class="footer-chuci-lotus" />
+    <div class="footer-waterline" aria-hidden="true">
+      <svg viewBox="0 0 1000 74" preserveAspectRatio="none">
+        <path class="footer-water-a" d="M0 34c105-8 177 8 276 1 113-8 172-6 270 1 113 8 222-12 454-1" />
+        <path class="footer-water-b" d="M84 46c94-5 151 6 243 0 84-6 153-4 238 2 93 6 159-4 274-2" />
+        <g class="footer-fish" transform="translate(110 38)">
+          <path d="M-20 0c9-10 27-10 38 0-10 10-28 10-38 0Z" />
+          <path d="M-18 0l-15-9 4 9-4 9Z" />
+          <circle cx="10" cy="-2" r="1.2" />
+        </g>
+        <g class="footer-reeds">
+          <path d="M920 69c-1-25 4-44 15-61M943 71c-2-22 3-39 14-54M964 72c0-19 5-34 14-45" />
+          <ellipse cx="936" cy="8" rx="4" ry="10" transform="rotate(22 936 8)" />
+          <ellipse cx="958" cy="16" rx="4" ry="10" transform="rotate(28 958 16)" />
+        </g>
+      </svg>
+    </div>
+    <div class="footer-inner">
+      <div class="footer-signature">
+        <span class="footer-monogram" aria-hidden="true">R/S</span>
+        <p>Rippleshe · 一些字，一些日子，一些折腾。</p>
+        <small>grown slowly somewhere by the water.</small>
+      </div>
+      <div class="footer-links">
+        <a href="/life/">沿时而行</a>
+        <a href="/scenes/">小景</a>
+        <a href="/now/">此刻</a>
+        <a href="/uses/">器物</a>
+        <a href="/resume/">履历</a>
+        <a href="/guestbook/">留字</a>
+        <a href="https://github.com/rippleshe" rel="me">GitHub ↗</a>
+      </div>
+    </div>
+  </div>
+</footer>

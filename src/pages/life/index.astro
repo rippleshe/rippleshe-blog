@@ -1,0 +1,108 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import BotanicalSprig from '../../components/BotanicalSprig.astro';
+import HerbDivider from '../../components/HerbDivider.astro';
+import GardenWayfinder from '../../components/GardenWayfinder.astro';
+import { getCollection } from 'astro:content';
+import { libraryItems, formatLibraryDate } from '../../lib/library';
+import { gardenUrl, titleOf } from '../../lib/content';
+import { publicFolios, folioMemberKey, folioUrl } from '../../lib/folios';
+
+const garden = (await getCollection('garden', ({ data }) => data.publish)).map((entry) => ({
+  id: `g-${entry.id}`,
+  memberKey: `garden:${entry.id.replace(/\.mdx?$/, '')}`,
+  type: '文字' as const,
+  title: titleOf(entry),
+  date: entry.data.date.toISOString(),
+  href: gardenUrl(entry),
+  kind: entry.data.kind,
+  tags: entry.data.tags,
+}));
+
+const media = libraryItems.map((item) => ({
+  id: item.id,
+  memberKey: `library:${item.id}`,
+  type: item.type === 'photo' ? '影像' as const : '文档' as const,
+  title: item.title,
+  date: item.date,
+  href: item.type === 'photo' ? '/collection/#photo-gallery-title' : item.src,
+  kind: item.type === 'photo' ? '照片' : item.ext || '文档',
+  tags: item.tags,
+  thumb: item.thumb,
+}));
+
+const covered = new Set(publicFolios.flatMap((folio) => folio.items.map(folioMemberKey)));
+const libraryById = new Map(libraryItems.map((item) => [item.id, item]));
+const folioItems = publicFolios.map((folio) => {
+  const coverRef = folio.items.find((item) => item.source === 'library' && libraryById.get(item.ref)?.type === 'photo');
+  const cover = coverRef ? libraryById.get(coverRef.ref) : undefined;
+  return {
+    id: `f-${folio.id}`,
+    memberKey: '',
+    type: '册页' as const,
+    title: folio.title,
+    date: `${folio.date}T12:00:00`,
+    href: folioUrl(folio),
+    kind: `${folio.items.length} 项`,
+    tags: [] as string[],
+    thumb: cover?.thumb,
+  };
+});
+
+const all = [
+  ...folioItems,
+  ...garden.filter((item) => !covered.has(item.memberKey)),
+  ...media.filter((item) => !covered.has(item.memberKey)),
+].sort((a, b) => new Date(b.date).valueOf() - new Date(a.date).valueOf());
+const groups = new Map<string, typeof all>();
+for (const item of all) {
+  const d = new Date(item.date);
+  const key = `${d.getFullYear()} 年 ${String(d.getMonth() + 1).padStart(2, '0')} 月`;
+  groups.set(key, [...(groups.get(key) || []), item]);
+}
+---
+<BaseLayout title="日录" description="文字、影像、文档与册页按时间汇成的一条日录。">
+  <div class="shell timeline-page">
+    <header class="timeline-hero">
+      <div>
+        <p class="eyebrow">Time path · along the garden</p>
+        <h1>日录</h1>
+        <p>如果芳洲按文字看、藏册按收藏看，这里只按时间看。字句、影像和纸页不另存一份；真正属于同一段经历的内容，则收成一张册页。</p>
+      </div>
+      <div class="timeline-clock" aria-label="当前日期">
+        <span class="timeline-day" id="timeline-day">--</span>
+        <div><b id="timeline-month">--</b><small id="timeline-year">----</small></div>
+        <BotanicalSprig variant="ruo" />
+      </div>
+    </header>
+
+    <HerbDivider label="岁时有序 · newest first" />
+
+    <div class="timeline-stream">
+      {[...groups.entries()].map(([month, items], monthIndex) => (
+        <section class="timeline-month-group">
+          <aside><span>{String(monthIndex + 1).padStart(2, '0')}</span><h2>{month}</h2></aside>
+          <div class="timeline-items">
+            {items.map((item) => (
+              <a class={`timeline-entry timeline-entry-${item.type === '影像' ? 'photo' : item.type === '文档' ? 'document' : item.type === '册页' ? 'folio' : 'text'}`} href={item.href} target={item.type === '文档' ? '_blank' : undefined}>
+                <time>{formatLibraryDate(item.date).slice(5)}</time>
+                {'thumb' in item && item.thumb ? <img src={item.thumb} alt="" loading="lazy" /> : <span class="timeline-symbol" aria-hidden="true">{item.type === '文字' ? '文' : item.type === '册页' ? '册' : '纸'}</span>}
+                <div><small>{item.type} · {item.kind}</small><h3>{item.title}</h3>{item.tags.length > 0 && <p>{item.tags.join(' · ')}</p>}</div>
+                <span class="timeline-arrow">↗</span>
+              </a>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+
+    <div class="timeline-end"><BotanicalSprig variant="lan" /><p>水往前流，旧日子并没有走远，只是安静地停在自己的月份里。</p><a class="rule-link" href="/collection/">去看藏册</a></div>
+    <GardenWayfinder current="life" />
+  </div>
+  <script is:inline>
+    const now = new Date();
+    document.querySelector('#timeline-day').textContent = String(now.getDate()).padStart(2,'0');
+    document.querySelector('#timeline-month').textContent = `${String(now.getMonth()+1).padStart(2,'0')} 月`;
+    document.querySelector('#timeline-year').textContent = String(now.getFullYear());
+  </script>
+</BaseLayout>

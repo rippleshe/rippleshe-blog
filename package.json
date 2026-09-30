@@ -1,0 +1,45 @@
+{
+  "name": "rippleshe-blog",
+  "type": "module",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev --host 127.0.0.1 --port 4173",
+    "garden": "node scripts/garden.mjs",
+    "check": "astro check",
+    "build": "node scripts/content-audit.mjs && astro check && astro build && node scripts/package-edgeone.mjs",
+    "preview": "astro preview",
+    "images": "node scripts/process-images.mjs",
+    "content:sync": "node scripts/sync-content.mjs",
+    "studio": "node scripts/studio.mjs",
+    "guestbook": "node scripts/guestbook-server.mjs",
+    "audit:content": "node scripts/content-audit.mjs",
+    "audit:cloudbase": "node scripts/cloudbase-pg-audit.mjs",
+    "audit:prod": "node scripts/production-audit.mjs",
+    "release:check": "node scripts/release.mjs",
+    "release:site": "node scripts/release.mjs --publish",
+    "audit:deps": "pnpm audit --prod --registry=https://registry.npmjs.org",
+    "cloudbase:keys": "node scripts/cloudbase-keys.mjs",
+    "cloudbase:owner": "node scripts/cloudbase-owner.mjs",
+    "cloudbase:gate": "node scripts/cloudbase-gate.mjs",
+    "cloudbase:schema": "node scripts/cloudbase-schema.mjs",
+    "audit:edgeone": "node scripts/edgeone-audit.mjs"
+  },
+  "dependencies": {
+    "astro": "7.2.10",
+    "sharp": "0.35.4"
+  },
+  "allowScripts": {
+    "esbuild": true
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "@cloudbase/cli": "^3.8.1",
+    "edgeone": "^1.6.33",
+    "playwright-core": "^1.62.1",
+    "typescript": "^6.0.3"
+  }
+}
