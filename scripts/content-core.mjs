@@ -238,6 +238,7 @@ function parseGardenNote(file, raw) {
     id: rel,
     title: String(meta.title || fallbackTitle),
     date: String(meta.date || ''),
+    updated: String(meta.updated || ''),
     kind: String(meta.kind || '小札'),
     tags: Array.isArray(meta.tags) ? meta.tags : [],
     publish: meta.publish !== false,
@@ -276,6 +277,7 @@ function patchFrontmatter(front, input) {
   const values = new Map([
     ['title', ['title: ' + JSON.stringify(String(input.title || '').trim() || '无题小札')]],
     ['date', ['date: ' + date]],
+    ...(input.updated ? [['updated', ['updated: ' + String(input.updated)]]] : []),
     ['kind', ['kind: ' + kind]],
     ['tags', tags.length ? ['tags:', ...tags.map((tag) => '  - ' + JSON.stringify(tag))] : ['tags: []']],
     ['publish', ['publish: ' + String(input.publish !== false)]],
@@ -303,7 +305,7 @@ export async function updateGardenNote(id, input) {
   const body = String(input.body || '').replace(/\r\n?/g, '\n').trim();
   if (!body) throw new Error('正文还没有写。');
   if (input.publish === false) await assertCanHideFromPublicFolio('garden', id);
-  const front = patchFrontmatter(match[1], input);
+  const front = patchFrontmatter(match[1], { ...input, updated: localDateString() });
   await fs.writeFile(file, '---\n' + front + '\n---\n' + body + '\n', 'utf8');
   return parseGardenNote(file, await fs.readFile(file, 'utf8'));
 }

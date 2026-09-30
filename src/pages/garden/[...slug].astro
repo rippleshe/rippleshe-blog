@@ -8,8 +8,9 @@ import { publicFolios, folioUrl } from '../../lib/folios';
 type RelatedLeaf = { entry: GardenEntry; sharedTags: string[] };
 
 export async function getStaticPaths() {
-  const entries = await getCollection('garden', ({ data }) => data.publish);
-  return entries.map((entry) => {
+  const entries = (await getCollection('garden', ({ data }) => data.publish))
+    .sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf() || titleOf(a).localeCompare(titleOf(b), 'zh-CN'));
+  return entries.map((entry, index) => {
     const ownTags = new Set(entry.data.tags);
     const related: RelatedLeaf[] = entries
       .filter((other) => other.id !== entry.id)
@@ -21,12 +22,20 @@ export async function getStaticPaths() {
         return Math.abs(a.entry.data.date.valueOf() - entry.data.date.valueOf()) - Math.abs(b.entry.data.date.valueOf() - entry.data.date.valueOf());
       })
       .slice(0, 3);
-    return { params: { slug: entry.id.replace(/\.mdx?$/, '') }, props: { entry, related } };
+    return {
+      params: { slug: entry.id.replace(/\.mdx?$/, '') },
+      props: { entry, related, olderEntry: entries[index - 1], newerEntry: entries[index + 1] },
+    };
   });
 }
 
-interface Props { entry: CollectionEntry<'garden'>; related: RelatedLeaf[]; }
-const { entry, related } = Astro.props;
+interface Props {
+  entry: CollectionEntry<'garden'>;
+  related: RelatedLeaf[];
+  olderEntry?: CollectionEntry<'garden'>;
+  newerEntry?: CollectionEntry<'garden'>;
+}
+const { entry, related, olderEntry, newerEntry } = Astro.props;
 const { Content } = await render(entry);
 
 function dayKey(value: Date | string) {
@@ -43,14 +52,15 @@ const hasEchoes = Boolean(boundFolio || sameDayMedia.length || relatedShown.leng
 <GardenLayout
   title={titleOf(entry)}
   date={entry.data.date}
+  updated={entry.data.updated}
   kind={entry.data.kind}
   tags={entry.data.tags}
   description={entry.data.description}
   lang={entry.data.lang}
 >
   <Content />
-  {hasEchoes && (
-    <Fragment slot="after-prose">
+  <Fragment slot="after-prose">
+    {hasEchoes && (
       <section class="reading-echoes" aria-labelledby="reading-echoes-title">
         <header class="reading-echoes-head">
           <div><p class="eyebrow">Nearby leaves · 旁页</p><h2 id="reading-echoes-title">这一页之外</h2></div>
@@ -87,8 +97,25 @@ const hasEchoes = Boolean(boundFolio || sameDayMedia.length || relatedShown.leng
           ))}
         </div>
       </section>
-    </Fragment>
-  )}
+    )}
+
+    {(olderEntry || newerEntry) && (
+      <nav class="reading-time-trail" aria-label="按时间继续阅读">
+        {olderEntry ? (
+          <a href={gardenUrl(olderEntry)} class="reading-time-link reading-time-older">
+            <small>← 更早一页 · {formatDate(olderEntry.data.date)}</small>
+            <b>{titleOf(olderEntry)}</b>
+          </a>
+        ) : <span></span>}
+        {newerEntry ? (
+          <a href={gardenUrl(newerEntry)} class="reading-time-link reading-time-newer">
+            <small>更新一页 · {formatDate(newerEntry.data.date)} →</small>
+            <b>{titleOf(newerEntry)}</b>
+          </a>
+        ) : <span></span>}
+      </nav>
+    )}
+  </Fragment>
 </GardenLayout>
 
 <style>
@@ -108,5 +135,8 @@ const hasEchoes = Boolean(boundFolio || sameDayMedia.length || relatedShown.leng
   .reading-echo-paper,.reading-echo-word{display:grid;grid-template-columns:68px 1fr;align-items:stretch}
   .reading-paper-mark,.reading-word-mark{display:grid;place-items:center;border-right:1px solid var(--line);color:var(--seal);font:11px var(--serif);letter-spacing:.08em}
   .reading-word-mark{font-size:19px;color:var(--moss)}.reading-echo em{display:block;margin-top:8px;color:var(--mist);font:normal 8px var(--sans);letter-spacing:.05em}
-  @media(max-width:620px){.reading-echoes-head{grid-template-columns:1fr}.reading-echoes-head>p{text-align:left}.reading-echo-grid{grid-template-columns:1fr}.reading-folio-backlink{grid-template-columns:56px 1fr}.reading-folio-backlink i{grid-column:2}.reading-echo-photo{grid-template-columns:92px 1fr}.reading-echo-photo img{width:92px}}
+  .reading-time-trail{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:46px 0 6px;padding-top:24px;border-top:1px solid var(--line)}
+  .reading-time-link{min-width:0;padding:4px 0}.reading-time-link small{display:block;margin-bottom:6px;color:var(--sage);font:8px var(--sans);letter-spacing:.07em}.reading-time-link b{display:block;font:400 17px/1.45 var(--serif);color:var(--ink)}
+  .reading-time-link:hover b{color:var(--moss)}.reading-time-newer{text-align:right}
+  @media(max-width:620px){.reading-echoes-head{grid-template-columns:1fr}.reading-echoes-head>p{text-align:left}.reading-echo-grid{grid-template-columns:1fr}.reading-folio-backlink{grid-template-columns:56px 1fr}.reading-folio-backlink i{grid-column:2}.reading-echo-photo{grid-template-columns:92px 1fr}.reading-echo-photo img{width:92px}.reading-time-trail{grid-template-columns:1fr;gap:18px}.reading-time-newer{text-align:left}}
 </style>

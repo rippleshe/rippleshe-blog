@@ -8,12 +8,14 @@ import { formatDate } from '../lib/content';
 interface Props {
   title: string;
   date: Date;
+  updated?: Date;
   kind: string;
   tags?: string[];
   description?: string;
   lang?: 'zh' | 'en';
 }
-const { title, date, kind, tags = [], description, lang = 'zh' } = Astro.props;
+const { title, date, updated, kind, tags = [], description, lang = 'zh' } = Astro.props;
+const tended = updated && formatDate(updated) !== formatDate(date) ? updated : undefined;
 const kindNotes: Record<string, string> = {
   '诗': 'POEM / A PRESSED MOMENT',
   '词': 'LYRIC / BY THE WATER',
@@ -44,7 +46,8 @@ const kindGlyph: 'lan' | 'ruo' | 'lotus' | 'vine' | 'hui' = kind === '诗' ? 'la
         {kind === '信' && <span class="letter-seal" aria-hidden="true">信</span>}
       </div>
       <div class="reading-meta reading-meta-v2">
-        <time datetime={date.toISOString()}>{formatDate(date)}</time>
+        <time datetime={date.toISOString()}>写于 {formatDate(date)}</time>
+        {tended && <><span aria-hidden="true">·</span><time datetime={tended.toISOString()}>再理于 {formatDate(tended)}</time></>}
         <span aria-hidden="true">·</span>
         <span>{kind}</span>
       </div>
