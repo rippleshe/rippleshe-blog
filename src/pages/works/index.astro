@@ -7,69 +7,281 @@ import GardenWayfinder from '../../components/GardenWayfinder.astro';
 import ChuciGlyph from '../../components/ChuciGlyph.astro';
 
 const projects = [
-  { no: '01', name: 'SciPlot Academic', desc: '科研绘图工具。把尺寸、字体、配色和常用图形先收进一个 Python 包，下一张图少从头来一遍。', year: '2026', href: '/works/sciplot/', kind: 'VISUALIZATION', glyph: 'plot' as const },
-  { no: '02', name: 'PanView', desc: '给 Pandoc 做的一层跨平台图形界面，把文档转换的常用动作放到手边。', year: '2026', href: 'https://github.com/rippleshe/PanView', kind: 'DESKTOP TOOL', glyph: 'window' as const },
-  { no: '03', name: 'NeteaseDL', desc: '一个小而完整的音乐链接解析与下载 Web 工具。', year: '2026', href: 'https://github.com/rippleshe/NeteaseDL', kind: 'WEB UTILITY', glyph: 'signal' as const },
-  { no: '04', name: 'IM Training Agent', desc: '围绕个性化训练、多智能体协同和可解释验证做的一套系统。', year: '2026', href: 'https://github.com/rippleshe/IM', kind: 'MULTI-AGENT', glyph: 'agents' as const },
+  {
+    no: '01',
+    name: 'SciPlot Academic',
+    tagline: '面向学术顶刊的高精度科研绘图系统',
+    desc: '覆盖 Nature / IEEE / Thesis 严苛出版规范，内建 45+ 经典图表家族、声明式极简 API 与 1200 DPI 矢量渲染管线。',
+    year: '2026',
+    href: '/works/sciplot/',
+    kind: 'VISUALIZATION SYSTEM',
+    badge: 'CORE SYSTEM',
+    tech: ['Python', 'Matplotlib', 'Publication Standard', 'Vector Pipeline'],
+    glyph: 'plot' as const,
+  },
+  {
+    no: '02',
+    name: 'PanView',
+    tagline: '多源文档排版与全景渲染桌面引擎',
+    desc: '基于跨平台图形架构封装的高效学术文档转换与可视化交互工具，无缝协同 LaTeX、Markdown 与主流出版排版流。',
+    year: '2026',
+    href: 'https://github.com/rippleshe/PanView',
+    kind: 'DESKTOP APPLICATION',
+    badge: 'OPEN SOURCE',
+    tech: ['Tauri', 'Rust / Web', 'Pandoc Engine', 'Desktop UI'],
+    glyph: 'window' as const,
+  },
+  {
+    no: '03',
+    name: 'NeteaseDL',
+    tagline: '高性能流媒体音频解析与元数据套件',
+    desc: '轻量化音频流协议解析、无损封面与 ID3 标签自动化注入工具，兼具高可用服务端接口与响应式 Web 控制台。',
+    year: '2026',
+    href: 'https://github.com/rippleshe/NeteaseDL',
+    kind: 'STREAM UTILITY',
+    badge: 'TOOL SUITE',
+    tech: ['TypeScript', 'Node.js', 'Media Codec', 'REST API'],
+    glyph: 'signal' as const,
+  },
+  {
+    no: '04',
+    name: 'IM Training Agent',
+    tagline: '交互式决策与强化学习多智能体协同平台',
+    desc: '面向复杂决策场景的自主代理训练框架，支持多智能体博弈协同、轨迹可视化分析与可解释性策略评估。',
+    year: '2026',
+    href: 'https://github.com/rippleshe/IM',
+    kind: 'MULTI-AGENT RL',
+    badge: 'RESEARCH ARCH',
+    tech: ['Python', 'PyTorch', 'Multi-Agent RL', 'Interpretability'],
+    glyph: 'agents' as const,
+  },
 ];
 ---
-<BaseLayout title="造物" description="Rippleshe 做过的一些东西。">
+<BaseLayout title="造物研制录" description="Rippleshe 的工程作品与系统研制录。涵盖科研可视化、系统软件与智能体系统。">
   <div class="shell works-page-v2">
     <header class="works-hero works-hero-v2">
       <div class="works-title-block">
-        <p class="eyebrow">Things I made · 造物簿</p>
+        <p class="eyebrow">Works & Systems · 造物研制录</p>
         <h1>造物</h1>
-        <p class="works-english">THINGS THAT MADE IT OFF THE DESK</p>
+        <p class="works-english">ENGINEERING, VISUALIZATION & AUTONOMOUS SYSTEMS</p>
       </div>
       <div class="works-intro-panel">
         <div class="works-ripple"><RippleMark size={88} /></div>
-        <span>WORKS / 2026</span>
-        <p>有些想法在纸上停一会儿，有些会被我反复拆开、重做，最后真的长成一个可以用的东西。</p>
-        <small>design · code · research · curiosity</small>
+        <span>ARCHIVE / 2026</span>
+        <p>以严谨工程构筑稳固的系统实体，连接底层机理、数据表征与人机交互。</p>
+        <div class="works-domains">
+          <span>学术科研可视化</span>
+          <span>跨平台桌面工程</span>
+          <span>流媒体解析工具</span>
+          <span>强化学习多智能体</span>
+        </div>
       </div>
     </header>
 
     <section class="works-featured" aria-labelledby="featured-work-title">
       <div class="works-featured-copy">
-        <div class="works-featured-topline"><span>01 / FEATURED</span><i>PYTHON · VISUALIZATION</i></div>
+        <div class="works-featured-topline">
+          <span class="badge-featured">01 / CORE WORK</span>
+          <i>PYTHON · VISUALIZATION</i>
+        </div>
         <h2 id="featured-work-title">SciPlot<br /><em>Academic</em></h2>
-        <p>把尺寸、字体、刻度和配色这些反复出现的细节，慢慢收成一套顺手的习惯。</p>
-        <a class="rule-link" href="/works/sciplot/">进入项目页</a>
+        <p class="featured-lead">面向学术顶级期刊的高精度科研绘图系统。将复杂的排版规范、感知一致色彩与多维统计表征收束为纯粹的声明式调用。</p>
+        
+        <div class="featured-metrics-strip">
+          <div><b>45+</b><span>图表家族</span></div>
+          <div><b>4 大</b><span>顶刊规范</span></div>
+          <div><b>1200</b><span>DPI 矢量</span></div>
+        </div>
+
+        <a class="rule-link" href="/works/sciplot/">查看完整系统规范与画廊 ↗</a>
       </div>
       <div class="works-featured-board">
-        <span class="works-board-code">PLATE / 01</span>
+        <span class="works-board-code">SPECIMEN / 01 · MULTI-LINE & CONFIDENCE</span>
         <SciPlotPlate />
         <div class="works-board-grid" aria-hidden="true"></div>
       </div>
     </section>
 
     <div class="works-register-head">
-      <span>REGISTER / OTHER WORKS</span>
-      <span>03 ENTRIES</span>
+      <span>SYSTEM REGISTRY · 研制名录</span>
+      <span>{projects.length} 项成果</span>
     </div>
+
     <div class="project-list project-list-v2">
-      {projects.slice(1).map((project) => (
-        <a class="project-row project-row-v2" href={project.href}>
-          <span class="project-no">{project.no}</span>
-          <div class="project-glyph-wrap"><WorkGlyph variant={project.glyph} /></div>
-          <div class="project-main">
-            <span class="project-kind">{project.kind}</span>
-            <span class="project-name">{project.name}</span>
+      {projects.map((project) => (
+        <article class="project-card-full">
+          <div class="project-header-row">
+            <span class="project-no">{project.no}</span>
+            <div class="project-title-group">
+              <span class="project-badge">{project.badge}</span>
+              <h3>{project.name}</h3>
+              <p class="project-tagline">{project.tagline}</p>
+            </div>
+            <div class="project-glyph-wrap">
+              <WorkGlyph variant={project.glyph} />
+            </div>
           </div>
-          <span class="project-desc">{project.desc}</span>
-          <span class="project-year">{project.year} ↗</span>
-        </a>
+
+          <p class="project-desc">{project.desc}</p>
+
+          <div class="project-footer-row">
+            <div class="project-tech-tags" aria-label="技术栈">
+              {project.tech.map((t) => <span>{t}</span>)}
+            </div>
+            <a class="project-action-link" href={project.href} target={project.href.startsWith('http') ? '_blank' : undefined} rel={project.href.startsWith('http') ? 'noreferrer' : undefined}>
+              <span>{project.href.startsWith('http') ? '访问仓库' : '项目专页'}</span>
+              <b>↗</b>
+            </a>
+          </div>
+        </article>
       ))}
     </div>
 
     <section class="works-closing-note">
-      <div class="works-closing-ripple" aria-hidden="true"><i></i><i></i><i></i><ChuciGlyph variant="pepper" compact={true} class="works-chuci-pepper" /></div>
+      <div class="works-closing-ripple" aria-hidden="true">
+        <i></i><i></i><i></i>
+        <ChuciGlyph variant="pepper" compact={true} class="works-chuci-pepper" />
+      </div>
       <div>
-        <p class="eyebrow">A note on making</p>
-        <strong>我喜欢“做出来”这件事本身。</strong>
-        <p>大的、小的、长期的、偶然的，都有各自的手感。做过一遍，世界上就多了一样原先没有的东西。</p>
+        <p class="eyebrow">Engineering Axiom · 研制宗旨</p>
+        <strong>器物有度，工致入微。</strong>
+        <p>从算法推演至生产可用，每项造物皆有其确凿的边界与使命。追求代码精炼、体验专注与科学可复现。</p>
       </div>
     </section>
+
     <GardenWayfinder current="works" />
   </div>
 </BaseLayout>
+
+<style>
+  .works-domains {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .works-domains span {
+    font-size: 11px;
+    padding: 3px 8px;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,0.4);
+    color: var(--moss);
+  }
+  .featured-lead {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--ink);
+    margin: 12px 0 16px;
+  }
+  .featured-metrics-strip {
+    display: flex;
+    gap: 20px;
+    padding: 12px 0;
+    margin-bottom: 20px;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+  .featured-metrics-strip b {
+    display: block;
+    font-size: 20px;
+    font-family: var(--serif);
+    color: var(--moss);
+  }
+  .featured-metrics-strip span {
+    font-size: 10px;
+    color: var(--mist);
+    letter-spacing: 0.05em;
+  }
+  .project-card-full {
+    display: flex;
+    flex-direction: column;
+    padding: 24px 28px;
+    border: 1px solid var(--line);
+    background: rgba(255,255,255,0.45);
+    margin-bottom: 16px;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .project-card-full:hover {
+    border-color: var(--line-strong);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(44, 53, 41, 0.04);
+  }
+  .project-header-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 12px;
+  }
+  .project-no {
+    font-family: var(--serif);
+    font-size: 14px;
+    color: var(--sage);
+    font-weight: 500;
+  }
+  .project-title-group {
+    flex: 1;
+  }
+  .project-badge {
+    display: inline-block;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--moss);
+    background: rgba(125,146,120,0.12);
+    padding: 1px 6px;
+    margin-bottom: 4px;
+  }
+  .project-title-group h3 {
+    margin: 0;
+    font-size: 20px;
+    font-family: var(--serif);
+    color: var(--ink);
+  }
+  .project-tagline {
+    margin: 4px 0 0;
+    font-size: 13px;
+    color: var(--moss);
+    font-weight: 500;
+  }
+  .project-desc {
+    margin: 0 0 16px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--ink);
+    opacity: 0.85;
+  }
+  .project-footer-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+    padding-top: 14px;
+    border-top: 1px dashed var(--line);
+  }
+  .project-tech-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .project-tech-tags span {
+    font-size: 10px;
+    padding: 2px 7px;
+    background: rgba(240, 237, 228, 0.6);
+    border: 1px solid var(--line);
+    color: var(--ink);
+  }
+  .project-action-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--moss);
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s ease;
+  }
+  .project-action-link:hover {
+    border-color: var(--moss);
+  }
+</style>

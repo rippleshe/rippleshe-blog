@@ -5,6 +5,12 @@ import HerbDivider from '../components/HerbDivider.astro';
 import ChuciGlyph from '../components/ChuciGlyph.astro';
 import { formatDate } from '../lib/content';
 
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
 interface Props {
   title: string;
   date: Date;
@@ -13,92 +19,503 @@ interface Props {
   tags?: string[];
   description?: string;
   lang?: 'zh' | 'en';
+  headings?: Heading[];
+  wordCount?: number;
+  readingMinutes?: number;
 }
-const { title, date, updated, kind, tags = [], description, lang = 'zh' } = Astro.props;
+const {
+  title,
+  date,
+  updated,
+  kind,
+  tags = [],
+  description,
+  lang = 'zh',
+  headings = [],
+  wordCount,
+  readingMinutes,
+} = Astro.props;
+
 const tended = updated && formatDate(updated) !== formatDate(date) ? updated : undefined;
 const kindNotes: Record<string, string> = {
-  '诗': 'POEM / A PRESSED MOMENT',
-  '词': 'LYRIC / BY THE WATER',
+  '诗': 'POEM / CLASSICAL METRE',
+  '词': 'LYRIC / WATERSIDE VERSE',
   '信': 'LETTER / KEPT BETWEEN PAGES',
-  '短文': 'PROSE / FIELD NOTE',
-  '小札': 'NOTE / SMALL GROWTH',
-  '摘记': 'CLIPPING / COLLECTED WORDS',
+  '短文': 'PROSE & ESSAY',
+  '小札': 'NOTE / OBSERVATION',
+  '摘记': 'CLIPPING & THOUGHTS',
 };
-const kindGlyph: 'lan' | 'ruo' | 'lotus' | 'vine' | 'hui' = kind === '诗' ? 'lan' : kind === '词' ? 'lotus' : kind === '信' ? 'ruo' : kind === '小札' ? 'hui' : 'vine';
+const kindGlyph: 'lan' | 'ruo' | 'lotus' | 'vine' | 'hui' =
+  kind === '诗' ? 'lan' : kind === '词' ? 'lotus' : kind === '信' ? 'ruo' : kind === '小札' ? 'hui' : 'vine';
+
+const tocHeadings = headings.filter((h) => h.depth >= 2 && h.depth <= 4);
+const hasToc = tocHeadings.length >= 2;
 ---
 <BaseLayout title={title} description={description ?? title} lang={lang} className="garden-reading">
+  <!-- 顶部阅读进度条 -->
+  <div class="reading-progress-bar" id="reading-progress-bar" aria-hidden="true"></div>
+
+  <!-- 水印与侧向水波指示器 -->
   <div class="reading-watermark" data-reading-watermark aria-hidden="true"><i></i><span></span></div>
-  <article class="reading-shell reading-shell-v2" data-kind={kind}>
-    <BotanicalSprig variant="lan" class="reading-botanical reading-botanical-left" />
-    <BotanicalSprig variant="hui" class="reading-botanical reading-botanical-right" />
 
-    <header class="reading-head reading-head-v2">
-      <div class="reading-topline">
-        <a class="eyebrow back-link" href="/garden/">← 回到芳洲</a>
-        <span class="reading-folio">FOLIO {String(date.getMonth() + 1).padStart(2, '0')} / {String(date.getDate()).padStart(2, '0')}</span>
-      </div>
-      <div class="reading-title-frame">
-        <span class="reading-frame-leaf reading-frame-leaf-a" aria-hidden="true">◇</span>
-        <span class="reading-frame-leaf reading-frame-leaf-b" aria-hidden="true">◇</span>
-        <p class="specimen-no">GARDEN / {date.getFullYear()}</p>
-        <h1>{title}</h1>
-        <p class="reading-kind-note">{kindNotes[kind] ?? 'GARDEN NOTE'}</p>
-        {kind === '信' && <span class="letter-seal" aria-hidden="true">信</span>}
-      </div>
-      <div class="reading-meta reading-meta-v2">
-        <time datetime={date.toISOString()}>写于 {formatDate(date)}</time>
-        {tended && <><span aria-hidden="true">·</span><time datetime={tended.toISOString()}>再理于 {formatDate(tended)}</time></>}
-        <span aria-hidden="true">·</span>
-        <span>{kind}</span>
-      </div>
-      {tags.length > 0 && (
-        <div class="tag-line tag-line-v2" aria-label="标签">
-          {tags.map((tag, index) => <span><small>{String(index + 1).padStart(2, '0')}</small> #{tag}</span>)}
+  <div class="reading-container">
+    {hasToc && (
+      <aside class="reading-sticky-toc" aria-label="侧边大纲导航">
+        <div class="sticky-toc-inner">
+          <div class="sticky-toc-head">
+            <small>OUTLINE · 篇目提要</small>
+            <span>{title}</span>
+          </div>
+          <ul class="sticky-toc-list">
+            {tocHeadings.map((h) => (
+              <li class={`toc-item depth-${h.depth}`}>
+                <a href={`#${h.slug}`} data-toc-target={h.slug}>{h.text}</a>
+              </li>
+            ))}
+          </ul>
         </div>
+      </aside>
+    )}
+
+    <article class="reading-shell reading-shell-v2" data-kind={kind}>
+      <BotanicalSprig variant="lan" class="reading-botanical reading-botanical-left" />
+      <BotanicalSprig variant="hui" class="reading-botanical reading-botanical-right" />
+
+      <header class="reading-head reading-head-v2">
+        <div class="reading-topline">
+          <a class="eyebrow back-link" href="/garden/">← 回到芳洲</a>
+          <div class="reading-topline-right">
+            <div class="font-scale-control" aria-label="调整阅读字号">
+              <button type="button" id="font-decrease" title="缩小字号" aria-label="缩小字号">A-</button>
+              <button type="button" id="font-increase" title="放大字号" aria-label="放大字号">A+</button>
+            </div>
+            <button type="button" class="reading-action-btn" id="copy-article-link">
+              <span>分享此篇</span>
+            </button>
+            <span class="reading-folio">FOLIO {String(date.getMonth() + 1).padStart(2, '0')} / {String(date.getDate()).padStart(2, '0')}</span>
+          </div>
+        </div>
+
+        <div class="reading-title-frame">
+          <span class="reading-frame-leaf reading-frame-leaf-a" aria-hidden="true">◇</span>
+          <span class="reading-frame-leaf reading-frame-leaf-b" aria-hidden="true">◇</span>
+          <p class="specimen-no">CHRONICLE / {date.getFullYear()}</p>
+          <h1>{title}</h1>
+          <p class="reading-kind-note">{kindNotes[kind] ?? 'LITERARY MANUSCRIPT'}</p>
+          {kind === '信' && <span class="letter-seal" aria-hidden="true">信</span>}
+        </div>
+
+        <div class="reading-meta reading-meta-v2">
+          <time datetime={date.toISOString()}>记于 {formatDate(date)}</time>
+          {tended && <><span aria-hidden="true">·</span><time datetime={tended.toISOString()}>理于 {formatDate(tended)}</time></>}
+          <span aria-hidden="true">·</span>
+          <span>{kind}</span>
+          {wordCount && wordCount > 0 && (
+            <>
+              <span aria-hidden="true">·</span>
+              <span>{wordCount} 字</span>
+              <span aria-hidden="true">·</span>
+              <span>约 {readingMinutes} 分钟</span>
+            </>
+          )}
+        </div>
+
+        {tags.length > 0 && (
+          <div class="tag-line tag-line-v2" aria-label="意象标签">
+            {tags.map((tag, index) => <span><small>{String(index + 1).padStart(2, '0')}</small> #{tag}</span>)}
+          </div>
+        )}
+      </header>
+
+      {hasToc && (
+        <nav class="reading-toc-box mobile-only-toc" aria-label="篇目提要">
+          <div class="reading-toc-head">
+            <small class="eyebrow">TABLE OF CONTENTS · 篇目提要</small>
+          </div>
+          <ul class="reading-toc-list">
+            {tocHeadings.map((h) => (
+              <li class={`toc-depth-${h.depth}`}>
+                <a href={`#${h.slug}`}>{h.text}</a>
+              </li>
+            ))}
+          </ul>
+        </nav>
       )}
-    </header>
 
-    <HerbDivider label="页中 · words" quiet={true} />
-    <div class="prose prose-v2"><slot /></div>
-    <slot name="after-prose" />
+      <HerbDivider label="正文 · the text" quiet={true} />
+      <div class="prose prose-v2" id="article-prose"><slot /></div>
+      <slot name="after-prose" />
 
-    <footer class="reading-end reading-end-v2">
-      <div class="reading-end-botanical">
-        <div class="reading-end-plants">
-          <BotanicalSprig variant="ruo" />
-          <ChuciGlyph variant={kindGlyph} compact={true} class="reading-chuci-glyph" />
+      <footer class="reading-end reading-end-v2">
+        <div class="reading-end-botanical">
+          <div class="reading-end-plants">
+            <BotanicalSprig variant="ruo" />
+            <ChuciGlyph variant={kindGlyph} compact={true} class="reading-chuci-glyph" />
+          </div>
+          <div>
+            <span class="tiny-ripple" aria-hidden="true"></span>
+            <p class="eyebrow">Epilogue · 篇末印存</p>
+            <strong>余韵悠长，落款成章。</strong>
+            <small>岁月深浅皆入字，水纹泛起处，思绪明澈。</small>
+          </div>
         </div>
-        <div>
-          <span class="tiny-ripple" aria-hidden="true"></span>
-          <p class="eyebrow">Afterword · 余香</p>
-          <strong>写到这里。</strong>
-          <small>有些东西留在纸上，有些顺着水纹继续往外走。</small>
-        </div>
-      </div>
-      <a class="rule-link" href="/garden/">回芳洲再走走</a>
-    </footer>
-  </article>
+        <a class="rule-link" href="/garden/">返回芳洲篇目</a>
+      </footer>
+    </article>
+  </div>
+
+  <div id="reading-toast" class="reading-toast" role="status" aria-live="polite" hidden>已完成</div>
+
   <script is:inline>
     (() => {
+      // 1. 顶部进度条与水印动画
+      const bar = document.getElementById('reading-progress-bar');
       const marker = document.querySelector('[data-reading-watermark]');
       const article = document.querySelector('.reading-shell-v2');
-      if (!(marker instanceof HTMLElement) || !(article instanceof HTMLElement)) return;
+      if (!article) return;
+
       let ticking = false;
-      const paint = () => {
-        const start = article.offsetTop;
-        const end = Math.max(start + 1, article.offsetTop + article.offsetHeight - window.innerHeight * .55);
-        const value = Math.min(1, Math.max(0, (window.scrollY - start + window.innerHeight * .24) / (end - start)));
-        marker.style.setProperty('--reading-progress', String(value));
-        marker.dataset.complete = value > .985 ? 'true' : 'false';
+      const updateProgress = () => {
+        const totalHeight = article.offsetHeight - window.innerHeight * 0.4;
+        const currentScroll = window.scrollY - article.offsetTop;
+        const progress = Math.min(1, Math.max(0, currentScroll / Math.max(1, totalHeight)));
+        
+        if (bar) bar.style.width = `${(progress * 100).toFixed(1)}%`;
+        if (marker instanceof HTMLElement) {
+          marker.style.setProperty('--reading-progress', String(progress));
+          marker.dataset.complete = progress > 0.985 ? 'true' : 'false';
+        }
         ticking = false;
       };
-      const requestPaint = () => { if (!ticking) { requestAnimationFrame(paint); ticking = true; } };
-      paint();
-      addEventListener('scroll', requestPaint, { passive: true });
-      addEventListener('resize', requestPaint, { passive: true });
+
+      const onRequest = () => {
+        if (!ticking) {
+          requestAnimationFrame(updateProgress);
+          ticking = true;
+        }
+      };
+
+      updateProgress();
+      window.addEventListener('scroll', onRequest, { passive: true });
+      window.addEventListener('resize', onRequest, { passive: true });
+
+      // 2. 复制链接功能
+      const copyBtn = document.getElementById('copy-article-link');
+      const toast = document.getElementById('reading-toast');
+      function showToast(msg) {
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.hidden = false;
+        toast.classList.add('show');
+        setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => { toast.hidden = true; }, 300);
+        }, 2000);
+      }
+
+      if (copyBtn) {
+        copyBtn.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(window.location.href);
+            showToast('文章链接已复制到剪贴板');
+          } catch (e) {
+            console.error(e);
+          }
+        });
+      }
+
+      // 3. 字号缩放调节
+      const prose = document.getElementById('article-prose');
+      const decBtn = document.getElementById('font-decrease');
+      const incBtn = document.getElementById('font-increase');
+      let currentScale = 1.0;
+
+      decBtn?.addEventListener('click', () => {
+        if (currentScale > 0.85) {
+          currentScale = Math.max(0.85, currentScale - 0.08);
+          prose.style.setProperty('--font-scale', currentScale.toFixed(2));
+          showToast(`字号: ${(currentScale * 100).toFixed(0)}%`);
+        }
+      });
+
+      incBtn?.addEventListener('click', () => {
+        if (currentScale < 1.35) {
+          currentScale = Math.min(1.35, currentScale + 0.08);
+          prose.style.setProperty('--font-scale', currentScale.toFixed(2));
+          showToast(`字号: ${(currentScale * 100).toFixed(0)}%`);
+        }
+      });
+
+      // 4. 正文内代码块自动注入复制按钮
+      prose?.querySelectorAll('pre').forEach((pre) => {
+        if (pre.querySelector('.code-copy-btn')) return;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'code-copy-btn';
+        btn.textContent = '复制';
+        btn.title = '复制代码';
+        btn.addEventListener('click', async () => {
+          const code = pre.querySelector('code')?.textContent || pre.textContent;
+          try {
+            await navigator.clipboard.writeText(code);
+            btn.textContent = '已复制！';
+            setTimeout(() => { btn.textContent = '复制'; }, 2000);
+          } catch (e) {
+            console.error(e);
+          }
+        });
+        pre.style.position = 'relative';
+        pre.appendChild(btn);
+      });
+
+      // 5. 正文图片自动挂载全局灯箱
+      prose?.querySelectorAll('img').forEach((img) => {
+        img.setAttribute('data-lightbox', 'true');
+        img.style.cursor = 'zoom-in';
+      });
+
+      // 6. 侧边 Sticky TOC 的 Scrollspy
+      const tocLinks = Array.from(document.querySelectorAll('.sticky-toc-list a'));
+      if (tocLinks.length > 0) {
+        const headings = tocLinks.map(link => {
+          const id = link.getAttribute('data-toc-target');
+          return id ? document.getElementById(id) : null;
+        }).filter(Boolean);
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const id = entry.target.id;
+              tocLinks.forEach(link => {
+                if (link.getAttribute('data-toc-target') === id) {
+                  link.classList.add('is-active');
+                } else {
+                  link.classList.remove('is-active');
+                }
+              });
+            }
+          });
+        }, { rootMargin: '0px 0px -60% 0px' });
+
+        headings.forEach(h => observer.observe(h));
+      }
     })();
   </script>
+
   <style>
+    :global(html) {
+      scroll-behavior: smooth;
+    }
+    .reading-progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      width: 0%;
+      background: linear-gradient(90deg, var(--moss) 0%, var(--sage) 100%);
+      z-index: 100;
+      transition: width 0.1s linear;
+      pointer-events: none;
+    }
+    .reading-container {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      gap: 48px;
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 16px;
+    }
+    .reading-sticky-toc {
+      display: none;
+      width: 220px;
+      position: sticky;
+      top: 100px;
+      height: fit-content;
+      max-height: calc(100vh - 140px);
+      overflow-y: auto;
+      padding-right: 12px;
+      margin-top: 120px;
+    }
+    @media (min-width: 1140px) {
+      .reading-sticky-toc {
+        display: block;
+      }
+      .mobile-only-toc {
+        display: none !important;
+      }
+    }
+    .sticky-toc-inner {
+      border-left: 2px solid var(--line);
+      padding-left: 14px;
+    }
+    .sticky-toc-head {
+      margin-bottom: 12px;
+    }
+    .sticky-toc-head small {
+      display: block;
+      font-size: var(--font-micro);
+      color: var(--sage);
+      letter-spacing: 0.08em;
+    }
+    .sticky-toc-head span {
+      display: block;
+      font-size: 13px;
+      font-family: var(--serif);
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-top: 2px;
+    }
+    .sticky-toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sticky-toc-list a {
+      font-size: 12px;
+      line-height: 1.45;
+      color: var(--ink-soft);
+      text-decoration: none;
+      display: block;
+      transition: color 0.15s ease, transform 0.15s ease;
+    }
+    .sticky-toc-list a:hover {
+      color: var(--moss);
+      transform: translateX(2px);
+    }
+    .sticky-toc-list a.is-active {
+      color: var(--moss);
+      font-weight: 600;
+      border-left: 2px solid var(--moss);
+      margin-left: -16px;
+      padding-left: 14px;
+    }
+    .sticky-toc-list .depth-3 {
+      padding-left: 10px;
+    }
+    .sticky-toc-list .depth-4 {
+      padding-left: 20px;
+    }
+    .reading-topline-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .font-scale-control {
+      display: flex;
+      border: 1px solid var(--line);
+      background: rgba(248, 245, 237, 0.4);
+    }
+    .font-scale-control button {
+      background: transparent;
+      border: 0;
+      color: var(--moss);
+      font-size: 11px;
+      padding: 3px 6px;
+      cursor: pointer;
+      font-family: var(--sans);
+      transition: background 0.15s ease;
+    }
+    .font-scale-control button:hover {
+      background: rgba(125, 146, 120, 0.15);
+    }
+    .reading-action-btn {
+      background: transparent;
+      border: 1px solid var(--line);
+      color: var(--moss);
+      font-size: 11px;
+      padding: 3px 8px;
+      cursor: pointer;
+      font-family: var(--sans);
+      transition: all 0.2s ease;
+    }
+    .reading-action-btn:hover {
+      background: rgba(125, 146, 120, 0.1);
+      border-color: var(--line-strong);
+    }
+    .reading-toc-box {
+      margin: 28px 0;
+      padding: 18px 22px;
+      background: rgba(248, 245, 237, 0.45);
+      border: 1px solid var(--line);
+      border-left: 3px solid var(--moss);
+    }
+    .reading-toc-head {
+      margin-bottom: 10px;
+    }
+    .reading-toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .reading-toc-list a {
+      font-size: 13px;
+      color: var(--ink);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+    .reading-toc-list a:hover {
+      color: var(--moss);
+    }
+    .toc-depth-3 {
+      padding-left: 14px;
+      font-size: 12px;
+    }
+    .toc-depth-4 {
+      padding-left: 28px;
+      font-size: 11px;
+    }
+    :global(.code-copy-btn) {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 1px solid var(--line);
+      padding: 2px 7px;
+      font-size: 10px;
+      color: var(--ink-soft);
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.2s ease, background 0.2s ease;
+    }
+    :global(pre:hover .code-copy-btn) {
+      opacity: 1;
+    }
+    :global(.code-copy-btn:hover) {
+      background: #fff;
+      color: var(--moss);
+    }
+    :global(.prose) {
+      font-size: calc(17px * var(--font-scale, 1));
+      line-height: calc(1.85 * var(--font-scale, 1));
+    }
+    .reading-toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #252e26;
+      color: #e5ede3;
+      padding: 8px 18px;
+      font-size: 12px;
+      border-radius: 4px;
+      opacity: 0;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      z-index: 1000;
+      pointer-events: none;
+    }
+    .reading-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
     .reading-watermark { --reading-progress:0; position:fixed; z-index:12; right:max(18px,calc((100vw - 1180px)/2 - 46px)); top:28vh; width:24px; height:44vh; pointer-events:none; opacity:.72; }
     .reading-watermark i { position:absolute; left:11px; top:0; width:1px; height:100%; background:rgba(63,86,65,.09); overflow:hidden; }
     .reading-watermark i::after { content:''; position:absolute; left:0; bottom:0; width:1px; height:calc(var(--reading-progress) * 100%); background:linear-gradient(to top,rgba(63,86,65,.5),rgba(125,146,120,.28)); transition:height .12s linear; }

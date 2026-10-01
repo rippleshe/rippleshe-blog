@@ -3,6 +3,7 @@ import { defineConfig } from 'astro/config';
 import ripplesheDevGarden from './dev-toolbar/rippleshe-integration.ts';
 
 export default defineConfig({
+  site: 'https://rippleshe.cyou',
   integrations: [ripplesheDevGarden()],
   devToolbar: { enabled: false },
   markdown: {

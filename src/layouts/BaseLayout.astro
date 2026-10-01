@@ -2,6 +2,7 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ChuciAmbient from '../components/ChuciAmbient.astro';
+import GlobalImageViewer from '../components/GlobalImageViewer.astro';
 import '../styles/global.css';
 import '../styles/portal.css';
 import '../styles/viewer.css';
@@ -12,6 +13,7 @@ interface Props {
   lang?: 'zh' | 'en';
   className?: string;
   noindex?: boolean;
+  image?: string;
 }
 const {
   title = 'Rippleshe',
@@ -19,8 +21,12 @@ const {
   lang = 'zh',
   className = '',
   noindex = false,
+  image = '/favicon.svg',
 } = Astro.props;
 const pageTitle = title === 'Rippleshe' ? title : `${title} · Rippleshe`;
+const siteUrl = Astro.site ?? new URL('https://rippleshe.cyou');
+const canonicalURL = new URL(Astro.url.pathname, siteUrl);
+const ogImageURL = new URL(image, siteUrl);
 ---
 <!doctype html>
 <html lang={lang}>
@@ -30,6 +36,17 @@ const pageTitle = title === 'Rippleshe' ? title : `${title} · Rippleshe`;
     <meta name="theme-color" content="#f3efe4" />
     <meta name="description" content={description} />
     {noindex && <meta name="robots" content="noindex,nofollow,noarchive" />}
+    <link rel="canonical" href={canonicalURL} />
+    <meta property="og:site_name" content="Rippleshe" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={ogImageURL} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <title>{pageTitle}</title>
@@ -40,6 +57,7 @@ const pageTitle = title === 'Rippleshe' ? title : `${title} · Rippleshe`;
     <Header />
     <main id="content"><slot /></main>
     <Footer />
+    <GlobalImageViewer />
     <div class="site-ripple-layer" aria-hidden="true"></div>
     <script is:inline>
       document.documentElement.classList.add('has-js');

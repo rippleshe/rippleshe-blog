@@ -4,38 +4,38 @@ import BotanicalSprig from '../components/BotanicalSprig.astro';
 import HerbDivider from '../components/HerbDivider.astro';
 import PageFolioHeader from '../components/PageFolioHeader.astro';
 ---
-<BaseLayout title="器物" description="Rippleshe 长期使用、愿意留下来的工具与器物。">
+<BaseLayout title="器物录" description="Rippleshe 的生产力工具、软硬件配置与生活器物志。">
   <div class="shell folio-page uses-page-v2">
     <PageFolioHeader
-      eyebrow="Uses · 器物册"
+      eyebrow="Uses · 器物志"
       title="器物"
-      english="THINGS THAT STAY WITH ME"
+      english="TOOLS, HARDWARE & ENVIRONMENT"
       variant="lan"
-      folio="OBJECTS / DAILY COMPANIONS"
-      intro="有些东西用久了，会沾上手的习惯，也沾上一点日子的气味。这里收的是这些陪伴。"
+      folio="OBJECTS / UTILITIES & HARDWARE"
+      intro="工欲善其事，必先利其器。记录长期伴随科研研发、文本写作与日常生活的工具链与器物。"
     />
 
-    <HerbDivider label="手边常物 · everyday objects" />
+    <HerbDivider label="常用器物与工具栈 · core tools" />
 
     <section class="object-cabinet" aria-label="器物分类">
       <article class="object-drawer">
         <span class="object-no">01</span>
-        <div><small>WRITING / THINKING</small><h2>写字与思考</h2><p>笔、纸、屏幕和一块安静的地方。想法常常就是从这些小东西旁边冒出来。</p></div>
+        <div><small>COMPUTING & DISPLAY</small><h2>计算与载具</h2><p>高性能计算主机、高色准显示器、机械键盘与静电容输入，构筑高专注工作站。</p></div>
         <i aria-hidden="true">⌁</i>
       </article>
       <article class="object-drawer">
         <span class="object-no">02</span>
-        <div><small>MAKING / SOFTWARE</small><h2>做东西</h2><p>编辑器、终端和那些越用越顺手的小工具，像桌面上总在原位的几件器物。</p></div>
+        <div><small>SOFTWARE & TOOLCHAIN</small><h2>软件与开发栈</h2><p>VS Code / Neovim、Git、Zsh、Python 科学计算生态与严谨的类型系统。</p></div>
         <i aria-hidden="true">◇</i>
       </article>
       <article class="object-drawer">
         <span class="object-no">03</span>
-        <div><small>SEEING / KEEPING</small><h2>看见与记录</h2><p>相机、手机、耳机，或者任何帮助我把某个时刻留下来的东西。</p></div>
+        <div><small>OPTICS & CAPTURE</small><h2>影像与记录</h2><p>便携微单相机与定焦镜头，以真实光学捕捉湖湘风物与光影质感。</p></div>
         <i aria-hidden="true">○</i>
       </article>
       <article class="object-drawer object-drawer-herb">
         <span class="object-no">04</span>
-        <div><small>GROWING / LIVING</small><h2>草木与日常</h2><p>杯子、植物、窗边的一点绿，也在桌面之外陪着日常。</p></div>
+        <div><small>DESK & ENVIRONMENT</small><h2>文房与案头</h2><p>茶盏、草木盆景与纸质笔记本，于理性代码之侧保留自然触感。</p></div>
         <BotanicalSprig variant="hui" class="object-herb" />
       </article>
     </section>
@@ -43,9 +43,9 @@ import PageFolioHeader from '../components/PageFolioHeader.astro';
     <section class="uses-note-card">
       <span class="seal-mark" aria-hidden="true">器</span>
       <div>
-        <p class="eyebrow">Things that stay</p>
-        <strong>器物要相处久一点，才会有故事。</strong>
-        <p>等一件东西用旧一点、顺手一点，再给它留一小格位置。</p>
+        <p class="eyebrow">Axiom · 器物论</p>
+        <strong>器以载道，久用成习。</strong>
+        <p>不求浮华堆砌，唯选稳定可靠。工具越顺手，越能将精力专注倾注于核心创造。</p>
       </div>
     </section>
   </div>

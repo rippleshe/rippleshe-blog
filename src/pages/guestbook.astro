@@ -10,7 +10,7 @@ const apiBase = import.meta.env.PUBLIC_GUESTBOOK_API || (import.meta.env.DEV ? '
 const edgeReady = Boolean(import.meta.env.CLOUDBASE_ENV_ID && import.meta.env.CLOUDBASE_PUBLISH_KEY);
 const guestbookProvider = import.meta.env.DEV ? 'local' : (edgeReady ? 'edgeone' : 'closed');
 ---
-<BaseLayout title="留字" description="来过的话，留一个字也很好。">
+<BaseLayout title="留字客册" description="芳洲来客簿。留名、寄语与思想共鸣。">
   <div
     class="shell guestbook-page-v3"
     id="guestbook-app"
@@ -32,24 +32,24 @@ const guestbookProvider = import.meta.env.DEV ? 'local' : (edgeReady ? 'edgeone'
         <BotanicalSprig variant="lan" class="guestbook-herb" />
         <BotanicalSprig variant="hui" class="guestbook-herb guestbook-herb-small" />
         <span class="guestbook-door-no">R/S · 04</span>
-        <p>水边留着一本薄薄的来客簿。先认一认彼此，往后再回来，这里还能记得你的名字。</p>
-        <small>EMAIL · USERNAME · NICKNAME · HELLO</small>
+        <p>水边来客，留墨存痕。以邮箱安全登记凭据，往来信步，皆有回响。</p>
+        <small>SECURE AUTH · IDENTITY & GUEST NOTES</small>
         <div class="guestbook-rings" aria-hidden="true"><i></i><i></i><i></i></div>
       </div>
     </header>
 
-    <HerbDivider label="先敲门，再落笔 · knock before writing" />
+    <HerbDivider label="访客鉴权与留墨 · visitor authentication" />
 
     <section class="guestbook-entry" aria-labelledby="guestbook-entry-title">
       <aside class="guestbook-entry-aside">
         <div class="guestbook-pass guestbook-pass-a">
           <span>VISITOR PASS</span>
-          <b>来</b>
-          <small>有名字的人，<br />会在这里留下回声。</small>
+          <b>客</b>
+          <small>水木清华，<br />过客留名。</small>
         </div>
         <div class="guestbook-pass guestbook-pass-b" aria-hidden="true">
           <span>RIPPLE / SHE</span>
-          <p>风从水面过。<br />有人恰好来。</p>
+          <p>微澜初泛。<br />见字如面。</p>
         </div>
         <BotanicalSprig variant="ruo" class="guestbook-side-herb" />
         <ChuciGlyph variant="vine" compact={true} class="guestbook-chuci-vine" />
@@ -57,29 +57,29 @@ const guestbookProvider = import.meta.env.DEV ? 'local' : (edgeReady ? 'edgeone'
 
       <div class="guestbook-entry-main">
         <div class="guestbook-entry-head">
-          <div><p class="eyebrow">At the little gate</p><h2 id="guestbook-entry-title">先认一个名字</h2></div>
+          <div><p class="eyebrow">Visitor authentication</p><h2 id="guestbook-entry-title">访客凭据登记</h2></div>
           <span id="guestbook-session-mark">GUEST / UNKNOWN</span>
         </div>
 
         <div id="guestbook-signed-out" class="guestbook-signed-out">
-          <p>用邮箱登记一次。用户名是你在这里的门牌，昵称是别人看见你的方式；如果愿意，再留一句初见时的招呼。</p>
+          <p>支持邮箱验证码安全注册与登录。公开留墨墙仅展示昵称，保护访客隐私。</p>
           <div class="guestbook-entry-actions">
-            <button class="guestbook-primary" id="guestbook-register-open" type="button">第一次来 · 登记</button>
-            <button class="guestbook-secondary" id="guestbook-login-open" type="button">回来看看 · 登录</button>
+            <button class="guestbook-primary" id="guestbook-register-open" type="button">访客登记 · 注册</button>
+            <button class="guestbook-secondary" id="guestbook-login-open" type="button">故友重访 · 登录</button>
           </div>
-          <small>邮箱只写进来客簿，不会挂在墙上。</small>
+          <small>邮箱仅用于身份验证，严守安全边界，不在公开墙体呈现。</small>
         </div>
 
         <div id="guestbook-signed-in" class="guestbook-signed-in" hidden>
           <div class="guestbook-profile-strip">
             <span class="guestbook-avatar" id="guestbook-avatar">R</span>
             <div><small>WELCOME BACK</small><b id="guestbook-profile-name">来客</b><p id="guestbook-profile-greeting"></p></div>
-            <button id="guestbook-logout" type="button">轻轻离开</button>
+            <button id="guestbook-logout" type="button">退出登录</button>
           </div>
           <form id="guestbook-message-form" class="guestbook-composer">
-            <label for="guestbook-message">写在这一页</label>
-            <textarea id="guestbook-message" name="message" maxlength="600" rows="5" placeholder="一句问候，一点近况，或者恰好想到的一句话……"></textarea>
-            <div><span id="guestbook-message-status">墨水已经备好。</span><button class="guestbook-primary" type="submit">把这张笺放上墙</button></div>
+            <label for="guestbook-message">留言寄语</label>
+            <textarea id="guestbook-message" name="message" maxlength="600" rows="5" placeholder="写下一句问候、思想共鸣或行旅见闻…"></textarea>
+            <div><span id="guestbook-message-status">随时可落墨。</span><button class="guestbook-primary" type="submit">发布留言</button></div>
           </form>
         </div>
       </div>
@@ -87,15 +87,15 @@ const guestbookProvider = import.meta.env.DEV ? 'local' : (edgeReady ? 'edgeone'
 
     <section class="guestbook-wall-section" aria-labelledby="guestbook-wall-title">
       <div class="guestbook-wall-head">
-        <div><p class="eyebrow">Notes by the water</p><h2 id="guestbook-wall-title">水边的字</h2></div>
-        <p>来客的字不排成队。像夹在书里的纸片，后来的人翻到哪一张，就读哪一张。</p>
+        <div><p class="eyebrow">Public guest wall · 留墨墙</p><h2 id="guestbook-wall-title">往来留墨</h2></div>
+        <p>如水上浮笺，汇存四方来客的问候与见闻。</p>
       </div>
       <div class="guestbook-wall" id="guestbook-wall" aria-live="polite">
         <div class="guestbook-wall-empty guestbook-wall-awaiting">
-          <div class="guestbook-awaiting-slip guestbook-awaiting-slip-1"><small>BLANK / 01</small><p>风还没有写字。</p><i></i></div>
-          <div class="guestbook-awaiting-slip guestbook-awaiting-slip-2"><small>BLANK / 02</small><p>第一张笺仍是空白。</p><i></i></div>
-          <div class="guestbook-awaiting-slip guestbook-awaiting-slip-3"><small>BLANK / 03</small><p>等一个名字落在这里。</p><i></i></div>
-          <span class="guestbook-awaiting-caption">留白也算水边的一部分。</span>
+          <div class="guestbook-awaiting-slip guestbook-awaiting-slip-1"><small>WALL / 01</small><p>墨痕待染。</p><i></i></div>
+          <div class="guestbook-awaiting-slip guestbook-awaiting-slip-2"><small>WALL / 02</small><p>静候访客留言。</p><i></i></div>
+          <div class="guestbook-awaiting-slip guestbook-awaiting-slip-3"><small>WALL / 03</small><p>见字如面。</p><i></i></div>
+          <span class="guestbook-awaiting-caption">虚席以待，静候来客。</span>
         </div>
       </div>
       <div class="guestbook-wall-tail" aria-hidden="true"><span>R/S</span><i></i><small>someone was here</small></div>

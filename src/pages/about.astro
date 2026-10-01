@@ -1,4 +1,4 @@
-﻿---
+---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BotanicalSprig from '../components/BotanicalSprig.astro';
 import HerbDivider from '../components/HerbDivider.astro';
@@ -6,74 +6,78 @@ import PageFolioHeader from '../components/PageFolioHeader.astro';
 import GardenWayfinder from '../components/GardenWayfinder.astro';
 import ChuciGlyph from '../components/ChuciGlyph.astro';
 ---
-<BaseLayout title="关于" description="关于 Rippleshe。">
+<BaseLayout title="关于" description="关于 Rippleshe。个人生平、学术背景与技术追求。">
   <div class="shell folio-page about-page-v2">
     <PageFolioHeader
-      eyebrow="About · 人物小志"
+      eyebrow="Profile · 人物小志"
       title="关于"
-      english="A FEW TRACES OF A PERSON"
+      english="PROFILE & ETHOS OF RIPPLESHE"
       variant="ruo"
       folio="PERSON / RIPPLE · SHE"
-      intro="Ripple 是我的英文名，She 是我的姓。于是 Rippleshe 既是名字，也像一圈从水面慢慢散开的波纹。"
+      intro="波纹散开，行止有矩。以工程严谨构筑造物，以文心风骨寄怀天地。"
     />
 
-    <HerbDivider label="人物小志 · a few traces" />
+    <HerbDivider label="人物生平与追求 · ethos" />
 
     <section class="portrait-notes" aria-labelledby="about-self">
       <aside class="portrait-index">
-        <p>PERSON<br />MAKER<br />WRITER<br />CURIOUS MIND</p>
+        <p>ENGINEER<br />RESEARCHER<br />WRITER<br />BUILDER</p>
         <BotanicalSprig variant="lan" />
         <ChuciGlyph variant="ruo" compact={true} class="about-chuci-ruo" />
       </aside>
       <div class="portrait-copy">
-        <p class="portrait-lead" id="about-self">我喜欢折腾东西，也喜欢那些和“效率”没什么关系的事情。</p>
+        <p class="portrait-lead" id="about-self">专注于科研可视化体系、系统级工具与决策智能体系统的工程与学术研究。</p>
         <div class="portrait-columns">
-          <p>软件、科研工具、奇怪的小项目，想到什么常常就想把它做出来。技术对我来说更像一种手艺：先拆开看看，再试着把它重新搭好。</p>
-          <p>另一边是花草、散步、现代诗、小短文，还有某一天并不起眼的天气。它们没有明确的产出，但会让日子留下自己的纹理。</p>
+          <p>推崇精简求真的工程哲学：直面机理，摒弃冗余抽象与过度设计。从 SciPlot Academic 的顶刊绘图语法到各类系统应用，始终追求确定性、鲁棒性与清晰度。</p>
+          <p>在算法与工程之外，长年记录湖湘山水、行旅诗篇与古典文学思考。文字与代码同为载体，一者澄明理性，一者安顿心性。</p>
         </div>
-        <p>这里慢慢留下一个人的轨迹：做过的事、走过的路，以及那些曾经停留过的片刻。</p>
+        <p>立足于真实的创造，于网络与现实世界中留下清晰、耐久的痕迹。</p>
       </div>
     </section>
 
     <section class="name-origin" aria-labelledby="name-origin-title">
       <div class="name-origin-head">
-        <p class="eyebrow">Name origin · 名字从哪里来</p>
+        <p class="eyebrow">Name origin · 名字渊源</p>
         <h2 id="name-origin-title">Rippleshe</h2>
-        <p>一个名字里刚好有水，也刚好有姓。</p>
+        <p>英文名与汉字姓氏的交织。</p>
       </div>
       <div class="name-origin-grid">
         <div class="name-origin-ripple">
           <small>01 / RIPPLE</small>
-          <strong>ripple</strong>
-          <p>英文名。也是水面被轻轻碰过以后，一圈一圈往外走的纹。</p>
+          <strong>Ripple</strong>
+          <p>波纹。取水面泛起之微澜，象征思想的扩散演化与自我审视的层层折返。</p>
           <div class="name-rings" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
         </div>
         <div class="name-origin-she">
           <small>02 / SHE</small>
           <strong>佘</strong>
-          <p>姓。名字的后半截，是一枚留在纸上的小印。</p>
+          <p>姓氏。人字立顶，示以行止之矩，作为现实锚点与行事之诺。</p>
         </div>
       </div>
     </section>
 
-    <section class="about-index-cards" aria-label="两条侧路">
+    <section class="about-index-cards" aria-label="核心领域索引">
       <a href="/now/" class="about-index-card">
-        <small>01 / NOW</small><b>此刻</b><span>最近在做的、想着的，先写成一张会变化的近况札。</span><i>↗</i>
+        <small>01 / NOW</small>
+        <b>此刻</b>
+        <span>当下正在推进的研究课题、工程系统与近期动向。</span>
+        <i>↗</i>
       </a>
       <a href="/scenes/" class="about-index-card">
-        <small>02 / CURIOS</small><b>小景</b><span>水纹、枝叶和几个一时兴起做出来的小机关。</span><i>↗</i>
+        <small>02 / SCENES</small>
+        <b>光景</b>
+        <span>楚辞草木意象、互动流形与数字庭园设计。</span>
+        <i>↗</i>
       </a>
     </section>
 
     <section class="about-contact-strip">
       <div>
-        <p class="eyebrow">Elsewhere · 水面之外</p>
-        <strong>偶尔也在别处留下些什么。</strong>
+        <p class="eyebrow">Elsewhere · 开源与学术网络</p>
+        <strong>GitHub 源码与研制成果</strong>
       </div>
-      <a class="rule-link" href="https://github.com/rippleshe">GitHub ↗</a>
+      <a class="rule-link" href="https://github.com/rippleshe" target="_blank" rel="noreferrer">访问 GitHub @rippleshe ↗</a>
     </section>
     <GardenWayfinder current="about" />
   </div>
 </BaseLayout>
-
-

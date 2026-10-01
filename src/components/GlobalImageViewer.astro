@@ -1,0 +1,135 @@
+---
+---
+<dialog class="photo-viewer" id="global-photo-viewer" aria-label="全屏高清图像检视">
+  <div class="photo-viewer-shell">
+    <div class="photo-viewer-top">
+      <span id="global-viewer-counter">IMAGE / --</span>
+      <button type="button" id="global-viewer-close">关闭 ✕</button>
+    </div>
+    <button class="photo-viewer-nav" id="global-viewer-prev" type="button" aria-label="上一张">←</button>
+    <figure class="photo-viewer-figure">
+      <img id="global-viewer-img" src="" alt="" />
+      <figcaption>
+        <div>
+          <span id="global-viewer-seal">图</span>
+          <div>
+            <b id="global-viewer-title">图像标题</b>
+            <time id="global-viewer-time">----</time>
+          </div>
+        </div>
+        <p id="global-viewer-desc">图像说明</p>
+      </figcaption>
+      <div class="photo-viewer-ripple" aria-hidden="true"><i></i><i></i><i></i></div>
+    </figure>
+    <button class="photo-viewer-nav" id="global-viewer-next" type="button" aria-label="下一张">→</button>
+  </div>
+</dialog>
+
+<script is:inline>
+  (() => {
+    const dialog = document.getElementById('global-photo-viewer');
+    if (!dialog) return;
+
+    const img = document.getElementById('global-viewer-img');
+    const title = document.getElementById('global-viewer-title');
+    const time = document.getElementById('global-viewer-time');
+    const desc = document.getElementById('global-viewer-desc');
+    const counter = document.getElementById('global-viewer-counter');
+    const seal = document.getElementById('global-viewer-seal');
+    const prevBtn = document.getElementById('global-viewer-prev');
+    const nextBtn = document.getElementById('global-viewer-next');
+    const closeBtn = document.getElementById('global-viewer-close');
+
+    let currentList = [];
+    let currentIndex = 0;
+
+    function renderItem(index) {
+      if (!currentList.length) return;
+      currentIndex = (index + currentList.length) % currentList.length;
+      const item = currentList[currentIndex];
+      if (!item) return;
+
+      if (img) {
+        img.src = item.src;
+        img.alt = item.title || '';
+      }
+      if (title) title.textContent = item.title || '';
+      if (time) time.textContent = item.date || item.journal || '';
+      if (desc) desc.textContent = item.desc || item.tags || '';
+      if (counter) counter.textContent = `${currentIndex + 1} / ${currentList.length}`;
+      if (seal) seal.textContent = item.seal || '图';
+
+      const single = currentList.length <= 1;
+      if (prevBtn) prevBtn.style.visibility = single ? 'hidden' : 'visible';
+      if (nextBtn) nextBtn.style.visibility = single ? 'hidden' : 'visible';
+    }
+
+    function openViewer(items, startIdx = 0) {
+      currentList = items;
+      renderItem(startIdx);
+      if (!dialog.open) {
+        dialog.showModal();
+        document.body.classList.add('viewer-open');
+      }
+    }
+
+    function closeViewer() {
+      if (dialog.open) {
+        dialog.close();
+        document.body.classList.remove('viewer-open');
+      }
+    }
+
+    closeBtn?.addEventListener('click', closeViewer);
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) closeViewer();
+    });
+
+    prevBtn?.addEventListener('click', () => renderItem(currentIndex - 1));
+    nextBtn?.addEventListener('click', () => renderItem(currentIndex + 1));
+
+    window.addEventListener('keydown', (e) => {
+      if (!dialog.open) return;
+      if (e.key === 'Escape') closeViewer();
+      if (e.key === 'ArrowLeft' && currentList.length > 1) renderItem(currentIndex - 1);
+      if (e.key === 'ArrowRight' && currentList.length > 1) renderItem(currentIndex + 1);
+    });
+
+    // 暴露全局调起接口
+    window.openGlobalImageViewer = openViewer;
+
+    // 自动扫描全站带 data-lightbox 的图片或卡片
+    document.addEventListener('click', (e) => {
+      const target = e.target.closest('[data-lightbox]');
+      if (!target) return;
+      e.preventDefault();
+
+      const groupName = target.getAttribute('data-lightbox-group');
+      let items = [];
+      let activeIndex = 0;
+
+      if (groupName) {
+        const groupElements = Array.from(document.querySelectorAll(`[data-lightbox][data-lightbox-group="${groupName}"]`));
+        items = groupElements.map((el) => ({
+          src: el.getAttribute('data-lightbox-src') || el.querySelector('img')?.src || '',
+          title: el.getAttribute('data-lightbox-title') || el.querySelector('h3')?.textContent || '',
+          desc: el.getAttribute('data-lightbox-desc') || el.querySelector('p')?.textContent || '',
+          date: el.getAttribute('data-lightbox-meta') || '',
+          seal: el.getAttribute('data-lightbox-seal') || '图',
+        }));
+        activeIndex = groupElements.indexOf(target);
+      } else {
+        items = [{
+          src: target.getAttribute('data-lightbox-src') || target.querySelector('img')?.src || target.src || '',
+          title: target.getAttribute('data-lightbox-title') || target.getAttribute('alt') || '',
+          desc: target.getAttribute('data-lightbox-desc') || '',
+          date: target.getAttribute('data-lightbox-meta') || '',
+          seal: target.getAttribute('data-lightbox-seal') || '图',
+        }];
+        activeIndex = 0;
+      }
+
+      openViewer(items, activeIndex);
+    });
+  })();
+</script>

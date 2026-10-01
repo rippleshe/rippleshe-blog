@@ -11,34 +11,34 @@ const allGarden = await getCollection('garden', ({ data }) => data.publish);
 const randomPages = allGarden.map(gardenUrl);
 const scenePoem = allGarden.find((entry) => entry.data.kind === '诗' || entry.data.kind === '词');
 ---
-<BaseLayout title="小景" description="水纹、枝叶、页边机关和几件随手做成的小玩意。">
+<BaseLayout title="光景意象" description="水纹流形、风动枝叶与楚辞意象的交互设计。">
   <div class="shell scenes-page">
     <header class="scenes-hero">
       <div>
-        <p class="eyebrow">Curious designs · 小景簿</p>
-        <h1>小景</h1>
-        <p>水纹、枝叶和几个偶然冒出来的小机关，单独留在这一角。路过时碰一下就好。</p>
+        <p class="eyebrow">Interactive Scenes · 光景意象</p>
+        <h1>光景</h1>
+        <p>东方草木意象、物理模拟与交互设计的交汇。汇聚水波流形、风动植物与诗意空间。</p>
       </div>
       <div class="scenes-herb" aria-hidden="true">
         <BotanicalSprig variant="lan" />
         <div class="scenes-rings"><i></i><i></i><i></i><i></i></div>
-        <span>PLAY / LOOK / TOUCH</span>
+        <span>RIPPLE / WIND / LIGHT</span>
       </div>
     </header>
 
-    <section class="scenes-index" aria-label="小景目录">
-      <a href="#scene-water"><span>01</span><b>水庭</b><small>TOUCH THE WATER</small></a>
-      <a href="#scene-wreath"><span>02</span><b>风环</b><small>MOVE WITH THE WIND</small></a>
-      <a href="#scene-leaves"><span>03</span><b>拾叶</b><small>SMALL CHANCE</small></a>
-      <a href="#scene-poetry"><span>04</span><b>诗廊</b><small>ONE POEM · ONE SCENE</small></a>
+    <section class="scenes-index" aria-label="光景目录">
+      <a href="#scene-water"><span>01</span><b>水庭</b><small>WAVE SIMULATION</small></a>
+      <a href="#scene-wreath"><span>02</span><b>风环</b><small>ELASTIC SPRING</small></a>
+      <a href="#scene-leaves"><span>03</span><b>拾遗</b><small>CHANCE & WORDS</small></a>
+      <a href="#scene-poetry"><span>04</span><b>诗廊</b><small>POETIC SPACE</small></a>
     </section>
 
-    <HerbDivider label="01 · 水庭 / touch the water" />
+    <HerbDivider label="01 · 水庭 / wave simulation" />
     <div id="scene-water" class="scene-water"><WatersidePond /></div>
 
-    <HerbDivider label="02 · 风环 / move a little" quiet={true} />
+    <HerbDivider label="02 · 风环 / elastic spring" quiet={true} />
     <section id="scene-wreath" class="scene-wreath" data-wind-wreath>
-      <div class="scene-copy"><p class="eyebrow">Wind wreath</p><h2>风从哪边来</h2><p>手指经过时，枝叶略微偏一偏。离开以后，它们再慢慢站回原来的样子。</p></div>
+      <div class="scene-copy"><p class="eyebrow">Wind wreath</p><h2>风动有律</h2><p>风场力学交互：兰若枝叶随指针受力偏转，依自然阻尼弹性复位。</p></div>
       <div class="wreath-stage" aria-label="会随指针轻微摆动的花环">
         <div class="wreath-ring"></div>
         <BotanicalSprig variant="lan" class="wreath-sprig wreath-sprig-a" />
@@ -47,21 +47,21 @@ const scenePoem = allGarden.find((entry) => entry.data.kind === '诗' || entry.d
       </div>
     </section>
 
-    <HerbDivider label="03 · 拾叶 / a small chance" quiet={true} />
+    <HerbDivider label="03 · 拾遗 / chance & words" quiet={true} />
     <section id="scene-leaves" class="scene-leaves">
-      <div class="scene-copy"><p class="eyebrow">Pick a leaf</p><h2>随手拾一片</h2><p>三个叶片里藏着三种去向：一句话、一页旧字，或者什么都不做。</p></div>
+      <div class="scene-copy"><p class="eyebrow">Pick a leaf</p><h2>草木结契</h2><p>三种意象去向：偶得佳句、漫溯旧卷或凝眸片刻。</p></div>
       <div class="leaf-picks" data-leaf-picks>
-        <button type="button" data-leaf="0"><i>叶</i><span>拾一片</span></button>
-        <button type="button" data-leaf="1"><i>芷</i><span>拾一片</span></button>
-        <button type="button" data-leaf="2"><i>苔</i><span>拾一片</span></button>
+        <button type="button" data-leaf="0"><i>叶</i><span>采兰</span></button>
+        <button type="button" data-leaf="1"><i>芷</i><span>采芷</span></button>
+        <button type="button" data-leaf="2"><i>苔</i><span>拾苔</span></button>
       </div>
-      <div class="leaf-result" id="leaf-result" aria-live="polite">还没有拾起哪一片。</div>
-      <button class="scene-random-page" type="button" data-scene-random={JSON.stringify(randomPages)}>◇ 翻一页旧字</button>
+      <div class="leaf-result" id="leaf-result" aria-live="polite">静待启阅。</div>
+      <button class="scene-random-page" type="button" data-scene-random={JSON.stringify(randomPages)}>◇ 随机漫步旧卷</button>
     </section>
 
-    <HerbDivider label="04 · 诗廊 / one poem, one scene" quiet={true} />
+    <HerbDivider label="04 · 诗廊 / poetic space" quiet={true} />
     <section id="scene-poetry" class="scene-poetry">
-      <div class="scene-copy"><p class="eyebrow">Poetry gallery</p><h2>诗旁边也有天气</h2><p>有时是一圈月影，有时只是一阵细雨。字停下来以后，旁边还留一点风。</p><a class="rule-link" href="/garden/poetry/">走进诗廊 ↗</a></div>
+      <div class="scene-copy"><p class="eyebrow">Poetry gallery</p><h2>诗意空间</h2><p>以视觉时空承载古典韵致，令文字与光晕、月影、雨滴共生。</p><a class="rule-link" href="/garden/poetry/">进入诗廊 ↗</a></div>
       <div class="scene-poetry-preview">
         {scenePoem && <PoemScene title={titleOf(scenePoem)} tags={scenePoem.data.tags} index={4} />}
         <small>{scenePoem ? titleOf(scenePoem) : '诗廊'}</small>

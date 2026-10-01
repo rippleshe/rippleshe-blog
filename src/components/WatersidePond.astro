@@ -152,6 +152,7 @@
     stage.addEventListener('pointerdown', (event) => {
       if (reduceMotion.matches) return;
       const rect = stage.getBoundingClientRect();
+      if (ripples.children.length > 8) ripples.firstElementChild?.remove();
       const ring = document.createElement('i');
       ring.style.left = `${event.clientX - rect.left}px`;
       ring.style.top = `${event.clientY - rect.top}px`;
@@ -160,6 +161,14 @@
       garden.dataset.awake = 'true';
       window.setTimeout(() => { garden.dataset.awake = 'false'; }, 1500);
     }, { passive: true });
+
+    // 视口感知暂停，节约能耗
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        garden.dataset.inView = entry.isIntersecting ? 'true' : 'false';
+      });
+    }, { threshold: 0.1 });
+    observer.observe(garden);
   })();
 </script>
 
@@ -175,12 +184,16 @@
     border-top: 1px solid var(--line-strong);
     border-bottom: 1px solid var(--line);
     position: relative;
+    touch-action: pan-y;
+  }
+  .waterside-pond[data-in-view='false'] * {
+    animation-play-state: paused !important;
   }
   .pond-note { padding: 42px 34px 32px 0; display:flex; flex-direction:column; justify-content:space-between; border-right:1px solid var(--line); }
-  .pond-kicker { margin:0 0 12px; color:var(--sage); font-size:8px; letter-spacing:.18em; }
+  .pond-kicker { margin:0 0 12px; color:var(--sage); font-size:var(--font-micro); letter-spacing:.14em; }
   .pond-note h2 { margin:0; font:400 clamp(48px,7vw,84px)/.88 var(--serif); letter-spacing:-.06em; }
   .pond-line { margin:22px 0 0; max-width:10rem; color:var(--ink-soft); font:14px/1.85 var(--serif); }
-  .pond-index { display:grid; grid-template-columns:auto 1fr; gap:8px 13px; align-items:center; color:var(--mist); font-size:7px; letter-spacing:.17em; }
+  .pond-index { display:grid; grid-template-columns:auto 1fr; gap:8px 13px; align-items:center; color:var(--mist); font-size:var(--font-micro); letter-spacing:.12em; }
   .pond-index span { color:var(--seal); font-family:var(--serif); font-size:16px; letter-spacing:.02em; }
   .pond-index i { display:block; height:1px; background:linear-gradient(90deg,var(--line-strong),transparent); }
   .pond-index small { grid-column:1/-1; }

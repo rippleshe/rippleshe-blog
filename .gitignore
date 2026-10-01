@@ -25,6 +25,8 @@ pnpm-debug.log*
 # editor / local AI tooling
 .idea/
 .skills/
+.zcode/
+.zcodeignore
 
 # local content inbox: keep instructions, never commit dropped originals
 content-inbox/*

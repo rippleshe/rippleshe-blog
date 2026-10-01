@@ -4,8 +4,16 @@ import BotanicalSprig from '../components/BotanicalSprig.astro';
 import GardenDrift from '../components/GardenDrift.astro';
 import ChuciGlyph from '../components/ChuciGlyph.astro';
 import site from '../data/site.json';
+import { getCollection } from 'astro:content';
+import { gardenUrl, titleOf, formatDate } from '../lib/content';
+import { libraryItems, formatLibraryDate } from '../lib/library';
 
 const dev = import.meta.env.DEV;
+
+const recentGarden = (await getCollection('garden', ({ data }) => data.publish))
+  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())[0];
+
+const recentPhoto = libraryItems.find((item) => item.type === 'photo');
 ---
 <BaseLayout>
   <div class="shell portal-page">
@@ -24,22 +32,22 @@ const dev = import.meta.env.DEV;
           <p>{site.manifesto.map((line) => <span>{line}</span>)}</p>
         </div>
 
-        <nav class="portal-actions" aria-label="从园门出发">
-          <a class="garden-button garden-button-primary" href="/garden/"><span>01</span><b>走进芳洲</b><small>WORDS</small></a>
-          <a class="garden-button" href="/collection/"><span>02</span><b>翻藏册</b><small>LIGHT & PAPER</small></a>
-          <a class="garden-button" href="/works/"><span>03</span><b>看造物</b><small>MADE THINGS</small></a>
-          <a class="garden-button" href="/scenes/"><span>04</span><b>逛小景</b><small>CURIOUS DESIGNS</small></a>
+        <nav class="portal-actions" aria-label="核心领域索引">
+          <a class="garden-button garden-button-primary" href="/garden/"><span>01</span><b>芳洲文澜</b><small>WORDS & POETRY</small></a>
+          <a class="garden-button" href="/collection/"><span>02</span><b>图志藏册</b><small>LIGHT & ARCHIVE</small></a>
+          <a class="garden-button" href="/works/"><span>03</span><b>工程造物</b><small>SYSTEMS & WORKS</small></a>
+          <a class="garden-button" href="/scenes/"><span>04</span><b>交互光景</b><small>SCENES & DESIGN</small></a>
         </nav>
 
         {dev && (
           <a class="portal-owner-studio" href="http://127.0.0.1:4175#record" target="_blank" rel="noreferrer">
-            <span>＋</span><b>添一页</b><small>LOCAL STUDIO</small>
+            <span>＋</span><b>工坊录入</b><small>LOCAL STUDIO</small>
           </a>
         )}
 
         <div class="portal-season-note">
           <b id="home-season">岁时</b>
-          <p>门前的风每天不太一样。选一条路，慢慢往里走。</p>
+          <p>岁序迁流，风物自若。立规于器物，寄怀于山川。</p>
         </div>
       </div>
 
@@ -52,12 +60,60 @@ const dev = import.meta.env.DEV;
       </div>
     </section>
 
+    <!-- 首页精选三联展陈：消除冷启动空洞感 -->
+    <section class="portal-showcase-strip" aria-label="近期收录与核心专案">
+      {recentGarden && (
+        <a href={gardenUrl(recentGarden)} class="showcase-card showcase-garden">
+          <div class="showcase-card-head">
+            <span class="showcase-badge">RECENT WRITING · 文澜</span>
+            <time>{formatDate(recentGarden.data.date)}</time>
+          </div>
+          <h3>{titleOf(recentGarden)}</h3>
+          <p>{recentGarden.data.description || '阅读最新文字篇章…'}</p>
+          <span class="showcase-link">启阅此篇 ↗</span>
+        </a>
+      )}
+
+      {recentPhoto && (
+        <a
+          href="/collection/"
+          class="showcase-card showcase-photo"
+          data-lightbox
+          data-lightbox-src={recentPhoto.src}
+          data-lightbox-title={recentPhoto.title}
+          data-lightbox-desc={recentPhoto.tags.join(' · ')}
+          data-lightbox-meta={formatLibraryDate(recentPhoto.date)}
+          data-lightbox-seal="影"
+        >
+          <div class="showcase-card-head">
+            <span class="showcase-badge">CAPTURED LIGHT · 光影</span>
+            <time>{formatLibraryDate(recentPhoto.date)}</time>
+          </div>
+          <div class="showcase-thumb-wrap">
+            <img src={recentPhoto.thumb || recentPhoto.src} alt={recentPhoto.title} loading="lazy" />
+          </div>
+          <h3>{recentPhoto.title}</h3>
+          <span class="showcase-link">全屏检视 ↗</span>
+        </a>
+      )}
+
+      <a href="/works/sciplot/" class="showcase-card showcase-system">
+        <div class="showcase-card-head">
+          <span class="showcase-badge">CORE WORK · 造物</span>
+          <span>v1.12.6</span>
+        </div>
+        <h3>SciPlot Academic</h3>
+        <p>国际顶刊科研绘图系统，45+ 图表家族，1200 DPI 矢量渲染。</p>
+        <span class="showcase-link">查看系统规范 ↗</span>
+      </a>
+    </section>
+
     <a class="portal-time-path" href="/life/" aria-label="沿时间浏览整座园子">
       <span class="portal-time-water" aria-hidden="true"><i></i><i></i><i></i></span>
       <div>
-        <small>TIME PATH · 日录</small>
-        <strong>沿水往回走</strong>
-        <p>字、照片和纸页，会在各自的月份里重新碰面。</p>
+        <small>CHRONICLE · 岁时日录</small>
+        <strong>循水溯源 · 编年长河</strong>
+        <p>文字、光影与手稿在各自的岁序月份中汇聚成册。</p>
       </div>
       <b>↗</b>
     </a>
@@ -65,9 +121,9 @@ const dev = import.meta.env.DEV;
     <div class="portal-closing">
       <BotanicalSprig variant="ruo" />
       <div>
-        <p class="eyebrow">At the gate</p>
-        <strong>先逛到这里。</strong>
-        <p>下次再来，园里的东西大概又会挪动几寸。</p>
+        <p class="eyebrow">At the shoreline · 水际回望</p>
+        <strong>水波微澜，草木自深。</strong>
+        <p>从算法工程到行旅篇什，皆是凝视世界的确定印迹。</p>
       </div>
     </div>
   </div>
@@ -89,6 +145,85 @@ const dev = import.meta.env.DEV;
   </script>
 
   <style is:global>
+    .portal-showcase-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin: 48px 0 24px;
+    }
+    .showcase-card {
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.45);
+      padding: 20px 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-decoration: none;
+      color: var(--ink);
+      transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .showcase-card:hover {
+      border-color: var(--line-strong);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(44, 53, 41, 0.05);
+    }
+    .showcase-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: var(--font-micro);
+      color: var(--mist);
+    }
+    .showcase-badge {
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      color: var(--moss);
+      background: rgba(125, 146, 120, 0.12);
+      padding: 2px 6px;
+    }
+    .showcase-card h3 {
+      font-size: 16px;
+      font-family: var(--serif);
+      margin: 0 0 8px;
+      line-height: 1.35;
+      color: var(--ink);
+    }
+    .showcase-card p {
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--ink-soft);
+      margin: 0 0 16px;
+      flex: 1;
+    }
+    .showcase-thumb-wrap {
+      width: 100%;
+      height: 100px;
+      overflow: hidden;
+      margin-bottom: 10px;
+      border: 1px solid var(--line);
+      background: #eee;
+    }
+    .showcase-thumb-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+    .showcase-card:hover .showcase-thumb-wrap img {
+      transform: scale(1.04);
+    }
+    .showcase-link {
+      font-size: 12px;
+      color: var(--moss);
+      font-weight: 500;
+    }
+    @media (max-width: 820px) {
+      .portal-showcase-strip {
+        grid-template-columns: 1fr;
+        gap: 14px;
+      }
+    }
     .portal-time-path{margin:54px 0 18px;min-height:152px;display:grid;grid-template-columns:minmax(180px,.58fr) 1fr 26px;gap:28px;align-items:center;padding:22px 4px;border-top:1px solid var(--line-strong);border-bottom:1px solid var(--line);transition:background .2s ease}
     .portal-time-path:hover{background:rgba(125,146,120,.035)}
     .portal-time-path>div small{display:block;color:var(--sage);font-size:7px;letter-spacing:.14em}.portal-time-path>div strong{display:block;margin:5px 0 7px;font:400 25px/1.2 var(--serif)}.portal-time-path>div p{margin:0;color:var(--mist);font:12px/1.7 var(--serif)}.portal-time-path>b{justify-self:end;color:var(--seal);font:400 18px var(--serif)}

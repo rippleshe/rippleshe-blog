@@ -25,31 +25,31 @@ const searchIndex = entries.map((entry) => ({
     .trim(),
 }));
 ---
-<BaseLayout title="芳洲" description="Rippleshe 的数字花园。小札、诗、信和一些不一定长成文章的东西。">
+<BaseLayout title="芳洲文字记" description="Rippleshe 的文字札记。收录古典诗词、随笔散文、山水行旅与岁月沉思。">
   <div class="shell garden-page-v2">
     <header class="page-intro garden-intro-v2">
       <div class="garden-title-block">
-        <p class="eyebrow">Digital garden · rippleshe</p>
+        <p class="eyebrow">Writings & Notes · 芳洲文澜</p>
         <h1>芳洲</h1>
-        <p class="garden-title-aside">FANGZHOU / A SMALL ISLET OF WORDS</p>
+        <p class="garden-title-aside">FANGZHOU / ESSAYS, POETRY & THOUGHTS</p>
       </div>
       <div class="garden-intro-panel">
         <BotanicalSprig variant="lan" class="garden-intro-sprig" />
-        <p class="page-intro-copy">念头落在这里，各自长成自己的样子。诗、信、半夜的胡思乱想，和某天被蚊子叮了一口的生气，都有一小块岸。</p>
-        <div class="garden-intro-meta"><span>小札</span><span>诗</span><span>信</span><span>碎片</span></div>
+        <p class="page-intro-copy">行旅山水、故里秋声、古典诗律与书斋沉吟。四十五篇章，存录思绪与岁月的刻痕。</p>
+        <div class="garden-intro-meta"><span>诗词</span><span>随笔</span><span>书简</span><span>山水记</span></div>
       </div>
     </header>
 
     <div class="garden-opening-composition">
       <div class="garden-pocket-note">
-        <small>卷首 / 001</small>
-        <p>先写下来。至于它算诗、算小札，等以后再争。</p>
+        <small>卷首 / 001 · 存真</small>
+        <p>采芳洲兮兰泽，见诸晴窗与暮雨。</p>
         <i aria-hidden="true">⌁</i>
       </div>
       <div class="garden-field-note">
         <span class="seal-mark" aria-hidden="true">芳</span>
-        <p><b>有的页认真得很。</b><br />有的只是半夜忽然想到一句。都算数。</p>
-        <small>FIELD NOTE / 002</small>
+        <p><b>文章千古事，得失寸心知。</b><br />记岳麓存青、湘水苍茫与平生所思。</p>
+        <small>ARCHIVE / 002</small>
       </div>
       <BotanicalSprig variant="ruo" class="garden-opening-herb" />
     </div>
@@ -72,27 +72,27 @@ const searchIndex = entries.map((entry) => ({
 
     <section class="garden-find" aria-label="在芳洲中寻找">
       <div class="garden-find-copy">
-        <p class="eyebrow">Find or wander · 拾句</p>
-        <h2>找一句，也可以随风走。</h2>
-        <p>搜索标题、标签和正文；不想找时，就让风替你翻一页。</p>
+        <p class="eyebrow">Find & Wander · 篇目检索</p>
+        <h2>拾句与溯源</h2>
+        <p>支持标题、正文与意象词汇检索；亦可随机启阅其中一篇。</p>
       </div>
       <div class="garden-find-controls">
         <label class="garden-search">
-          <span>拾句</span>
-          <input type="search" data-garden-search placeholder="标题、标签或正文里的一句话" autocomplete="off" />
+          <span>检索</span>
+          <input type="search" data-garden-search placeholder="输入标题、标签或正文字句…" autocomplete="off" />
           <small>/</small>
         </label>
         <button class="garden-wander" type="button" data-garden-wander>
           <span aria-hidden="true">↝</span>
-          <b>随风一页</b>
-          <small>随手翻开</small>
+          <b>随风启阅</b>
+          <small>随机漫游</small>
         </button>
       </div>
     </section>
 
-    <HerbDivider label="岁时 · seasonal archive" />
+    <HerbDivider label="岁时编年 · chronological archive" />
 
-    <div class="archive-filter-status" data-garden-filter-status hidden><span>沿着 <b data-filter-name></b> 找到 <i data-filter-count>0</i> 篇</span><button type="button" data-garden-reset>回到全部</button></div>
+    <div class="archive-filter-status" data-garden-filter-status hidden><span>按 <b data-filter-name></b> 检索到 <i data-filter-count>0</i> 篇</span><button type="button" data-garden-reset>清除筛选</button></div>
 
     <section class="archive-v2" aria-label="花园内容">
       {years.map((year, yearIndex) => (
@@ -121,9 +121,9 @@ const searchIndex = entries.map((entry) => ({
     <section class="home-section tag-section-v2" aria-labelledby="tags-title">
       <BotanicalSprig variant="hui" class="tag-section-herb" />
       <div class="tag-section-head">
-        <p class="eyebrow">Index by scent · 香径</p>
-        <h2 class="section-heading" id="tags-title">循着标签走</h2>
-        <p>一个词拐出一条小径。走进去，常会碰见很久以前的另一场天气。</p>
+        <p class="eyebrow">Index by topic · 标签小径</p>
+        <h2 class="section-heading" id="tags-title">意象与分类索引</h2>
+        <p>按文类、风物与题旨分类聚合，串联不同时序的行记与心绪。</p>
       </div>
       <div class="tag-herbarium">
         <button class="tag-specimen tag-specimen-all is-active" type="button" data-garden-tag="" aria-pressed="true"><small>00</small><b>全部</b><i aria-hidden="true"></i></button>

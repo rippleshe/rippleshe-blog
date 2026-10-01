@@ -4,24 +4,24 @@ import HerbDivider from '../components/HerbDivider.astro';
 import PageFolioHeader from '../components/PageFolioHeader.astro';
 import site from '../data/site.json';
 ---
-<BaseLayout title="此刻" description="Rippleshe 最近正在发生的事情。">
+<BaseLayout title="此刻" description="Rippleshe 当前的研究、系统研发与生活状态。">
   <div class="shell folio-page now-page-v2">
     <PageFolioHeader
-      eyebrow="Now · 时令札"
+      eyebrow="Now · 动态记存"
       title="此刻"
-      english="WHAT IS GROWING NOW"
+      english="CURRENT INITIATIVES & RESEARCH"
       variant="hui"
       folio="CURRENT / RIPPLE"
-      intro="手边正在做的事、最近绕不过去的念头，还有几件尚未长成的东西，都先记在这一页。"
+      intro="学术研究课题、系统工程研制与生活创作方向的动态记录。"
     />
 
-    <HerbDivider label="近况札 · current notes" />
+    <HerbDivider label="进行专案 · active pursuits" />
 
     <section class="now-waterline" aria-labelledby="now-waterline-title">
       <div class="now-waterline-copy">
-        <p class="eyebrow">The moment you arrived</p>
-        <h2 id="now-waterline-title">你读到这里的时刻</h2>
-        <p>时针走到这里，你也刚好路过。把这一分钟轻轻钉在今天的水线上。</p>
+        <p class="eyebrow">Temporal coordinates</p>
+        <h2 id="now-waterline-title">当前时空坐标</h2>
+        <p>访客访问此刻的时间印记与今日进程。</p>
       </div>
       <div class="now-waterline-clock">
         <small>LOCAL / NOW</small>
@@ -31,7 +31,7 @@ import site from '../data/site.json';
       <div class="now-waterline-meter">
         <div class="now-waterline-track"><i id="reader-day-progress"></i><b id="reader-day-dot"></b></div>
         <div class="now-waterline-meta"><span>00:00</span><strong id="reader-day-percent">--%</strong><span>24:00</span></div>
-        <p>今天已经走过 <b id="reader-day-percent-copy">--%</b> · 今年第 <b id="reader-year-day">---</b> 天</p>
+        <p>今日已度过 <b id="reader-day-percent-copy">--%</b> · 全年第 <b id="reader-year-day">---</b> 天</p>
       </div>
     </section>
 

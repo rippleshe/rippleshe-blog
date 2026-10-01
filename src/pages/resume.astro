@@ -3,47 +3,147 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import HerbDivider from '../components/HerbDivider.astro';
 import PageFolioHeader from '../components/PageFolioHeader.astro';
 ---
-<BaseLayout title="履历" description="Rippleshe 的网页履历。">
+<BaseLayout title="履历" description="Rippleshe 的专业工程与学术履历。">
   <div class="shell folio-page resume-page-v2">
     <PageFolioHeader
-      eyebrow="Resume · 履历折页"
+      eyebrow="Resume · 个人履历"
       title="履历"
-      english="A FEW THINGS I HAVE MADE AND LEARNED"
+      english="ACADEMIC BACKGROUND & ENGINEERING SYSTEMS"
       variant="ruo"
-      folio="RESUME / WEB EDITION"
-      intro="把一路做过、学过、在意过的事折在一张纸里。如今还轻，往后的页角会慢慢有字。"
+      folio="CURRICULUM VITAE / RIPPLESHE"
+      intro="学术研究、工程系统研制与核心专业能力的结构化汇编。"
     />
 
-    <HerbDivider label="履历折页 · selected traces" />
+    <HerbDivider label="专业履历 · curriculum vitae" />
 
     <section class="resume-fold" aria-label="履历结构">
       <aside class="resume-sidebar">
-        <div class="resume-monogram">R/S</div>
+        <div class="resume-monogram">R / S</div>
         <dl>
-          <div><dt>name</dt><dd>Ripple She</dd></div>
-          <div><dt>interests</dt><dd>making · writing · research</dd></div>
+          <div><dt>NAME</dt><dd>Ripple She (佘)</dd></div>
+          <div><dt>FOCUS</dt><dd>Data Visualization · Distributed Systems · Multi-Agent RL</dd></div>
+          <div><dt>LOCATION</dt><dd>Hunan, China</dd></div>
+          <div><dt>STATUS</dt><dd>Active Research & Development</dd></div>
         </dl>
       </aside>
 
       <div class="resume-main">
         <section class="resume-section">
           <span class="resume-section-no">01</span>
-          <div><small>PROFILE</small><h2>喜欢把想法做出来的人</h2><p>软件、科研工具、个人项目和文字记录总在并行。做过什么、学过什么，慢慢会比一句自我概括更具体。</p></div>
+          <div>
+            <small>RESEARCH & ENGINEERING PROFILE</small>
+            <h2>专业方向与研究定位</h2>
+            <p>专注于科研数据可视化标准、跨平台系统工具及多智能体强化学习算法。坚持精炼的工程原则，追求底层透明性、代码可维护性与学术级出版精度。</p>
+          </div>
         </section>
+
         <section class="resume-section">
           <span class="resume-section-no">02</span>
-          <div><small>SELECTED WORK</small><h2>造物</h2><p>SciPlot Academic、PanView、NeteaseDL、IM-Training-Agent……做过的东西各有一页，也各有自己的脾气。</p><a class="rule-link" href="/works/">查看项目</a></div>
+          <div>
+            <small>CORE SYSTEMS & ARTIFACTS</small>
+            <h2>核心系统与研制成果</h2>
+            <ul class="resume-works-list">
+              <li>
+                <strong>SciPlot Academic</strong>
+                <span>面向 Nature、IEEE、Science 规范的学术级科研绘图系统，内置 45+ 经典图表家族。</span>
+              </li>
+              <li>
+                <strong>PanView</strong>
+                <span>跨平台多源文档排版引擎与可视化交互桌面应用，深度协同 LaTeX 与学术排版流。</span>
+              </li>
+              <li>
+                <strong>NeteaseDL</strong>
+                <span>轻量化高性能流媒体音频协议解析与自动化 ID3 元数据处理工具套件。</span>
+              </li>
+              <li>
+                <strong>IM Training Agent</strong>
+                <span>面向交互决策的强化学习多智能体协同框架，支持策略博弈与可解释性分析。</span>
+              </li>
+            </ul>
+            <a class="rule-link" href="/works/">查看造物专页 ↗</a>
+          </div>
         </section>
-        <section class="resume-section resume-section-open">
+
+        <section class="resume-section">
           <span class="resume-section-no">03</span>
-          <div><small>LEARNING / RESEARCH</small><h2>学习与研究</h2><p>课程、竞赛、研究，以及那些一时想不明白的问题，往往比一串名词更容易留下痕迹。</p></div>
+          <div>
+            <small>TECHNICAL STACK & METHODOLOGY</small>
+            <h2>技术栈与专业技能</h2>
+            <div class="resume-skills-grid">
+              <div>
+                <strong>编程语言与核心库</strong>
+                <p>Python (PyTorch, NumPy, Pandas, Matplotlib), TypeScript / JavaScript, Rust, C/C++</p>
+              </div>
+              <div>
+                <strong>数据与可视化</strong>
+                <p>Publication-Ready Visualization, Vector Graphics (SVG/PDF), Statistical Inference, EDA</p>
+              </div>
+              <div>
+                <strong>系统架构与基础设施</strong>
+                <p>Edge Computing (Tencent EdgeOne), PostgreSQL, CloudBase RPC, Git, Docker, Astro SSG</p>
+              </div>
+              <div>
+                <strong>算法与研究方法</strong>
+                <p>Multi-Agent Reinforcement Learning, Decision Optimization, Formal Experimentation</p>
+              </div>
+            </div>
+          </div>
         </section>
       </div>
     </section>
 
     <section class="resume-print-note">
-      <span>PRINT NOTE</span>
-      <p>若有一天需要把它递给别人，就把这张折页收得更薄一些，只留下最要紧的几行。</p>
+      <span>PROFESSIONAL CONTACT</span>
+      <p>如需探讨学术研究合作、系统工程交流或技术咨询，欢迎通过 GitHub @rippleshe 取得联络。</p>
     </section>
   </div>
 </BaseLayout>
+
+<style>
+  .resume-works-list {
+    list-style: none;
+    padding: 0;
+    margin: 12px 0 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .resume-works-list li {
+    padding-left: 12px;
+    border-left: 2px solid var(--moss);
+  }
+  .resume-works-list strong {
+    display: block;
+    font-size: 14px;
+    font-family: var(--serif);
+    color: var(--ink);
+  }
+  .resume-works-list span {
+    font-size: 12px;
+    color: var(--ink);
+    opacity: 0.8;
+  }
+  .resume-skills-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .resume-skills-grid strong {
+    display: block;
+    font-size: 13px;
+    color: var(--moss);
+    margin-bottom: 4px;
+  }
+  .resume-skills-grid p {
+    font-size: 12px;
+    line-height: 1.5;
+    margin: 0;
+    opacity: 0.85;
+  }
+  @media (max-width: 640px) {
+    .resume-skills-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

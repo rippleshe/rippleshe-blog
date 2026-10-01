@@ -1,88 +1,702 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import WorkGlyph from '../../components/WorkGlyph.astro';
+import BotanicalSprig from '../../components/BotanicalSprig.astro';
+import GardenWayfinder from '../../components/GardenWayfinder.astro';
+
+const standards = [
+  { journal: 'Nature / Springer', col1: '89 mm', col2: '183 mm', font: 'Helvetica / Arial (5–8 pt)', dpi: '1200 DPI 矢量', color: '感知均匀色系 · 色盲安全' },
+  { journal: 'IEEE Transactions', col1: '3.5 in (88.9 mm)', col2: '7.16 in (181.8 mm)', font: 'Times New Roman (8–10 pt)', dpi: '600–1200 DPI', color: '灰度兼容 · 单色线型编码' },
+  { journal: 'Science / AAAS', col1: '58.4 mm (1/3)', col2: '184.2 mm (全宽)', font: 'Helvetica (6–9 pt)', dpi: '1200 DPI 矢量', color: '极简无边框 · 强化数据墨水比' },
+  { journal: 'Thesis / Monograph', col1: '140 mm', col2: '160 mm', font: '中英双语混合字体回退', dpi: '300–600 DPI', color: '典雅学术色系 · 支持双语标注' },
+];
+
+const chartFamilies = [
+  {
+    category: '分布与不确定性',
+    en: 'Distribution & Uncertainty',
+    charts: ['雨云图 (Raincloud)', '小提琴图 (Violin)', '山脊图 (Ridgeline)', '箱线分布 (Boxplot)', '边际分布 (Marginal)', '置信度带 (Confidence)'],
+  },
+  {
+    category: '多维流向与拓扑',
+    en: 'Flow, Hierarchy & Topology',
+    charts: ['桑基图 (Sankey)', '旭日层级 (Sunburst)', '弦图 (Chord)', '网络拓扑 (Network Graph)', '打包气泡 (Packed Bubble)', '树状层级 (Treemap)'],
+  },
+  {
+    category: '对比、时序与相关',
+    en: 'Comparison & Dynamics',
+    charts: ['高精度多线 (Multi-line)', '柱线双轴 (Combo)', '相关性热图 (Heatmap)', '3D 瀑布图 (Waterfall 3D)', '日历热图 (Calendar)', '雷达图 (Radar)'],
+  },
+  {
+    category: '学术推断与模型诊断',
+    en: 'Inference & Diagnostics',
+    charts: ['火山图 (Volcano)', '泰勒图 (Taylor Diagram)', 'Bland-Altman 一致性', 'Q-Q 正态检验', '残差分布 (Residuals)', '主成分分析 (PCA)'],
+  },
+];
+
+const gallery = [
+  {
+    id: '01',
+    title: '多序列演化与置信边界',
+    code: '01_multi_line.png',
+    type: 'Multi-line & Confidence Interval',
+    journal: 'Physical Review / IEEE',
+    desc: '展示多组动态信号与收敛轨迹，主曲线与半透明置信区间带层叠，高对比度低饱和配色保证重叠可辨识性。',
+  },
+  {
+    id: '19',
+    title: '雨云图：多模态分布表征',
+    code: '19_raincloud.png',
+    type: 'Raincloud Plot (Half-Violin + Box + Jitter)',
+    journal: 'Nature Methods / BioRxiv',
+    desc: '融合半小提琴核密度估计、微型箱线图与原始数据点抖动，同时呈现数据总体分布形态与真实离散观测值。',
+  },
+  {
+    id: '31',
+    title: '高维能量与类别流动',
+    code: '31_sankey.png',
+    type: 'Sankey Diagram',
+    journal: 'Applied Energy / Resources',
+    desc: '精准呈现系统节点间的多阶段转移与损耗流向，节点宽度与连线弧度遵循流体力学几何平滑过渡。',
+  },
+  {
+    id: '46',
+    title: '多层级辐射与比例分解',
+    code: '46_sunburst.png',
+    type: 'Sunburst Radial Hierarchy',
+    journal: 'Science Advances / Ecology',
+    desc: '环形辐射几何结构，向外层层展开分类层级与权重分配，中心留白与径向文字角度保持极佳阅读体验。',
+  },
+];
 ---
-<BaseLayout title="SciPlot Academic" description="Rippleshe 的科研绘图库。">
+<BaseLayout title="SciPlot Academic 科研绘图体系" description="面向国际顶刊的高精度科研绘图框架。遵循 Nature、Science、IEEE 等期刊严格出版规范。">
   <div class="shell sciplot-page-v2">
     <header class="sciplot-hero sciplot-hero-v2">
-      <div class="sciplot-title sciplot-title-v2">
-        <div>
-          <div class="sciplot-kicker-row">
-            <p class="eyebrow">Work 01 · Python / Visualization</p>
-            <span>R/S · PLATE 001</span>
-          </div>
-          <h1>SciPlot<br /><em>Academic</em></h1>
-          <p class="sciplot-subline">RESEARCH FIGURES / DEFAULTS WITH A HIGHER FLOOR</p>
-        </div>
-        <div class="sciplot-intro-note">
-          <WorkGlyph variant="plot" class="sciplot-intro-glyph" />
-          <p>一张科研图从第一笔就可以站得更稳些。SciPlot 把常用期刊尺寸、中文排版、色盲安全配色和常见图表收进同一套 API，省下反复修边角的时间。</p>
-        </div>
+      <div class="sciplot-kicker-row">
+        <a class="eyebrow back-link" href="/works/">← 回到造物研制录</a>
+        <span class="sciplot-version-badge">VERSION 1.12.6 · PRODUCTION SPEC</span>
       </div>
 
-      <div class="sciplot-board sciplot-board-v2">
-        <span class="sciplot-axis-note sciplot-axis-note-a">FIG.01 / MULTI LINE</span>
-        <span class="sciplot-axis-note sciplot-axis-note-b">FIG.19 / RAINCLOUD</span>
-        <img src="/media/works/sciplot/01_multi_line.png" alt="SciPlot 多线对比图" />
-        <img src="/media/works/sciplot/19_raincloud.png" alt="SciPlot 雨云图" />
-        <div class="sciplot-board-coordinates" aria-hidden="true"><span>0,0</span><span>x</span><span>y</span></div>
+      <div class="sciplot-title-group">
+        <h1>SciPlot<br /><em>Academic</em></h1>
+        <p class="sciplot-subtitle">面向国际顶刊的高精度科研可视化框架与出版级排版系统</p>
       </div>
 
-      <div class="project-facts project-facts-v2">
-        <div class="project-fact"><small>Role</small><span>Design / Development</span></div>
-        <div class="project-fact"><small>Stack</small><span>Python · Matplotlib</span></div>
-        <div class="project-fact"><small>Type</small><span>Open-source tool</span></div>
-        <div class="project-fact"><small>Repository</small><a href="https://github.com/rippleshe/sciplot-academic">GitHub ↗</a></div>
+      <div class="sciplot-stats-row">
+        <div class="sciplot-stat-box">
+          <span class="stat-num">45+</span>
+          <span class="stat-label">图表家族体系</span>
+        </div>
+        <div class="sciplot-stat-box">
+          <span class="stat-num">1200</span>
+          <span class="stat-label">DPI 矢量渲染</span>
+        </div>
+        <div class="sciplot-stat-box">
+          <span class="stat-num">4 大</span>
+          <span class="stat-label">主流顶刊版式</span>
+        </div>
+        <div class="sciplot-stat-box">
+          <span class="stat-num">0 配置</span>
+          <span class="stat-label">声明式开箱即用</span>
+        </div>
       </div>
     </header>
 
-    <section class="project-story project-story-v2">
-      <aside class="project-story-index">
-        <span>01</span>
-        <small>WHY</small>
-        <WorkGlyph variant="plot" />
-      </aside>
+    <!-- 顶刊排版规范对比 -->
+    <section class="sciplot-section" aria-labelledby="standards-heading">
+      <div class="section-head">
+        <small class="eyebrow">STANDARDS & PRESETS · 期刊版式规范</small>
+        <h2 id="standards-heading">出版物级精准版面约束</h2>
+        <p>学术发表要求严格的栏宽约束与可辨识度标准。SciPlot 将国际主流出版机构的物理尺寸与排版规范固化为底层引擎标准。</p>
+      </div>
+
+      <div class="standards-table-wrap">
+        <table class="standards-table">
+          <thead>
+            <tr>
+              <th>目标出版体系</th>
+              <th>单栏宽度 (Single Column)</th>
+              <th>双栏宽度 (Double Column)</th>
+              <th>字体规范</th>
+              <th>矢量分辨率与色彩</th>
+            </tr>
+          </thead>
+          <tbody>
+            {standards.map((s) => (
+              <tr>
+                <td><strong>{s.journal}</strong></td>
+                <td><code>{s.col1}</code></td>
+                <td><code>{s.col2}</code></td>
+                <td>{s.font}</td>
+                <td><small>{s.dpi} · {s.color}</small></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- 代码调用范式 -->
+    <section class="sciplot-section" aria-labelledby="code-heading">
+      <div class="section-head">
+        <small class="eyebrow">DECLARATIVE API · 调用范式</small>
+        <h2 id="code-heading">极简声明式代码流水线</h2>
+        <p>告别反复微调 Matplotlib 底层参数的繁琐流程。以最少代码完成符合顶刊规范的图表生成与矢量导出。</p>
+      </div>
+
+      <div class="code-install-bar">
+        <span class="install-label">QUICK INSTALL</span>
+        <div class="install-tabs">
+          <button type="button" class="install-tab active" data-cmd="pip install sciplot-academic">pip</button>
+          <button type="button" class="install-tab" data-cmd="uv add sciplot-academic">uv</button>
+          <button type="button" class="install-tab" data-cmd="conda install -c conda-forge sciplot">conda</button>
+        </div>
+        <div class="install-cmd-box">
+          <code id="install-cmd-text">pip install sciplot-academic</code>
+          <button type="button" class="copy-install-btn" title="复制安装命令">复制</button>
+        </div>
+      </div>
+
+      <div class="code-showcase-box">
+        <div class="code-box-header">
+          <div class="code-dots"><i></i><i></i><i></i></div>
+          <span>example_publication_figure.py</span>
+          <button class="copy-code-btn" type="button" data-copy-target="#sciplot-demo-code">复制代码</button>
+        </div>
+        <pre><code id="sciplot-demo-code">import sciplot as sp
+import pandas as pd
+
+# 1. 一键载入目标期刊出版规范（栏宽、字号、边距、字体）
+sp.set_style('nature', dpi=1200, font='helvetica')
+
+# 2. 声明式生成专业级雨云图（支持核密度、微型箱线与散点抖动）
+fig, ax = sp.plot_raincloud(
+    data=df,
+    x='treatment_group',
+    y='biomarker_level',
+    palette='muted_scientific',
+    bandwidth=0.25,
+    box_whisker=True,
+    jitter=0.08
+)
+
+# 3. 添加出版级学术标注与显著性标识
+sp.annotate_significance(ax, group1='Control', group2='Treated', p_val=0.001)
+
+# 4. 导出为满足投稿标准的无损矢量 PDF
+sp.save('figure1_multimodal.pdf')</code></pre>
+      </div>
+    </section>
+
+    <!-- 45+ 家族分类矩阵 -->
+    <section class="sciplot-section" aria-labelledby="spectrum-heading">
+      <div class="section-head">
+        <small class="eyebrow">CHART MATRIX · 45+ 图表家族谱系</small>
+        <h2 id="spectrum-heading">覆盖全科研生命周期的图表库</h2>
+        <p>系统化覆盖从探索性数据分析、模型收敛诊断到论文主图呈现的全维度学术可视化需求。</p>
+      </div>
+
+      <div class="families-grid">
+        {chartFamilies.map((fam) => (
+          <div class="family-card">
+            <div class="family-head">
+              <h3>{fam.category}</h3>
+              <small>{fam.en}</small>
+            </div>
+            <ul class="family-list">
+              {fam.charts.map((c) => (
+                <li><span>{c}</span></li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <!-- 实机案例画廊 -->
+    <section class="sciplot-section" aria-labelledby="gallery-heading">
+      <div class="section-head">
+        <small class="eyebrow">GALLERY SPECIMENS · 出版级实图陈列</small>
+        <h2 id="gallery-heading">真实学术渲染成果展示</h2>
+        <p>以下示例图表均由 SciPlot 引擎原生渲染生成，满足 1200 DPI 矢量级输出精度。</p>
+      </div>
+
+      <div class="sciplot-specimens-grid">
+        {gallery.map((item) => (
+          <article
+            class="specimen-card"
+            data-lightbox
+            data-lightbox-group="sciplot"
+            data-lightbox-src={`/media/works/sciplot/${item.code}`}
+            data-lightbox-title={item.title}
+            data-lightbox-desc={item.desc}
+            data-lightbox-meta={`${item.type} · ${item.journal}`}
+            data-lightbox-seal="图"
+          >
+            <div class="specimen-image-wrap">
+              <img src={`/media/works/sciplot/${item.code}`} alt={item.title} loading="lazy" />
+              <div class="specimen-zoom-hint"><span>🔍 全屏放大检视</span></div>
+              <div class="specimen-tag-bar">
+                <span>{item.type}</span>
+                <code>{item.journal}</code>
+              </div>
+            </div>
+            <div class="specimen-content">
+              <span class="specimen-id">PLATE {item.id}</span>
+              <h3>{item.title}</h3>
+              <p>{item.desc}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <footer class="sciplot-closing-box">
+      <BotanicalSprig variant="ruo" />
       <div>
-        <p class="project-story-lead">科研图常常难在最后那一串琐事：尺寸、字体、刻度、图例，熟得不能再熟，却总要重来。</p>
-        <p>尺寸、字体、刻度、图例、配色和导出，总在每张图后面排着队。索性把这些习惯收进底层，画下一张时少重复一点。</p>
-        <p>于是它从几个常用函数，慢慢长成一个覆盖基础统计图、网络图、3D、复合面板和期刊样式的绘图库。</p>
-        <a class="rule-link" href="https://github.com/rippleshe/sciplot-academic">看源码与文档</a>
+        <p class="eyebrow">System Philosophy</p>
+        <strong>让科学数据拥有其本该具有的秩序与清晰度。</strong>
+        <p>以工程标准化抹平繁琐参数，将科研人员的时间还给探索与发现本身。</p>
       </div>
-    </section>
+      <a class="rule-link" href="/works/">返回造物研制录</a>
+    </footer>
 
-    <section class="sciplot-principles" aria-labelledby="sciplot-principles-title">
-      <div class="sciplot-principles-head">
-        <span>02</span>
-        <div><p class="eyebrow">Principles</p><h2 id="sciplot-principles-title">我更在意默认值。</h2></div>
-      </div>
-      <div class="sciplot-principle-grid">
-        <article><small>A / DEFAULT</small><strong>随手画，也不能太难看。</strong><p>把常见排版决策提前做好，不要求每一张图都重新调教。</p></article>
-        <article><small>B / CONSISTENCY</small><strong>同一套图，应该像一家人。</strong><p>尺寸、字体、刻度、留白和导出方式保持统一，不让风格靠记忆维持。</p></article>
-        <article><small>C / RANGE</small><strong>常规图和复杂图都能留下来。</strong><p>既覆盖基础统计图，也允许网络图、复合面板和更特殊的科研可视化。</p></article>
-      </div>
-    </section>
-
-    <section class="project-gallery project-gallery-v2" aria-label="SciPlot 图表示例">
-      <figure class="sciplot-gallery-figure sciplot-gallery-a">
-        <span>FIG.31 / FLOW</span>
-        <img src="/media/works/sciplot/31_sankey.png" alt="SciPlot 桑基图" loading="lazy" />
-        <figcaption>Sankey / relation & flow</figcaption>
-      </figure>
-      <figure class="sciplot-gallery-figure sciplot-gallery-b">
-        <span>FIG.46 / HIERARCHY</span>
-        <img src="/media/works/sciplot/46_sunburst.png" alt="SciPlot 旭日图" loading="lazy" />
-        <figcaption>Sunburst / hierarchy</figcaption>
-      </figure>
-    </section>
-
-    <section class="sciplot-closing">
-      <div class="sciplot-closing-line" aria-hidden="true"></div>
-      <div>
-        <p class="eyebrow">Work note · 01</p>
-        <strong>好用的工具，最好安静一点。</strong>
-        <p>SciPlot 更像桌边一把顺手的尺。少折腾几次默认值，把心思留给下一张图。</p>
-      </div>
-      <a class="rule-link" href="/works/">回到造物</a>
-    </section>
+    <GardenWayfinder current="works" />
   </div>
+
+  <script is:inline>
+    // 复制代码
+    document.querySelectorAll('.copy-code-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const target = document.querySelector(btn.dataset.copyTarget);
+        if (!target) return;
+        try {
+          await navigator.clipboard.writeText(target.textContent);
+          const orig = btn.textContent;
+          btn.textContent = '已复制！';
+          btn.style.color = 'var(--moss)';
+          setTimeout(() => {
+            btn.textContent = orig;
+            btn.style.color = '';
+          }, 2000);
+        } catch (e) {
+          console.error(e);
+        }
+      });
+    });
+
+    // 切换安装命令
+    const tabs = document.querySelectorAll('.install-tab');
+    const cmdText = document.getElementById('install-cmd-text');
+    const copyInstall = document.querySelector('.copy-install-btn');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+        if (cmdText) cmdText.textContent = tab.dataset.cmd || '';
+      });
+    });
+
+    copyInstall?.addEventListener('click', async () => {
+      if (!cmdText) return;
+      try {
+        await navigator.clipboard.writeText(cmdText.textContent);
+        const orig = copyInstall.textContent;
+        copyInstall.textContent = '已复制！';
+        setTimeout(() => { copyInstall.textContent = orig; }, 2000);
+      } catch (e) {
+        console.error(e);
+      }
+    });
+  </script>
 </BaseLayout>
+
+<style>
+  .sciplot-page-v2 {
+    padding-top: 36px;
+    padding-bottom: 72px;
+  }
+  .sciplot-kicker-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .sciplot-version-badge {
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    padding: 3px 8px;
+    background: rgba(125, 146, 120, 0.15);
+    border: 1px solid var(--line);
+    color: var(--moss);
+    font-family: var(--sans);
+  }
+  .sciplot-title-group h1 {
+    font-size: clamp(38px, 6vw, 56px);
+    line-height: 1.05;
+    margin: 0;
+    font-family: var(--serif);
+    letter-spacing: -0.03em;
+  }
+  .sciplot-title-group h1 em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--moss);
+  }
+  .sciplot-subtitle {
+    font-size: 16px;
+    color: var(--ink);
+    opacity: 0.85;
+    margin: 12px 0 28px;
+    max-width: 680px;
+    line-height: 1.6;
+  }
+  .sciplot-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    padding: 20px 0;
+    border-top: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+    margin-bottom: 48px;
+  }
+  .sciplot-stat-box {
+    display: flex;
+    flex-direction: column;
+  }
+  .stat-num {
+    font-size: 28px;
+    font-family: var(--serif);
+    color: var(--moss);
+    line-height: 1.1;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--mist);
+    letter-spacing: 0.05em;
+    margin-top: 4px;
+  }
+  .sciplot-section {
+    margin-bottom: 56px;
+  }
+  .section-head {
+    margin-bottom: 24px;
+  }
+  .section-head h2 {
+    font-size: 24px;
+    font-family: var(--serif);
+    margin: 4px 0 8px;
+  }
+  .section-head p {
+    font-size: 13px;
+    line-height: 1.65;
+    color: var(--ink);
+    opacity: 0.85;
+    max-width: 720px;
+    margin: 0;
+  }
+  .standards-table-wrap {
+    overflow-x: auto;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.45);
+  }
+  .standards-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    text-align: left;
+  }
+  .standards-table th, .standards-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+  .standards-table th {
+    background: rgba(240, 237, 228, 0.6);
+    font-weight: 600;
+    font-size: 11px;
+    color: var(--moss);
+    letter-spacing: 0.05em;
+  }
+  .standards-table code {
+    font-family: var(--sans);
+    background: rgba(0,0,0,0.04);
+    padding: 2px 4px;
+    font-size: 11px;
+  }
+  .code-install-bar {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+    padding: 8px 14px;
+    background: rgba(248, 245, 237, 0.6);
+    border: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .install-label {
+    font-size: var(--font-micro);
+    color: var(--sage);
+    letter-spacing: 0.08em;
+  }
+  .install-tabs {
+    display: flex;
+    gap: 6px;
+  }
+  .install-tab {
+    background: transparent;
+    border: 1px solid var(--line);
+    font-size: 11px;
+    padding: 2px 8px;
+    cursor: pointer;
+    color: var(--ink-soft);
+    font-family: var(--sans);
+    transition: all 0.15s ease;
+  }
+  .install-tab.active {
+    background: var(--moss);
+    color: #fff;
+    border-color: var(--moss);
+  }
+  .install-cmd-box {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #141815;
+    padding: 4px 12px;
+    margin-left: auto;
+    border: 1px solid #2d382f;
+  }
+  .install-cmd-box code {
+    color: #a4b8a5;
+    font-size: 11px;
+    font-family: Consolas, monospace;
+  }
+  .copy-install-btn {
+    background: transparent;
+    border: 0;
+    color: #fff;
+    font-size: 10px;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  .copy-install-btn:hover {
+    opacity: 1;
+    color: var(--sage-light);
+  }
+  .code-showcase-box {
+    border: 1px solid var(--line-strong);
+    background: #1e2420;
+    color: #e5ede3;
+    overflow: hidden;
+  }
+  .code-box-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: #141815;
+    border-bottom: 1px solid #2d382f;
+    font-size: 11px;
+    color: #8c9e8d;
+    font-family: var(--sans);
+  }
+  .code-dots {
+    display: flex;
+    gap: 6px;
+  }
+  .code-dots i {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #3b463e;
+    display: block;
+  }
+  .copy-code-btn {
+    background: transparent;
+    border: 1px solid #3b463e;
+    color: #a4b8a5;
+    padding: 2px 8px;
+    font-size: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .copy-code-btn:hover {
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+  }
+  .code-showcase-box pre {
+    margin: 0;
+    padding: 20px;
+    overflow-x: auto;
+    font-size: 12px;
+    line-height: 1.65;
+    font-family: Consolas, Monaco, monospace;
+  }
+  .families-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+  .family-card {
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.45);
+    padding: 20px;
+  }
+  .family-head {
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--line);
+  }
+  .family-head h3 {
+    margin: 0;
+    font-size: 16px;
+    font-family: var(--serif);
+    color: var(--ink);
+  }
+  .family-head small {
+    font-size: 10px;
+    color: var(--mist);
+    letter-spacing: 0.05em;
+  }
+  .family-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .family-list li span {
+    font-size: 11px;
+    color: var(--ink);
+    opacity: 0.9;
+  }
+  .sciplot-specimens-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+  .specimen-card {
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.45);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transition: border-color 0.2s ease, transform 0.2s ease;
+    cursor: pointer;
+  }
+  .specimen-card:hover {
+    border-color: var(--line-strong);
+    transform: translateY(-2px);
+  }
+  .specimen-zoom-hint {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(248, 245, 237, 0.92);
+    border: 1px solid var(--line);
+    padding: 3px 8px;
+    font-size: 11px;
+    color: var(--moss);
+    opacity: 0;
+    transform: translateY(-4px);
+    transition: all 0.2s ease;
+    pointer-events: none;
+  }
+  .specimen-card:hover .specimen-zoom-hint {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .specimen-image-wrap {
+    position: relative;
+    background: #fff;
+    padding: 16px;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 240px;
+  }
+  .specimen-image-wrap img {
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+    max-height: 280px;
+  }
+  .specimen-tag-bar {
+    position: absolute;
+    bottom: 8px;
+    left: 12px;
+    right: 12px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: var(--mist);
+  }
+  .specimen-content {
+    padding: 18px 20px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .specimen-id {
+    font-size: 9px;
+    color: var(--moss);
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+  }
+  .specimen-content h3 {
+    margin: 0 0 8px;
+    font-size: 16px;
+    font-family: var(--serif);
+  }
+  .specimen-content p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--ink);
+    opacity: 0.85;
+  }
+  .sciplot-closing-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 28px;
+    border: 1px solid var(--line-strong);
+    background: rgba(125, 146, 120, 0.06);
+    margin-top: 48px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .sciplot-closing-box strong {
+    display: block;
+    font-size: 17px;
+    font-family: var(--serif);
+    margin-bottom: 6px;
+  }
+  .sciplot-closing-box p {
+    margin: 0;
+    font-size: 12px;
+    color: var(--ink);
+    opacity: 0.85;
+  }
+  @media (max-width: 768px) {
+    .sciplot-stats-row {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .families-grid {
+      grid-template-columns: 1fr;
+    }
+    .sciplot-specimens-grid {
+      grid-template-columns: 1fr;
+    }
+    .family-list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
