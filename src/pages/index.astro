@@ -1,4 +1,4 @@
----
+﻿---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BotanicalSprig from '../components/BotanicalSprig.astro';
 import HerbDivider from '../components/HerbDivider.astro';
@@ -115,7 +115,7 @@ const dev = import.meta.env.DEV;
       <div class="portal-memory-copy">
         <p class="eyebrow">Old ripples · calendar memory</p>
         <h2 id="old-ripples-title">旧日水纹</h2>
-        <p>不按热度，也不猜你喜欢。只让日历偶尔把旧日送回来。</p>
+        <p>有些旧日的水纹，会在相似的时节重新浮上来。</p>
         <a class="rule-link" href="/life/">沿日录继续往前</a>
       </div>
       <div class="portal-memory-list" id="old-ripple-items"></div>
@@ -244,3 +244,4 @@ const dev = import.meta.env.DEV;
     @media(max-width:760px){.portal-memory{grid-template-columns:1fr;gap:24px}.portal-memory-item{grid-template-columns:92px 1fr}.portal-memory-item img{width:92px}}
   </style>
 </BaseLayout>
+
