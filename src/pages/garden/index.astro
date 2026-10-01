@@ -116,6 +116,14 @@ const searchIndex = entries.map((entry) => ({
           </div>
         </div>
       ))}
+      <div class="archive-empty-state" data-archive-empty hidden>
+        <span class="seal-mark" aria-hidden="true">空</span>
+        <div>
+          <h3>未寻得对应字句</h3>
+          <p>当前检索词或标签下暂无匹配篇目，可尝试更换关键词或清除筛选。</p>
+        </div>
+        <button type="button" class="rule-link" data-garden-reset>重置检索条件</button>
+      </div>
     </section>
 
     <section class="home-section tag-section-v2" aria-labelledby="tags-title">
@@ -194,6 +202,30 @@ const searchIndex = entries.map((entry) => ({
       return (start > 0 ? '…' : '') + body.slice(start, end).trim() + (end < body.length ? '…' : '');
     }
 
+    const emptyState = document.querySelector('[data-archive-empty]');
+
+    function highlightSnippet(container, text, query) {
+      if (!container || !text) return;
+      const terms = termsOf(query);
+      if (!terms.length) {
+        container.textContent = text;
+        return;
+      }
+      container.innerHTML = '';
+      const regex = new RegExp(`(${terms.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})`, 'gi');
+      const parts = text.split(regex);
+      parts.forEach(part => {
+        if (terms.some(t => t.toLowerCase() === part.toLowerCase())) {
+          const mark = document.createElement('mark');
+          mark.className = 'garden-mark';
+          mark.textContent = part;
+          container.appendChild(mark);
+        } else if (part) {
+          container.appendChild(document.createTextNode(part));
+        }
+      });
+    }
+
     function apply(move = false, updateUrl = true) {
       let count = 0;
       rows.forEach((row) => {
@@ -205,12 +237,13 @@ const searchIndex = entries.map((entry) => ({
         const hit = row.querySelector('[data-search-hit]');
         if (hit) {
           const snippet = show && activeQuery ? snippetOf(item, activeQuery) : '';
-          hit.textContent = snippet;
           hit.hidden = !snippet;
+          if (snippet) highlightSnippet(hit, snippet, activeQuery);
         }
         if (show) count += 1;
       });
       years.forEach((year) => { year.hidden = !year.querySelector('.archive-entry-v2:not([hidden])'); });
+      if (emptyState) emptyState.hidden = count > 0;
       buttons.forEach((button) => {
         const active = (button.dataset.gardenTag || '') === activeTag;
         button.classList.toggle('is-active', active);
@@ -231,6 +264,20 @@ const searchIndex = entries.map((entry) => ({
       }
       if (move) archive.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+
+    // 快捷键支持：按 / 聚焦，按 Escape 清空
+    window.addEventListener('keydown', (e) => {
+      if (e.key === '/' && document.activeElement !== search) {
+        e.preventDefault();
+        search?.focus();
+        search?.select();
+      } else if (e.key === 'Escape' && document.activeElement === search) {
+        search.value = '';
+        activeQuery = '';
+        apply(false);
+        search.blur();
+      }
+    });
 
     const initialButton = buttons.find((button) => (button.dataset.gardenTag || '') === activeTag);
     showExtraTags(Boolean(initialButton?.hasAttribute('data-extra-tag')));

@@ -3,6 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import BotanicalSprig from '../components/BotanicalSprig.astro';
 import HerbDivider from '../components/HerbDivider.astro';
 import PageFolioHeader from '../components/PageFolioHeader.astro';
+import GardenWayfinder from '../components/GardenWayfinder.astro';
 ---
 <BaseLayout title="器物录" description="Rippleshe 的生产力工具、软硬件配置与生活器物志。">
   <div class="shell folio-page uses-page-v2">
@@ -48,5 +49,17 @@ import PageFolioHeader from '../components/PageFolioHeader.astro';
         <p>不求浮华堆砌，唯选稳定可靠。工具越顺手，越能将精力专注倾注于核心创造。</p>
       </div>
     </section>
+
+    <GardenWayfinder current="about" />
   </div>
+
+  <style>
+    .object-drawer {
+      transition: transform 0.25s var(--ease-garden), background 0.25s ease;
+    }
+    .object-drawer:hover {
+      transform: translateX(4px);
+      background: rgba(125, 146, 120, 0.05);
+    }
+  </style>
 </BaseLayout>

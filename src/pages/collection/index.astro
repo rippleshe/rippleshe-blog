@@ -81,9 +81,12 @@ const galleryRatioOf = (item: (typeof photos)[number]) => {
     </section>
     <GardenWayfinder current="collection" />
   </div>
-</BaseLayout>
+
   <style>
-    .collection-photo{scroll-margin-top:34px;transition:box-shadow .35s ease,background .35s ease}
+    .collection-photo{scroll-margin-top:34px;transition:box-shadow .35s ease,background .35s ease,transform .25s ease}
     .collection-photo:target{background:rgba(125,146,120,.055);box-shadow:0 0 0 1px rgba(63,86,65,.24),0 18px 44px rgba(53,55,42,.07)}
+    .collection-photo:hover {
+      transform: translateY(-2px);
+    }
   </style>
 </BaseLayout>

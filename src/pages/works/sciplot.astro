@@ -133,6 +133,42 @@ const gallery = [
           </tbody>
         </table>
       </div>
+
+      <!-- 顶刊物理版面可视化标尺 -->
+      <div class="manuscript-gauge-card">
+        <div class="gauge-control-bar">
+          <span class="gauge-label">LAYOUT SIMULATION · 论文排版实景模拟</span>
+          <div class="gauge-buttons">
+            <button type="button" class="gauge-btn active" data-col="single" data-width="89mm" data-journal="Nature (Single Column · 89mm)">Nature 单栏 (89mm)</button>
+            <button type="button" class="gauge-btn" data-col="double" data-width="183mm" data-journal="Nature (Double Column · 183mm)">Nature 双栏 (183mm)</button>
+            <button type="button" class="gauge-btn" data-col="single" data-width="88.9mm" data-journal="IEEE Trans (Single Column · 3.5 in)">IEEE 单栏 (3.5 in)</button>
+          </div>
+        </div>
+        <div class="virtual-manuscript-paper">
+          <div class="manuscript-head-lines">
+            <div class="manuscript-title-line"></div>
+            <div class="manuscript-author-line"></div>
+          </div>
+          <div class="virtual-columns-layout" id="virtual-layout-mode" data-mode="single">
+            <div class="virtual-column">
+              <p class="sim-text-line"></p><p class="sim-text-line"></p><p class="sim-text-line"></p>
+              <div class="sim-figure-slot" id="sim-figure-target">
+                <div class="sim-figure-graphic">
+                  <span class="sim-graphic-tag" id="sim-gauge-tag">Nature 单栏 · 89 mm</span>
+                  <img src="/media/works/sciplot/19_raincloud.png" alt="排版示意图" />
+                </div>
+                <caption class="sim-caption">Fig. 1 | Multimodal distribution of biomarkers across experimental groups.</caption>
+              </div>
+              <p class="sim-text-line"></p><p class="sim-text-line"></p><p class="sim-text-line"></p>
+            </div>
+            <div class="virtual-column">
+              <p class="sim-text-line"></p><p class="sim-text-line"></p><p class="sim-text-line"></p><p class="sim-text-line"></p>
+              <p class="sim-text-line"></p><p class="sim-text-line"></p><p class="sim-text-line"></p><p class="sim-text-line"></p>
+              <p class="sim-text-line"></p><p class="sim-text-line"></p><p class="sim-text-line"></p><p class="sim-text-line"></p>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- 代码调用范式 -->
@@ -297,6 +333,19 @@ sp.save('figure1_multimodal.pdf')</code></pre>
       });
     });
 
+    // 切换论文版面单双栏模拟
+    const gaugeBtns = document.querySelectorAll('.gauge-btn');
+    const layoutMode = document.getElementById('virtual-layout-mode');
+    const gaugeTag = document.getElementById('sim-gauge-tag');
+    gaugeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        gaugeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if (layoutMode) layoutMode.dataset.mode = btn.dataset.col || 'single';
+        if (gaugeTag) gaugeTag.textContent = btn.dataset.journal || '';
+      });
+    });
+
     copyInstall?.addEventListener('click', async () => {
       if (!cmdText) return;
       try {
@@ -424,6 +473,119 @@ sp.save('figure1_multimodal.pdf')</code></pre>
     background: rgba(0,0,0,0.04);
     padding: 2px 4px;
     font-size: 11px;
+  }
+  .manuscript-gauge-card {
+    margin-top: 24px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.5);
+    padding: 20px 24px;
+  }
+  .gauge-control-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .gauge-label {
+    font-size: var(--font-micro);
+    color: var(--sage);
+    letter-spacing: 0.08em;
+  }
+  .gauge-buttons {
+    display: flex;
+    gap: 8px;
+  }
+  .gauge-btn {
+    background: transparent;
+    border: 1px solid var(--line);
+    font-size: 11px;
+    padding: 3px 10px;
+    cursor: pointer;
+    color: var(--ink-soft);
+    transition: all 0.2s ease;
+  }
+  .gauge-btn.active {
+    background: var(--moss);
+    color: #fff;
+    border-color: var(--moss);
+  }
+  .virtual-manuscript-paper {
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.08);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.04);
+    padding: 24px 28px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .manuscript-title-line {
+    width: 65%;
+    height: 10px;
+    background: #3f5641;
+    opacity: 0.6;
+    margin-bottom: 8px;
+  }
+  .manuscript-author-line {
+    width: 35%;
+    height: 6px;
+    background: #becbb7;
+    margin-bottom: 20px;
+  }
+  .virtual-columns-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .virtual-columns-layout[data-mode='double'] .sim-figure-slot {
+    grid-column: 1 / -1;
+  }
+  .virtual-column {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .sim-text-line {
+    height: 4px;
+    background: #e4e6df;
+    border-radius: 1px;
+    margin: 0;
+  }
+  .sim-figure-slot {
+    margin: 10px 0;
+    padding: 10px;
+    background: #fafaf8;
+    border: 1px dashed var(--line-strong);
+    transition: all 0.3s ease;
+  }
+  .sim-figure-graphic {
+    position: relative;
+    background: #fff;
+    padding: 8px;
+    border: 1px solid #eee;
+    text-align: center;
+  }
+  .sim-figure-graphic img {
+    max-height: 140px;
+    max-width: 100%;
+    object-fit: contain;
+  }
+  .sim-graphic-tag {
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    font-size: 9px;
+    color: var(--moss);
+    background: rgba(125,146,120,0.15);
+    padding: 1px 5px;
+  }
+  .sim-caption {
+    display: block;
+    font-size: 10px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    font-style: italic;
+    font-family: var(--serif);
   }
   .code-install-bar {
     display: flex;
