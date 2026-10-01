@@ -241,8 +241,9 @@ img { max-width: 100%; display: block; }
   .site-header nav::-webkit-scrollbar { display:none; }
   .site-header nav a { flex:0 0 auto; font-size:13px; }
   .site-header nav a small { display:none; }
-  .header-tools { gap:8px; }
-  .header-studio span { display:none; }
+  .header-tools { gap:6px; }
+  .header-studio span, .header-random span { display:none; }
+  .header-random { padding: 4px 6px; }
   .hero-title { font-size: 64px; }
   .manifesto { font-size: 19px; }
   .growth-row { grid-template-columns: 66px 1fr; gap: 14px; }
@@ -388,14 +389,14 @@ body {
 .letter-seal { display: grid; place-items: center; width: 42px; height: 42px; position: absolute; right: 28px; bottom: 24px; border: 1px solid rgba(139,78,67,.55); color: var(--seal); font-family: var(--serif); transform: rotate(4deg); }
 .reading-meta-v2 { margin-top: 18px; }
 .tag-line-v2 span { display: inline-flex; gap: 6px; align-items: baseline; border-bottom: 1px solid rgba(125,146,120,.18); padding-bottom: 2px; }
-.tag-line-v2 small { color: var(--seal); font-size: 7px; }
+.tag-line-v2 small { color: var(--seal); font-size: var(--font-micro); }
 .reading-shell-v2 > .herb-divider { margin: 36px 0 56px; }
 .prose-v2 { width: min(720px,100%); margin-inline: auto; position: relative; }
 .prose-v2::before { content: ''; position: absolute; left: -42px; top: 0; bottom: 0; width: 1px; background: linear-gradient(transparent, rgba(63,86,65,.09) 8%, rgba(63,86,65,.09) 92%, transparent); }
-.prose-v2 > p:first-of-type::first-letter { float: left; font-size: 3.5em; line-height: .76; padding: .15em .12em 0 0; color: var(--moss); font-family: var(--serif); }
+.prose-v2 > p:first-of-type::first-letter { float: left; font-size: 2.5em; line-height: 0.9; margin: 0 0.16em -0.05em 0; color: var(--moss); font-family: var(--serif); }
 .reading-shell-v2[data-kind='信'] .prose-v2 > p:first-of-type::first-letter,
 .reading-shell-v2[data-kind='诗'] .prose-v2 > p:first-of-type::first-letter,
-.reading-shell-v2[data-kind='词'] .prose-v2 > p:first-of-type::first-letter { float: none; font-size: inherit; line-height: inherit; padding: 0; color: inherit; }
+.reading-shell-v2[data-kind='词'] .prose-v2 > p:first-of-type::first-letter { float: none; font-size: inherit; line-height: inherit; margin: 0; color: inherit; }
 .reading-shell-v2[data-kind='信'] .prose-v2 { background: linear-gradient(90deg, transparent 31px, rgba(139,78,67,.08) 32px, transparent 33px); padding-left: 56px; }
 .reading-shell-v2[data-kind='诗'] .prose-v2,
 .reading-shell-v2[data-kind='词'] .prose-v2 { width: min(620px,100%); font-size: clamp(18px,2vw,21px); line-height: 2.2; white-space: pre-line; }
@@ -411,7 +412,7 @@ body {
 .site-header::after { content: ''; display: block; width: var(--shell); margin: 7px auto 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(63,86,65,.12) 15%, rgba(63,86,65,.12) 85%, transparent); }
 .brand-word { display: grid; gap: 0; line-height: 1.15; }
 .brand-word b { font: inherit; font-weight: 400; }
-.brand-word small { margin-top: 3px; color: var(--mist); font-family: var(--sans); font-size: 7px; letter-spacing: .18em; }
+.brand-word small { margin-top: 3px; color: var(--mist); font-family: var(--sans); font-size: var(--font-micro); letter-spacing: .08em; }
 .site-header nav a { display: inline-grid; grid-template-columns: auto auto; align-items: baseline; gap: 5px; }
 .site-header nav a small { color: var(--seal); font-family: var(--serif); font-size: var(--font-micro); opacity: .78; }
 .header-tools { display:flex; align-items:center; gap:14px; }
