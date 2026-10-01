@@ -2,16 +2,16 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BotanicalSprig from '../components/BotanicalSprig.astro';
 import HerbDivider from '../components/HerbDivider.astro';
-import PageHerbariumHeader from '../components/PageHerbariumHeader.astro';
+import PageFolioHeader from '../components/PageFolioHeader.astro';
 import GardenWayfinder from '../components/GardenWayfinder.astro';
 import ChuciGlyph from '../components/ChuciGlyph.astro';
 ---
 <BaseLayout title="关于" description="关于 Rippleshe。">
   <div class="shell folio-page about-page-v2">
-    <PageHerbariumHeader
+    <PageFolioHeader
       eyebrow="About · 人物小志"
       title="关于"
-      english="NOT A LABEL, JUST A PERSON"
+      english="A FEW TRACES OF A PERSON"
       variant="ruo"
       folio="PERSON / RIPPLE · SHE"
       intro="Ripple 是我的英文名，She 是我的姓。于是 Rippleshe 既是名字，也像一圈从水面慢慢散开的波纹。"
@@ -22,7 +22,7 @@ import ChuciGlyph from '../components/ChuciGlyph.astro';
     <section class="portrait-notes" aria-labelledby="about-self">
       <aside class="portrait-index">
         <p>PERSON<br />MAKER<br />WRITER<br />CURIOUS MIND</p>
-        <BotanicalSprig variant="lan" label={true} />
+        <BotanicalSprig variant="lan" />
         <ChuciGlyph variant="ruo" compact={true} class="about-chuci-ruo" />
       </aside>
       <div class="portrait-copy">
@@ -56,18 +56,12 @@ import ChuciGlyph from '../components/ChuciGlyph.astro';
       </div>
     </section>
 
-    <section class="about-index-cards" aria-label="关于我的三个侧院">
+    <section class="about-index-cards" aria-label="两条侧路">
       <a href="/now/" class="about-index-card">
-        <small>01 / NOW</small><b>此刻</b><span>最近正在做什么、想着什么。它是一张会继续变化的近况札。</span><i>↗</i>
-      </a>
-      <a href="/uses/" class="about-index-card">
-        <small>02 / OBJECTS</small><b>器物</b><span>长期使用、慢慢沾上习惯的工具与日常物件。</span><i>↗</i>
-      </a>
-      <a href="/resume/" class="about-index-card">
-        <small>03 / TRACE</small><b>履历</b><span>需要认真说明经历时，再从这里翻开一张较正式的折页。</span><i>↗</i>
+        <small>01 / NOW</small><b>此刻</b><span>最近在做的、想着的，先写成一张会变化的近况札。</span><i>↗</i>
       </a>
       <a href="/scenes/" class="about-index-card">
-        <small>04 / CURIOS</small><b>小景</b><span>那些最能暴露个人偏好的网页机关、花草、水纹和小实验。</span><i>↗</i>
+        <small>02 / CURIOS</small><b>小景</b><span>水纹、枝叶和几个一时兴起做出来的小机关。</span><i>↗</i>
       </a>
     </section>
 

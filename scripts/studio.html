@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Rippleshe · 私人内容台</title>
+<title>Rippleshe · 拾页</title>
 <style>
 :root{--paper:#f5f0e5;--paper-soft:#fbf8f0;--paper-deep:#e9e2d3;--ink:#273027;--soft:#687066;--mist:#979b90;--sage:#7e9279;--moss:#405b44;--seal:#8c5145;--line:rgba(60,80,61,.16);--line-strong:rgba(60,80,61,.28);--shadow:0 22px 70px rgba(55,58,45,.07)}
 *{box-sizing:border-box}
@@ -62,13 +62,13 @@ h1,h2,h3,p{margin-top:0}h1{margin:10px 0 17px;font:400 clamp(54px,8vw,92px)/.9 G
 <body>
 <main class="wrap">
 <header class="masthead">
-<div><div class="kicker">private desk · local only · rippleshe</div><h1>拾页<i>。</i></h1><p class="lead">不是后台，也不是仪表盘。这里只做三件事：把东西留下来，把画面排成你想要的样子，再把旧东西慢慢整理好。</p></div>
+<div><div class="kicker">private desk · rippleshe</div><h1>拾页<i>。</i></h1><p class="lead">写下来的、拍下来的，先在这张桌上落一落。闲下来，再慢慢排页、翻旧稿。</p></div>
 <div><nav class="quick-links" aria-label="本地预览"><a href="http://127.0.0.1:4173/" target="_blank">看网站 ↗</a><a href="http://127.0.0.1:4173/collection/" target="_blank">看藏册 ↗</a><a href="http://127.0.0.1:4173/garden/" target="_blank">看芳洲 ↗</a></nav>
-<div class="summary"><div><b id="count-notes">–</b><span>文字</span></div><div><b id="count-photos">–</b><span>影像</span></div><div><b id="count-docs">–</b><span>文档</span></div></div><div class="release-box"><div class="release-copy"><b id="release-title">线上是 rippleshe.cyou</b><small id="release-state">发布会先构建、审计，再推送到 EdgeOne。</small></div><button class="quiet release-button" id="publish-site" type="button">把这一轮送出去</button></div></div>
+<div class="summary"><div><b id="count-notes">–</b><span>文字</span></div><div><b id="count-photos">–</b><span>影像</span></div><div><b id="count-docs">–</b><span>文档</span></div></div><div class="release-box"><div class="release-copy"><b id="release-title">线上是 rippleshe.cyou</b><small id="release-state">送出去以前，先替这一轮检查一遍。</small></div><button class="quiet release-button" id="publish-site" type="button">把这一轮送出去</button></div></div>
 </header>
-<nav class="tabs" aria-label="内容台"><button class="tab" type="button" data-tab="record" aria-selected="true">记录</button><button class="tab" type="button" data-tab="layout" aria-selected="false">编排</button><button class="tab" type="button" data-tab="organize" aria-selected="false">整理</button></nav>
+<nav class="tabs" aria-label="拾页"><button class="tab" type="button" data-tab="record" aria-selected="true">记录</button><button class="tab" type="button" data-tab="layout" aria-selected="false">编排</button><button class="tab" type="button" data-tab="organize" aria-selected="false">整理</button></nav>
 <section class="panel is-active" data-panel="record">
-<div class="section-head"><div><div class="kicker">capture first · friction later</div><h2>先留下来</h2></div><p>一段字、一首诗、一张照片都应该在几十秒内收进去。是否精选、怎么陈列，可以之后再慢慢决定。</p></div>
+<div class="section-head"><div><div class="kicker">write first · arrange later</div><h2>先留下来</h2></div><p>一句也好，一封信也好；照片刚落进来时，先别急着替它找位置。</p></div>
 <div class="record-echo" id="record-echo"><time id="record-echo-date"></time><div class="record-echo-copy"><small>DATE MEMORY · 这一日</small><b id="record-echo-title">正在翻这一天的旧页</b><p id="record-echo-detail"></p></div><button class="quiet" id="record-echo-gather" type="button" hidden>去整理</button></div>
 <div class="record-grid">
 <section class="sheet">
@@ -97,14 +97,14 @@ h1,h2,h3,p{margin-top:0}h1{margin:10px 0 17px;font:400 clamp(54px,8vw,92px)/.9 G
 </div>
 </section>
 <section class="panel" data-panel="layout">
-<div class="section-head"><div><div class="kicker">curate the light cabinet</div><h2>把画廊排成自己的样子</h2></div><p>拖动卡片改变顺序；“窄 / 常 / 宽 / 主”决定它在桌面画廊里的分量。手机端会自动收束，不需要单独维护第二套布局。</p></div>
+<div class="section-head"><div><div class="kicker">curate the light cabinet</div><h2>把画廊排成自己的样子</h2></div><p>拖一拖次序，再给照片一点大小轻重。屏幕窄下来时，画面会自己收拢。</p></div>
 <div class="layout-toolbar"><p id="layout-state">当前编排尚未改动。</p><div class="layout-actions"><button class="quiet" id="layout-by-date" type="button">按日期重排</button><button class="primary" id="save-layout" type="button">保存编排</button></div></div>
 <div class="layout-board" id="layout-board"></div>
 </section>
 <section class="panel" data-panel="organize">
-<div class="section-head"><div><div class="kicker">return and revise</div><h2>旧东西也能继续长</h2></div><p>文字不是发出去就封存；照片也不该因为进了库就再也碰不到。这里负责改、找、撤下和回看。</p></div>
+<div class="section-head"><div><div class="kicker">return and revise</div><h2>旧东西也能继续长</h2></div><p>旧稿可以重写，旧照片可以换个位置。有时隔一阵子回来，反而更知道它该待在哪里。</p></div>
 <section class="folio-shelf">
-<div class="folio-shelf-head"><div><div class="kicker">bound memories</div><h3>册页</h3></div><p>不复制内容，只把真正属于同一段经历的东西装订在一起。</p></div>
+<div class="folio-shelf-head"><div><div class="kicker">bound memories</div><h3>册页</h3></div><p>几张照片、一段字，偶尔会在这里认出彼此。</p></div>
 <div class="folio-list" id="folio-list"></div>
 <div class="folio-hints" id="folio-hints"></div>
 </section>
@@ -138,11 +138,11 @@ h1,h2,h3,p{margin-top:0}h1{margin:10px 0 17px;font:400 clamp(54px,8vw,92px)/.9 G
 <div class="dialog-meta">
 <input name="id" type="hidden">
 <div class="field"><label>日期</label><input name="date" type="date"></div>
-<div class="field"><label>册页名字</label><input name="title" type="text" placeholder="不是分类名，是这一段记忆的名字"></div>
+<div class="field"><label>册页名字</label><input name="title" type="text" placeholder="给这一段日子起个名字"></div>
 <div class="checks"><label><input name="publish" type="checkbox" checked> 在日录中展示</label></div>
 </div>
 <div class="dialog-paper">
-<div class="field"><label>引子</label><textarea name="intro" style="min-height:120px" placeholder="留一两句话就够了。为什么这些东西属于同一页？"></textarea></div>
+<div class="field"><label>引子</label><textarea name="intro" style="min-height:120px" placeholder="留一两句话，替这一页掀开一个角。"></textarea></div>
 <div class="field"><label>装订顺序</label><div class="folio-compose-list" id="folio-compose-list"></div></div>
 <div class="dialog-foot"><button class="danger" id="folio-delete" type="button" hidden>拆掉这张册页</button><button class="primary" type="submit">保存册页</button></div>
 </div>
@@ -173,14 +173,14 @@ function paintRelease(job){
 var status=job&&job.status||'idle';
 releaseButton.disabled=status==='running';
 releaseButton.textContent=status==='running'?'正在送出去…':status==='success'?'再发布一次':'把这一轮送出去';
-if(status==='running'){releaseTitle.textContent='正在发布到 rippleshe.cyou';releaseState.textContent='构建、审计和 EdgeOne 部署正在进行，通常需要一分多钟。';}
-else if(status==='success'){releaseTitle.textContent='这一轮已经在线';releaseState.innerHTML='已通过公网验收 · <a href="https://rippleshe.cyou/" target="_blank">打开 rippleshe.cyou ↗</a>';}
-else if(status==='failed'){releaseTitle.textContent='这次没有发布成功';releaseState.textContent=(job.lines&&job.lines.slice(-1)[0])||'可以检查最后一段发布日志后再试。';}
-else{releaseTitle.textContent='线上是 rippleshe.cyou';releaseState.textContent='发布会先构建、审计，再推送到 EdgeOne。';}
+if(status==='running'){releaseTitle.textContent='正在发布到 rippleshe.cyou';releaseState.textContent='正在收拾这一轮的页面，随后送往线上。';}
+else if(status==='success'){releaseTitle.textContent='这一轮已经在线';releaseState.innerHTML='已经到线上了 · <a href="https://rippleshe.cyou/" target="_blank">打开 rippleshe.cyou ↗</a>';}
+else if(status==='failed'){releaseTitle.textContent='这次没有发布成功';releaseState.textContent=(job.lines&&job.lines.slice(-1)[0])||'这次没送出去，看看最后一行提示再试。';}
+else{releaseTitle.textContent='线上是 rippleshe.cyou';releaseState.textContent='送出去前，会自己把该检查的事做完。';}
 }
 async function refreshRelease(){try{var job=await request('/api/release');paintRelease(job);if(job.status==='running'){clearTimeout(releasePoll);releasePoll=setTimeout(refreshRelease,1800)}}catch{}}
 releaseButton.addEventListener('click',async function(){
-if(!confirm('把当前内容与页面发布到 https://rippleshe.cyou/ ？\n会先执行完整构建与公网验收。'))return;
+if(!confirm('把这一轮送到 rippleshe.cyou ？\n送出去前会先自己检查一遍。'))return;
 try{var job=await request('/api/release',{method:'POST'});paintRelease(job);refreshRelease();}catch(error){toast(error.message,true);refreshRelease()}
 });
 function paintRecordEcho(date){
@@ -191,7 +191,7 @@ state.library.items.filter(function(item){return item.publish!==false&&String(it
 state.echoFree=items.filter(function(item){return !boundFolioFor(item.source,item.ref)});
 document.querySelector('#record-echo-date').textContent=date.replaceAll('-','.');
 var title=document.querySelector('#record-echo-title'),detail=document.querySelector('#record-echo-detail'),button=document.querySelector('#record-echo-gather');
-if(!items.length){title.textContent='这一日还没有别的页。';detail.textContent='继续留下来就好，关系可以以后再整理。';button.hidden=true;return}
+if(!items.length){title.textContent='这一日还没有别的页。';detail.textContent='先留这一页。往后的东西，到了再说。';button.hidden=true;return}
 title.textContent='这一日已经留下 '+items.length+' 项';
 var names=items.slice(0,3).map(function(item){return item.title}).join(' · ');
 var bound=items.length-state.echoFree.length;
@@ -367,7 +367,7 @@ else dateHints.push({kind:'同日',label:date+' · 先看六项',items:members.s
 });
 var tagHints=[...tagGroups.entries()].filter(function(x){return x[1].length>=2&&x[1].length<=6&&new Set(x[1].map(function(i){return i.source})).size>1}).sort(function(a,b){return b[1].length-a[1].length||a[0].localeCompare(b[0],'zh-CN')}).slice(0,4).map(function(x){return {kind:'同题',label:'#'+x[0],items:x[1].map(function(i){return {source:i.source,ref:i.ref}})}});
 state.folioHints=dateHints.concat(tagHints).slice(0,8);
-document.querySelector('#folio-hints').innerHTML=state.folioHints.length?'<small style="color:var(--mist)">关系线索 · 只给出小而相干的候选，不把一整天的素材粗暴捆在一起</small>'+state.folioHints.map(function(hint,index){var preview=hint.items.slice(0,3).map(refInfo).filter(Boolean).map(function(x){return x.title}).join(' · ');return '<button class="folio-hint" type="button" data-folio-hint-index="'+index+'"><b>'+esc(hint.kind)+' · '+esc(hint.label)+' · '+hint.items.length+' 项</b><span>'+esc(preview)+(hint.items.length>3?' · …':'')+'</span></button>'}).join(''):'';
+document.querySelector('#folio-hints').innerHTML=state.folioHints.length?'<small style="color:var(--mist)">有几页挨得很近，顺手放在这里。</small>'+state.folioHints.map(function(hint,index){var preview=hint.items.slice(0,3).map(refInfo).filter(Boolean).map(function(x){return x.title}).join(' · ');return '<button class="folio-hint" type="button" data-folio-hint-index="'+index+'"><b>'+esc(hint.kind)+' · '+esc(hint.label)+' · '+hint.items.length+' 项</b><span>'+esc(preview)+(hint.items.length>3?' · …':'')+'</span></button>'}).join(''):'';
 }
 function toggleSelected(source,ref){
 var bound=boundFolioFor(source,ref);if(bound){toast('这项内容已经在《'+bound.title+'》里。',true);return}
@@ -385,7 +385,7 @@ function renderFolios(){
 var list=state.folios.folios||[];
 document.querySelector('#folio-list').innerHTML=list.length?list.map(function(folio){
 return '<article class="folio-card" data-folio-id="'+esc(folio.id)+'"><small>'+esc(folio.date)+(folio.publish===false?' · 未展示':' · 日录中')+'</small><b>'+esc(folio.title)+'</b><p>'+esc((folio.intro||'').slice(0,70) || (folio.items.length+' 项内容'))+'</p><div class="folio-card-actions"><button class="icon-button" type="button" data-edit-folio>整理</button>'+(folio.publish!==false?'<a class="icon-button" href="http://127.0.0.1:4173/life/'+encodeURIComponent(folio.id)+'/" target="_blank">看 ↗</a>':'')+'</div></article>'
-}).join(''):'<div class="empty">还没有册页。先从下面的文字与素材里点“收”，选两项以上。</div>';
+}).join(''):'<div class="empty">还没有册页。先从下面收两三样到手边。</div>';
 renderFolioHints();
 }
 var folioDialog=document.querySelector('#folio-dialog');
@@ -411,7 +411,7 @@ document.querySelector('#folio-delete').hidden=!folio;paintFolioCompose();folioD
 document.querySelector('#folio-clear').addEventListener('click',function(){state.selected=[];renderNotes();renderLibrary();paintFolioBuilder()});
 document.querySelector('#folio-create').addEventListener('click',function(){if(state.selected.length>=2)openFolio(null)});
 document.querySelector('#folio-list').addEventListener('click',function(event){if(!event.target.closest('[data-edit-folio]'))return;var card=event.target.closest('[data-folio-id]');var folio=(state.folios.folios||[]).find(function(x){return x.id===card.dataset.folioId});if(folio)openFolio(folio)});
-document.querySelector('#folio-hints').addEventListener('click',function(event){var button=event.target.closest('[data-folio-hint-index]');if(!button)return;var hint=state.folioHints[Number(button.dataset.folioHintIndex)];if(!hint)return;state.selected=hint.items.map(function(x){return {source:x.source,ref:x.ref}});renderNotes();renderLibrary();paintFolioBuilder();document.querySelector('#folio-builder').scrollIntoView({behavior:'smooth',block:'center'});toast(hint.kind+'只是一个线索，你仍然可以删掉不属于这段记忆的项。')});
+document.querySelector('#folio-hints').addEventListener('click',function(event){var button=event.target.closest('[data-folio-hint-index]');if(!button)return;var hint=state.folioHints[Number(button.dataset.folioHintIndex)];if(!hint)return;state.selected=hint.items.map(function(x){return {source:x.source,ref:x.ref}});renderNotes();renderLibrary();paintFolioBuilder();document.querySelector('#folio-builder').scrollIntoView({behavior:'smooth',block:'center'});toast('已经把这几页放到手边，再挑一挑。')});
 document.querySelector('#folio-compose-list').addEventListener('click',function(event){var row=event.target.closest('[data-folio-index]');if(!row)return;var i=Number(row.dataset.folioIndex);if(event.target.closest('[data-folio-up]')&&i>0){var x=folioDraftItems.splice(i,1)[0];folioDraftItems.splice(i-1,0,x)}else if(event.target.closest('[data-folio-down]')&&i<folioDraftItems.length-1){var x=folioDraftItems.splice(i,1)[0];folioDraftItems.splice(i+1,0,x)}else if(event.target.closest('[data-folio-remove]'))folioDraftItems.splice(i,1);paintFolioCompose()});
 folioForm.addEventListener('submit',async function(event){event.preventDefault();var data=new FormData(folioForm);if(folioDraftItems.length<2){toast('册页至少需要两项内容。',true);return}var id=data.get('id');try{await request(id?'/api/folio/update':'/api/folio',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:id,date:data.get('date'),title:data.get('title'),intro:data.get('intro'),publish:data.get('publish')==='on',items:folioDraftItems})});state.selected=[];folioDialog.close();await loadAll();toast(id?'册页已经重新装订。':'已经收成一页。')}catch(error){toast(error.message,true)}});
 document.querySelector('#folio-delete').addEventListener('click',async function(){var id=folioForm.elements.id.value;if(!id||!confirm('拆掉这张册页？原来的文字和照片不会删除。'))return;try{await request('/api/folio/delete',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({id:id})});folioDialog.close();await loadAll();toast('册页已经拆开，原内容仍在。')}catch(error){toast(error.message,true)}});
@@ -504,7 +504,7 @@ catch(error){toast(error.message,true)}
 setToday();
 var initialTab=location.hash.slice(1);if(['record','layout','organize'].includes(initialTab))setTab(initialTab,false);
 refreshRelease();
-loadAll().catch(function(error){toast('内容台没有加载成功：'+error.message,true)});
+loadAll().catch(function(error){toast('拾页没有打开：'+error.message,true)});
 })();
 </script>
 </body>

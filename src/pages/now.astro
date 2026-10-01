@@ -1,18 +1,18 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import HerbDivider from '../components/HerbDivider.astro';
-import PageHerbariumHeader from '../components/PageHerbariumHeader.astro';
+import PageFolioHeader from '../components/PageFolioHeader.astro';
 import site from '../data/site.json';
 ---
 <BaseLayout title="此刻" description="Rippleshe 最近正在发生的事情。">
   <div class="shell folio-page now-page-v2">
-    <PageHerbariumHeader
+    <PageFolioHeader
       eyebrow="Now · 时令札"
       title="此刻"
       english="WHAT IS GROWING NOW"
       variant="hui"
       folio="CURRENT / RIPPLE"
-      intro="这里只记最近的天气：正在做什么、想着什么，哪几件事还在手边慢慢长。"
+      intro="手边正在做的事、最近绕不过去的念头，还有几件尚未长成的东西，都先记在这一页。"
     />
 
     <HerbDivider label="近况札 · current notes" />
@@ -21,7 +21,7 @@ import site from '../data/site.json';
       <div class="now-waterline-copy">
         <p class="eyebrow">The moment you arrived</p>
         <h2 id="now-waterline-title">你读到这里的时刻</h2>
-        <p>这一小格属于读者。你从哪里来不重要，只记下这一分钟在今天的位置。</p>
+        <p>时针走到这里，你也刚好路过。把这一分钟轻轻钉在今天的水线上。</p>
       </div>
       <div class="now-waterline-clock">
         <small>LOCAL / NOW</small>
@@ -52,7 +52,7 @@ import site from '../data/site.json';
       <div>
         <p class="eyebrow">A small weather report</p>
         <strong id="now-season">此刻仍在生长。</strong>
-        <p>这一页只收眼前的风。再往前的日子，已经在日录里有了自己的页码。</p>
+        <p>眼前的风先记在这里；再早一些的日子，顺着日录慢慢找。</p>
       </div>
       <time id="now-date" datetime="">--.--.--</time>
     </section>

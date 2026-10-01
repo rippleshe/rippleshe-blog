@@ -7,8 +7,8 @@ import GardenWayfinder from '../../components/GardenWayfinder.astro';
 import ChuciGlyph from '../../components/ChuciGlyph.astro';
 
 const projects = [
-  { no: '01', name: 'SciPlot Academic', desc: '科研绘图工具。把高下限的排版、配色和图表类型收进一个 Python 包。', year: '2026', href: '/works/sciplot/', kind: 'VISUALIZATION', glyph: 'plot' as const },
-  { no: '02', name: 'PanView', desc: '给 Pandoc 做的一层跨平台图形界面，让文档转换不必从背命令开始。', year: '2026', href: 'https://github.com/rippleshe/PanView', kind: 'DESKTOP TOOL', glyph: 'window' as const },
+  { no: '01', name: 'SciPlot Academic', desc: '科研绘图工具。把尺寸、字体、配色和常用图形先收进一个 Python 包，下一张图少从头来一遍。', year: '2026', href: '/works/sciplot/', kind: 'VISUALIZATION', glyph: 'plot' as const },
+  { no: '02', name: 'PanView', desc: '给 Pandoc 做的一层跨平台图形界面，把文档转换的常用动作放到手边。', year: '2026', href: 'https://github.com/rippleshe/PanView', kind: 'DESKTOP TOOL', glyph: 'window' as const },
   { no: '03', name: 'NeteaseDL', desc: '一个小而完整的音乐链接解析与下载 Web 工具。', year: '2026', href: 'https://github.com/rippleshe/NeteaseDL', kind: 'WEB UTILITY', glyph: 'signal' as const },
   { no: '04', name: 'IM Training Agent', desc: '围绕个性化训练、多智能体协同和可解释验证做的一套系统。', year: '2026', href: 'https://github.com/rippleshe/IM', kind: 'MULTI-AGENT', glyph: 'agents' as const },
 ];
@@ -19,7 +19,7 @@ const projects = [
       <div class="works-title-block">
         <p class="eyebrow">Things I made · 造物簿</p>
         <h1>造物</h1>
-        <p class="works-english">SELECTED THINGS BUILT, BROKEN, AND BUILT AGAIN</p>
+        <p class="works-english">THINGS THAT MADE IT OFF THE DESK</p>
       </div>
       <div class="works-intro-panel">
         <div class="works-ripple"><RippleMark size={88} /></div>
@@ -33,7 +33,7 @@ const projects = [
       <div class="works-featured-copy">
         <div class="works-featured-topline"><span>01 / FEATURED</span><i>PYTHON · VISUALIZATION</i></div>
         <h2 id="featured-work-title">SciPlot<br /><em>Academic</em></h2>
-        <p>把科研绘图里那些“每次都要重新修”的细节，慢慢做成默认就正确的东西。</p>
+        <p>把尺寸、字体、刻度和配色这些反复出现的细节，慢慢收成一套顺手的习惯。</p>
         <a class="rule-link" href="/works/sciplot/">进入项目页</a>
       </div>
       <div class="works-featured-board">

@@ -4,38 +4,38 @@ interface Props { current: Place; }
 const { current } = Astro.props;
 const routes = {
   garden: [
-    { href:'/collection/', eyebrow:'NEXT ROOM', title:'去藏册看光', note:'从字句走到照片与纸页。' },
-    { href:'/life/', eyebrow:'TIME PATH', title:'沿时而行', note:'把文字、影像与文档按日期重新看一遍。' },
+    { href:'/collection/', eyebrow:'NEXT ROOM', title:'去藏册看光', note:'字句读倦了，去翻几页光。' },
+    { href:'/life/', eyebrow:'TIME PATH', title:'沿时而行', note:'沿月份往回走，看看旧日怎样排开。' },
   ],
   collection: [
-    { href:'/works/', eyebrow:'NEXT ROOM', title:'去看造物', note:'从保存下来的东西，走到真正做出来的东西。' },
-    { href:'/life/', eyebrow:'TIME PATH', title:'沿时而行', note:'看看这些影像和文字在什么时候发生。' },
+    { href:'/works/', eyebrow:'NEXT ROOM', title:'去看造物', note:'纸页收好以后，再去看手边做成的东西。' },
+    { href:'/life/', eyebrow:'TIME PATH', title:'沿时而行', note:'这些光什么时候落下，水线都记着。' },
   ],
   works: [
-    { href:'/scenes/', eyebrow:'SMALL SCENES', title:'去小景', note:'看那些不必成为项目、但值得玩的设计。' },
-    { href:'/about/', eyebrow:'ABOUT THE MAKER', title:'去关于', note:'从作品回到做这些东西的人。' },
+    { href:'/scenes/', eyebrow:'SMALL SCENES', title:'去小景', note:'去碰一碰那些水纹、枝叶和小机关。' },
+    { href:'/about/', eyebrow:'ABOUT THE MAKER', title:'去关于', note:'看完东西，再认识做东西的人。' },
   ],
   scenes: [
-    { href:'/garden/', eyebrow:'WORDS', title:'回芳洲', note:'从机关与水纹，回到写下来的东西。' },
-    { href:'/about/', eyebrow:'THE PERSON', title:'去关于', note:'看看这些偏好从哪里长出来。' },
+    { href:'/garden/', eyebrow:'WORDS', title:'回芳洲', note:'玩够了，回去翻几页字。' },
+    { href:'/about/', eyebrow:'THE PERSON', title:'去关于', note:'有些偏好，总会露出一点来处。' },
   ],
   about: [
-    { href:'/now/', eyebrow:'SIDE GARDEN', title:'去此刻', note:'看最近正在发生什么。' },
-    { href:'/guestbook/', eyebrow:'AT THE GATE', title:'去留字', note:'如果愿意，也在水边留一张笺。' },
+    { href:'/now/', eyebrow:'SIDE GARDEN', title:'去此刻', note:'看看最近手边又长出了什么。' },
+    { href:'/guestbook/', eyebrow:'AT THE GATE', title:'去留字', note:'路过水边，也可以留一张笺。' },
   ],
   guestbook: [
-    { href:'/garden/', eyebrow:'BACK INSIDE', title:'走进芳洲', note:'从来客簿回到园子里的文字。' },
-    { href:'/', eyebrow:'GARDEN MAP', title:'回到园门', note:'重新看看整座园子的路。' },
+    { href:'/garden/', eyebrow:'BACK INSIDE', title:'走进芳洲', note:'笺放下了，再往园子里走。' },
+    { href:'/', eyebrow:'GARDEN GATE', title:'回到园门', note:'几条小路仍从那里分开。' },
   ],
   life: [
-    { href:'/garden/', eyebrow:'WORDS', title:'按文字看', note:'回到芳洲，只看写下来的东西。' },
-    { href:'/collection/', eyebrow:'LIGHT & PAPER', title:'按收藏看', note:'回到藏册，只看影像与纸页。' },
+    { href:'/garden/', eyebrow:'WORDS', title:'回芳洲', note:'从年月里拐回字句。' },
+    { href:'/collection/', eyebrow:'LIGHT & PAPER', title:'翻藏册', note:'从年月里拐回影像与纸页。' },
   ],
 } as const;
 const links = routes[current];
 ---
 <nav class="garden-wayfinder" aria-label="从这里继续">
-  <div class="wayfinder-title"><small>PATH / 从这里继续</small><span>园子没有唯一的走法。</span></div>
+  <div class="wayfinder-title"><small>PATH / 从这里继续</small><span>路在脚下分开。</span></div>
   <div class="wayfinder-links">
     {links.map((item, index) => (
       <a href={item.href}>

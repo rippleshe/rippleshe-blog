@@ -67,7 +67,7 @@ for (const item of all) {
       <div>
         <p class="eyebrow">Time path · along the garden</p>
         <h1>日录</h1>
-        <p>如果芳洲按文字看、藏册按收藏看，这里只按时间看。字句、影像和纸页不另存一份；真正属于同一段经历的内容，则收成一张册页。</p>
+        <p>水线从新近慢慢退向旧时。某个月份里，字、光和纸页又碰到一起；想起哪一年，就从那里折回去。</p>
       </div>
       <div class="timeline-clock" aria-label="当前日期">
         <span class="timeline-day" id="timeline-day">--</span>
@@ -76,7 +76,7 @@ for (const item of all) {
       </div>
     </header>
 
-    <HerbDivider label="岁时有序 · newest first" />
+    <HerbDivider label="沿月而下 · newest first" />
 
     <div class="timeline-stream">
       {[...groups.entries()].map(([month, items], monthIndex) => (
@@ -96,7 +96,7 @@ for (const item of all) {
       ))}
     </div>
 
-    <div class="timeline-end"><BotanicalSprig variant="lan" /><p>水往前流，旧日子并没有走远，只是安静地停在自己的月份里。</p><a class="rule-link" href="/collection/">去看藏册</a></div>
+    <div class="timeline-end"><BotanicalSprig variant="lan" /><p>翻到尽头，水还在往前。旧月份只是收起了声响。</p><a class="rule-link" href="/collection/">去看藏册</a></div>
     <GardenWayfinder current="life" />
   </div>
   <script is:inline>

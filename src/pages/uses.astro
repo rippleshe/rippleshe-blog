@@ -2,11 +2,11 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BotanicalSprig from '../components/BotanicalSprig.astro';
 import HerbDivider from '../components/HerbDivider.astro';
-import PageHerbariumHeader from '../components/PageHerbariumHeader.astro';
+import PageFolioHeader from '../components/PageFolioHeader.astro';
 ---
 <BaseLayout title="器物" description="Rippleshe 长期使用、愿意留下来的工具与器物。">
   <div class="shell folio-page uses-page-v2">
-    <PageHerbariumHeader
+    <PageFolioHeader
       eyebrow="Uses · 器物册"
       title="器物"
       english="THINGS THAT STAY WITH ME"
@@ -15,7 +15,7 @@ import PageHerbariumHeader from '../components/PageHerbariumHeader.astro';
       intro="有些东西用久了，会沾上手的习惯，也沾上一点日子的气味。这里收的是这些陪伴。"
     />
 
-    <HerbDivider label="器物册 · kept, not collected" />
+    <HerbDivider label="手边常物 · everyday objects" />
 
     <section class="object-cabinet" aria-label="器物分类">
       <article class="object-drawer">
@@ -35,7 +35,7 @@ import PageHerbariumHeader from '../components/PageHerbariumHeader.astro';
       </article>
       <article class="object-drawer object-drawer-herb">
         <span class="object-no">04</span>
-        <div><small>GROWING / LIVING</small><h2>草木与日常</h2><p>植物、香气、杯子、窗边的一点绿——器物不只属于桌面，也属于生活。</p></div>
+        <div><small>GROWING / LIVING</small><h2>草木与日常</h2><p>杯子、植物、窗边的一点绿，也在桌面之外陪着日常。</p></div>
         <BotanicalSprig variant="hui" class="object-herb" />
       </article>
     </section>
@@ -45,7 +45,7 @@ import PageHerbariumHeader from '../components/PageHerbariumHeader.astro';
       <div>
         <p class="eyebrow">Things that stay</p>
         <strong>器物要相处久一点，才会有故事。</strong>
-        <p>等某件东西真正沾上日常的手感，再给它一小格位置。</p>
+        <p>等一件东西用旧一点、顺手一点，再给它留一小格位置。</p>
       </div>
     </section>
   </div>

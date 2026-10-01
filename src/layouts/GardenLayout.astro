@@ -58,14 +58,14 @@ const kindGlyph: 'lan' | 'ruo' | 'lotus' | 'vine' | 'hui' = kind === '诗' ? 'la
       )}
     </header>
 
-    <HerbDivider label="正文 · words kept here" quiet={true} />
+    <HerbDivider label="页中 · words" quiet={true} />
     <div class="prose prose-v2"><slot /></div>
     <slot name="after-prose" />
 
     <footer class="reading-end reading-end-v2">
-      <div class="reading-end-herbarium">
+      <div class="reading-end-botanical">
         <div class="reading-end-plants">
-          <BotanicalSprig variant="ruo" label={true} />
+          <BotanicalSprig variant="ruo" />
           <ChuciGlyph variant={kindGlyph} compact={true} class="reading-chuci-glyph" />
         </div>
         <div>

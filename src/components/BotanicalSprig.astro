@@ -1,15 +1,9 @@
 ---
 interface Props {
   variant?: 'lan' | 'ruo' | 'hui';
-  label?: boolean;
   class?: string;
 }
-const { variant = 'lan', label = false, class: className = '' } = Astro.props;
-const names = {
-  lan: ['兰芷', 'LAN · ZHI / FRAGRANT HERBS'],
-  ruo: ['杜若', 'DU RUO / BY THE WATER'],
-  hui: ['蕙草', 'HUI / FRAGRANT HERB'],
-};
+const { variant = 'lan', class: className = '' } = Astro.props;
 ---
 <figure class={`botanical-sprig botanical-${variant} ${className}`} aria-hidden="true">
   <svg viewBox="0 0 180 320" role="img">
@@ -50,7 +44,4 @@ const names = {
       </>
     )}
   </svg>
-  {label && (
-    <figcaption><span>{names[variant][0]}</span><small>{names[variant][1]}</small></figcaption>
-  )}
 </figure>

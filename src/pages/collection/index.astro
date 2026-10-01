@@ -32,10 +32,10 @@ const galleryRatioOf = (item: (typeof photos)[number]) => {
       </div>
     </header>
 
-    <HerbDivider label="花间陈列 · photographs" />
+    <HerbDivider label="光落成页 · photographs" />
 
     <section class="collection-section" aria-labelledby="photo-gallery-title">
-      <div class="collection-section-head"><div><p class="eyebrow">Light cabinet</p><h2 id="photo-gallery-title">影像</h2></div><p>光落下来，日子便有了形状。这里不替你决定次序：哪一张靠前、占多大、留什么画幅，都由你自己排。</p></div>
+      <div class="collection-section-head"><div><p class="eyebrow">Light cabinet</p><h2 id="photo-gallery-title">影像</h2></div><p>有的舒展开，有的挤在页角。翻到哪一张，哪一张就亮一下。</p></div>
       <div class="collection-gallery">
         {photos.map((item, index) => (
           <figure id={`media-${item.id}`} class={`collection-photo collection-photo-${item.gallerySize || fallbackGallerySizes[index % fallbackGallerySizes.length]} collection-ratio-${galleryRatioOf(item)} collection-photo-${item.display || 'cover'}`}>

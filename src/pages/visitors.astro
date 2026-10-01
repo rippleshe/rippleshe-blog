@@ -19,7 +19,7 @@ if (provider === 'closed') return Astro.redirect('/', 302);
       <div>
         <p class="eyebrow">Private folio · 主人页</p>
         <h1>来客簿</h1>
-        <p>这里不挂在院门口。只是给主人翻一翻：谁来过，叫什么名字，初见时说了什么，又留下过几张笺。</p>
+        <p>来客的名字和第一张笺收在这一册，主人偶尔回来翻一翻。</p>
       </div>
       <div class="visitors-key-card" id="visitors-key-card">
         {provider === 'local' ? (
@@ -56,7 +56,7 @@ if (provider === 'closed') return Astro.redirect('/', 302);
       <div class="owner-messages">
         <div class="guestbook-wall-head">
           <div><p class="eyebrow">Notes register</p><h2>墙上的字</h2></div>
-          <p>这里保留更完整的来客信息。需要收走哪一张，直接在这里处理。</p>
+          <p>来客的完整信息收在这一页；哪张笺该收起，也从这里动手。</p>
         </div>
         <div id="owner-message-list"></div>
       </div>

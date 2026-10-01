@@ -5,20 +5,19 @@ import HerbDivider from '../../components/HerbDivider.astro';
 import WatersidePond from '../../components/WatersidePond.astro';
 import GardenWayfinder from '../../components/GardenWayfinder.astro';
 import PoemScene from '../../components/PoemScene.astro';
-import ChuCiHerbarium from '../../components/ChuCiHerbarium.astro';
 import { getCollection } from 'astro:content';
 import { gardenUrl, titleOf } from '../../lib/content';
 const allGarden = await getCollection('garden', ({ data }) => data.publish);
 const randomPages = allGarden.map(gardenUrl);
 const scenePoem = allGarden.find((entry) => entry.data.kind === '诗' || entry.data.kind === '词');
 ---
-<BaseLayout title="小景" description="水纹、花草、页边机关和一些不必长成项目的有趣设计。">
+<BaseLayout title="小景" description="水纹、枝叶、页边机关和几件随手做成的小玩意。">
   <div class="shell scenes-page">
     <header class="scenes-hero">
       <div>
         <p class="eyebrow">Curious designs · 小景簿</p>
         <h1>小景</h1>
-        <p>有些东西不需要成为一个项目。只要让人停一下、碰一下，或者多看一眼，就值得被单独收起来。</p>
+        <p>水纹、枝叶和几个偶然冒出来的小机关，单独留在这一角。路过时碰一下就好。</p>
       </div>
       <div class="scenes-herb" aria-hidden="true">
         <BotanicalSprig variant="lan" />
@@ -29,41 +28,26 @@ const scenePoem = allGarden.find((entry) => entry.data.kind === '诗' || entry.d
 
     <section class="scenes-index" aria-label="小景目录">
       <a href="#scene-water"><span>01</span><b>水庭</b><small>TOUCH THE WATER</small></a>
-      <a href="#scene-season"><span>02</span><b>今日花签</b><small>DAILY BOTANICAL</small></a>
-      <a href="#scene-wreath"><span>03</span><b>风环</b><small>MOVE WITH THE WIND</small></a>
-      <a href="#scene-leaves"><span>04</span><b>拾叶</b><small>SMALL CHANCE</small></a>
-      <a href="#scene-poetry"><span>05</span><b>诗廊</b><small>ONE POEM · ONE SCENE</small></a>
-      <a href="#scene-chuci"><span>06</span><b>香草谱</b><small>CHUCI HERBARIUM</small></a>
+      <a href="#scene-wreath"><span>02</span><b>风环</b><small>MOVE WITH THE WIND</small></a>
+      <a href="#scene-leaves"><span>03</span><b>拾叶</b><small>SMALL CHANCE</small></a>
+      <a href="#scene-poetry"><span>04</span><b>诗廊</b><small>ONE POEM · ONE SCENE</small></a>
     </section>
 
     <HerbDivider label="01 · 水庭 / touch the water" />
     <div id="scene-water" class="scene-water"><WatersidePond /></div>
 
-    <HerbDivider label="02 · 今日花签 / one card a day" quiet={true} />
-    <section id="scene-season" class="scene-season">
-      <div class="scene-copy"><p class="eyebrow">Daily botanical</p><h2>今天长什么样</h2><p>同一天看到的是同一张签。到了第二天，日期、植物和一句话一起换掉。</p></div>
-      <div class="daily-slip" data-daily-slip>
-        <small id="scene-slip-month">SEASON / ----</small>
-        <b id="scene-slip-day">--</b>
-        <span id="scene-slip-plant">草木</span>
-        <p id="scene-slip-line">风从页边过。</p>
-        <i aria-hidden="true"></i>
-      </div>
-    </section>
-
-    <HerbDivider label="03 · 风环 / move a little" quiet={true} />
+    <HerbDivider label="02 · 风环 / move a little" quiet={true} />
     <section id="scene-wreath" class="scene-wreath" data-wind-wreath>
-      <div class="scene-copy"><p class="eyebrow">Wind wreath</p><h2>让花环跟着一点风</h2><p>鼠标从哪边经过，枝叶就往哪边偏一点。不是追着光标跑，只是像真的被风碰了一下。</p></div>
+      <div class="scene-copy"><p class="eyebrow">Wind wreath</p><h2>风从哪边来</h2><p>手指经过时，枝叶略微偏一偏。离开以后，它们再慢慢站回原来的样子。</p></div>
       <div class="wreath-stage" aria-label="会随指针轻微摆动的花环">
         <div class="wreath-ring"></div>
         <BotanicalSprig variant="lan" class="wreath-sprig wreath-sprig-a" />
         <BotanicalSprig variant="ruo" class="wreath-sprig wreath-sprig-b" />
-        <BotanicalSprig variant="hui" class="wreath-sprig wreath-sprig-c" />
-        <span>RIPPLE / GARDEN</span>
+
       </div>
     </section>
 
-    <HerbDivider label="04 · 拾叶 / a small chance" quiet={true} />
+    <HerbDivider label="03 · 拾叶 / a small chance" quiet={true} />
     <section id="scene-leaves" class="scene-leaves">
       <div class="scene-copy"><p class="eyebrow">Pick a leaf</p><h2>随手拾一片</h2><p>三个叶片里藏着三种去向：一句话、一页旧字，或者什么都不做。</p></div>
       <div class="leaf-picks" data-leaf-picks>
@@ -75,19 +59,13 @@ const scenePoem = allGarden.find((entry) => entry.data.kind === '诗' || entry.d
       <button class="scene-random-page" type="button" data-scene-random={JSON.stringify(randomPages)}>◇ 翻一页旧字</button>
     </section>
 
-    <HerbDivider label="05 · 诗廊 / one poem, one scene" quiet={true} />
+    <HerbDivider label="04 · 诗廊 / one poem, one scene" quiet={true} />
     <section id="scene-poetry" class="scene-poetry">
-      <div class="scene-copy"><p class="eyebrow">Poetry gallery</p><h2>让每一首诗旁边长一幅小景</h2><p>月亮会有月影，雨会落成细线，花会抽枝，水会缓慢流。它们不是插图，而是每首诗自己的呼吸。</p><a class="rule-link" href="/garden/poetry/">走进诗廊 ↗</a></div>
+      <div class="scene-copy"><p class="eyebrow">Poetry gallery</p><h2>诗旁边也有天气</h2><p>有时是一圈月影，有时只是一阵细雨。字停下来以后，旁边还留一点风。</p><a class="rule-link" href="/garden/poetry/">走进诗廊 ↗</a></div>
       <div class="scene-poetry-preview">
         {scenePoem && <PoemScene title={titleOf(scenePoem)} tags={scenePoem.data.tags} index={4} />}
         <small>{scenePoem ? titleOf(scenePoem) : '诗廊'}</small>
       </div>
-    </section>
-
-    <HerbDivider label="06 · 香草谱 / chuci herbarium" quiet={true} />
-    <section id="scene-chuci" class="scene-chuci">
-      <div class="scene-copy scene-chuci-copy"><p class="eyebrow">Chuci herbarium</p><h2>把《楚辞》里的草木请进园子</h2><p>这里取的是诗里的香草意象，不冒充植物学图鉴。江离、芷、兰、木兰、宿莽、椒桂、芰荷、芙蓉、薜荔、女萝……各自长成一张代码画出来的标本。</p></div>
-      <ChuCiHerbarium />
     </section>
 
     <GardenWayfinder current="scenes" />
@@ -95,23 +73,6 @@ const scenePoem = allGarden.find((entry) => entry.data.kind === '诗' || entry.d
 
   <script is:inline>
     (() => {
-      const slip = document.querySelector('[data-daily-slip]');
-      const plants = ['江离 · 春佩','辟芷 · 新叶','秋兰 · 清佩','蕙 · 百亩','木兰 · 朝露','宿莽 · 洲渚','留夷 · 芳畦','揭车 · 清芬','杜衡 · 芳芷','申椒 · 辛香','菌桂 · 清枝','芰荷 · 夏水','芙蓉 · 水裳','秋菊 · 落英','薜荔 · 山藤','女萝 · 垂蔓','杜若 · 芳洲'];
-      const lines = ['把今天留得松一点。','去看一束不重要的光。','适合写两三行字。','什么都不赶，也算一件事。','风会过去，水会记得。','留一点空给偶然。','去见一棵树。'];
-      const paintSlip = () => {
-        if (!slip) return;
-        const d = new Date();
-        const start = new Date(d.getFullYear(),0,0);
-        const doy = Math.floor((d.getTime()-start.getTime())/86400000);
-        document.querySelector('#scene-slip-month').textContent = `${d.toLocaleString('en',{month:'short'}).toUpperCase()} · ${d.getFullYear()}`;
-        document.querySelector('#scene-slip-day').textContent = String(d.getDate()).padStart(2,'0');
-        document.querySelector('#scene-slip-plant').textContent = plants[doy % plants.length];
-        document.querySelector('#scene-slip-line').textContent = lines[(doy + 2) % lines.length];
-        slip.dataset.variant = String(doy % 4);
-      };
-      paintSlip();
-      window.addEventListener('rippleshe:timechange', paintSlip);
-
       const wreath = document.querySelector('[data-wind-wreath]');
       const stage = wreath?.querySelector('.wreath-stage');
       stage?.addEventListener('pointermove', (event) => {
@@ -139,9 +100,8 @@ const scenePoem = allGarden.find((entry) => entry.data.kind === '诗' || entry.d
 </BaseLayout>
 
 <style>
-.scenes-page{padding-top:34px}.scenes-hero{min-height:560px;display:grid;grid-template-columns:1fr .8fr;gap:70px;align-items:center;border-bottom:1px solid var(--line)}.scenes-hero h1{margin:6px 0 22px;font:400 clamp(78px,10vw,138px)/.82 var(--serif);letter-spacing:-.07em}.scenes-hero>div:first-child>p:last-child{max-width:42rem;color:var(--ink-soft);font:18px/1.8 var(--serif)}.scenes-herb{min-height:430px;position:relative;display:grid;place-items:center}.scenes-herb .botanical-sprig{width:260px;color:var(--moss);opacity:.42;transform:rotate(-9deg)}.scenes-rings{position:absolute;inset:50% auto auto 50%;width:300px;height:300px;transform:translate(-50%,-50%)}.scenes-rings i{position:absolute;inset:50%;border:1px solid rgba(85,117,107,.15);border-radius:50%;transform:translate(-50%,-50%)}.scenes-rings i:nth-child(1){width:110px;height:110px}.scenes-rings i:nth-child(2){width:170px;height:170px}.scenes-rings i:nth-child(3){width:230px;height:230px}.scenes-rings i:nth-child(4){width:290px;height:290px}.scenes-herb>span{position:absolute;right:15px;bottom:32px;color:var(--mist);font-size:7px;letter-spacing:.14em}.scenes-index{margin:32px 0 74px;display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid var(--line-strong);border-left:1px solid var(--line)}.scenes-index a{min-height:112px;padding:14px;display:grid;border-right:1px solid var(--line);border-bottom:1px solid var(--line);transition:background .2s ease}.scenes-index a:hover{background:rgba(125,146,120,.06)}.scenes-index span{color:var(--seal);font:9px var(--serif)}.scenes-index b{align-self:end;font:400 19px var(--serif)}.scenes-index small{color:var(--mist);font-size:6px;letter-spacing:.11em}.scene-water{margin-bottom:82px}.scene-season,.scene-wreath,.scene-leaves{padding:72px 0;display:grid;grid-template-columns:minmax(280px,.8fr) minmax(340px,1.2fr);gap:70px;align-items:center}.scene-copy h2{margin:7px 0 16px;font:400 clamp(38px,5vw,58px)/1 var(--serif);letter-spacing:-.035em}.scene-copy>p:last-child{max-width:34rem;color:var(--ink-soft);font:14px/1.8 var(--serif)}.daily-slip{justify-self:center;width:min(390px,100%);min-height:430px;padding:28px 30px;position:relative;display:flex;flex-direction:column;border:1px solid rgba(63,86,65,.16);background:linear-gradient(160deg,rgba(248,245,237,.96),rgba(226,232,217,.4));box-shadow:0 24px 65px rgba(53,55,42,.06);overflow:hidden}.daily-slip small{color:var(--sage);font-size:7px;letter-spacing:.15em}.daily-slip>b{margin:30px 0 12px;color:var(--moss);font:400 112px/.8 var(--serif);letter-spacing:-.08em}.daily-slip>span{color:var(--seal);font:16px var(--serif)}.daily-slip>p{margin:auto 0 0;max-width:15rem;font:20px/1.65 var(--serif)}.daily-slip>i{position:absolute;right:-40px;bottom:-50px;width:200px;height:200px;border:1px solid rgba(85,117,107,.12);border-radius:50%}.daily-slip>i::before,.daily-slip>i::after{content:'';position:absolute;inset:30px;border:1px solid rgba(85,117,107,.1);border-radius:50%}.daily-slip>i::after{inset:62px}.daily-slip[data-variant='1']{transform:rotate(.7deg)}.daily-slip[data-variant='2']{background:linear-gradient(155deg,rgba(248,245,237,.96),rgba(218,230,225,.5))}.daily-slip[data-variant='3']{transform:rotate(-.6deg)}.wreath-stage{justify-self:center;width:min(520px,100%);aspect-ratio:1;position:relative;display:grid;place-items:center;transition:transform .35s ease;transform:translateY(var(--wind-y,0)) rotate(var(--wind-x,0deg))}.wreath-ring{position:absolute;width:66%;height:66%;border:1px solid rgba(63,86,65,.14);border-radius:50%;box-shadow:inset 0 0 0 28px rgba(125,146,120,.018)}.wreath-sprig{position:absolute;width:220px;color:var(--moss);opacity:.45;transition:transform .5s ease}.wreath-sprig-a{left:8%;top:18%;transform:rotate(calc(-58deg + var(--wind-x,0deg)))}.wreath-sprig-b{right:7%;top:26%;transform:rotate(calc(61deg + var(--wind-x,0deg)))}.wreath-sprig-c{left:31%;bottom:4%;transform:rotate(calc(173deg + var(--wind-x,0deg)))}.wreath-stage>span{position:relative;padding:8px 12px;background:var(--paper);color:var(--mist);font-size:7px;letter-spacing:.16em}.scene-leaves{grid-template-columns:minmax(280px,.7fr) 1fr}.leaf-picks{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.leaf-picks button{min-height:190px;border:1px solid var(--line);background:rgba(248,245,237,.32);display:grid;place-items:center;align-content:center;gap:12px;color:var(--ink-soft);cursor:pointer;transition:transform .22s ease,background .22s ease}.leaf-picks button:hover,.leaf-picks button.is-picked{transform:translateY(-4px);background:rgba(125,146,120,.075)}.leaf-picks i{width:72px;height:96px;display:grid;place-items:center;border:1px solid rgba(63,86,65,.2);border-radius:70% 30% 65% 35%;transform:rotate(-13deg);font:400 22px var(--serif);font-style:normal;color:var(--moss)}.leaf-picks button:nth-child(2) i{transform:rotate(7deg);border-radius:35% 65% 38% 62%}.leaf-picks button:nth-child(3) i{transform:rotate(-2deg);border-radius:55% 45% 52% 48%}.leaf-picks span{font:12px var(--serif);color:var(--mist)}.leaf-result{grid-column:2;margin-top:-46px;padding:16px 18px;border-top:1px solid var(--line);font:17px/1.7 var(--serif);color:var(--ink-soft)}.scene-random-page{grid-column:2;justify-self:start;margin-top:10px;border:0;border-bottom:1px solid var(--line-strong);padding:8px 0;background:none;color:var(--moss);font:13px var(--serif);cursor:pointer}.scene-poetry{padding:78px 0;display:grid;grid-template-columns:minmax(280px,.78fr) minmax(360px,1.22fr);gap:70px;align-items:center}.scene-poetry .rule-link{display:inline-block;margin-top:18px}.scene-poetry-preview{min-height:360px;position:relative;display:grid;place-items:center;border:1px solid rgba(63,86,65,.13);background:linear-gradient(145deg,rgba(248,245,237,.42),rgba(222,231,220,.24));overflow:hidden}.scene-poetry-preview::before,.scene-poetry-preview::after{content:'';position:absolute;border:1px solid rgba(85,117,107,.11);border-radius:50%;pointer-events:none}.scene-poetry-preview::before{width:240px;height:240px;right:-96px;top:-112px}.scene-poetry-preview::after{width:150px;height:150px;left:-66px;bottom:-74px}.scene-poetry-preview :global(.poem-scene){width:min(520px,88%);height:auto;position:relative;z-index:1}.scene-poetry-preview>small{position:absolute;left:18px;bottom:15px;z-index:2;color:var(--mist);font:8px var(--serif);letter-spacing:.08em}
-.scene-chuci{padding:78px 0}.scene-chuci-copy{max-width:48rem;margin-bottom:34px}.scene-chuci-copy>p:last-child{max-width:48rem}
-@media(max-width:850px){.scenes-hero{grid-template-columns:1fr;min-height:0;padding:60px 0}.scenes-herb{min-height:350px}.scenes-index{grid-template-columns:repeat(2,1fr)}.scene-season,.scene-wreath,.scene-leaves,.scene-poetry{grid-template-columns:1fr;gap:32px}.leaf-result,.scene-random-page{grid-column:1;margin-top:0}.scene-poetry-preview{min-height:300px}}
-@media(max-width:560px){.scenes-index{grid-template-columns:1fr 1fr}.scenes-hero h1{font-size:82px}.leaf-picks{grid-template-columns:1fr}.leaf-picks button{min-height:130px;grid-template-columns:70px auto}.leaf-picks i{width:54px;height:70px}.daily-slip{min-height:360px}.daily-slip>b{font-size:92px}}
+.scenes-page{padding-top:34px}.scenes-hero{min-height:560px;display:grid;grid-template-columns:1fr .8fr;gap:70px;align-items:center;border-bottom:1px solid var(--line)}.scenes-hero h1{margin:6px 0 22px;font:400 clamp(78px,10vw,138px)/.82 var(--serif);letter-spacing:-.07em}.scenes-hero>div:first-child>p:last-child{max-width:42rem;color:var(--ink-soft);font:18px/1.8 var(--serif)}.scenes-herb{min-height:430px;position:relative;display:grid;place-items:center}.scenes-herb .botanical-sprig{width:260px;color:var(--moss);opacity:.42;transform:rotate(-9deg)}.scenes-rings{position:absolute;inset:50% auto auto 50%;width:300px;height:300px;transform:translate(-50%,-50%)}.scenes-rings i{position:absolute;inset:50%;border:1px solid rgba(85,117,107,.15);border-radius:50%;transform:translate(-50%,-50%)}.scenes-rings i:nth-child(1){width:110px;height:110px}.scenes-rings i:nth-child(2){width:170px;height:170px}.scenes-rings i:nth-child(3){width:230px;height:230px}.scenes-rings i:nth-child(4){width:290px;height:290px}.scenes-herb>span{position:absolute;right:15px;bottom:32px;color:var(--mist);font-size:7px;letter-spacing:.14em}.scenes-index{margin:32px 0 74px;display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line-strong);border-left:1px solid var(--line)}.scenes-index a{min-height:112px;padding:14px;display:grid;border-right:1px solid var(--line);border-bottom:1px solid var(--line);transition:background .2s ease}.scenes-index a:hover{background:rgba(125,146,120,.06)}.scenes-index span{color:var(--seal);font:9px var(--serif)}.scenes-index b{align-self:end;font:400 19px var(--serif)}.scenes-index small{color:var(--mist);font-size:6px;letter-spacing:.11em}.scene-water{margin-bottom:82px}.scene-wreath,.scene-leaves{padding:64px 0;display:grid;grid-template-columns:minmax(280px,.88fr) minmax(320px,1.12fr);gap:58px;align-items:center}.scene-copy h2{margin:7px 0 16px;font:400 clamp(38px,5vw,58px)/1 var(--serif);letter-spacing:-.035em}.scene-copy>p:last-child{max-width:34rem;color:var(--ink-soft);font:14px/1.8 var(--serif)}.wreath-stage{justify-self:center;width:min(330px,86%);aspect-ratio:1;position:relative;display:grid;place-items:center;transition:transform .35s ease;transform:translateY(var(--wind-y,0)) rotate(var(--wind-x,0deg))}.wreath-ring{position:absolute;width:66%;height:66%;border:1px solid rgba(63,86,65,.14);border-radius:50%;box-shadow:inset 0 0 0 28px rgba(125,146,120,.018)}.wreath-sprig{position:absolute;width:138px;color:var(--moss);opacity:.3;transition:transform .5s ease}.wreath-sprig-a{left:12%;top:20%;transform:rotate(calc(-54deg + var(--wind-x,0deg)))}.wreath-sprig-b{right:12%;top:25%;transform:rotate(calc(55deg + var(--wind-x,0deg)))}.scene-leaves{grid-template-columns:minmax(280px,.7fr) 1fr}.leaf-picks{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.leaf-picks button{min-height:190px;border:1px solid var(--line);background:rgba(248,245,237,.32);display:grid;place-items:center;align-content:center;gap:12px;color:var(--ink-soft);cursor:pointer;transition:transform .22s ease,background .22s ease}.leaf-picks button:hover,.leaf-picks button.is-picked{transform:translateY(-4px);background:rgba(125,146,120,.075)}.leaf-picks i{width:72px;height:96px;display:grid;place-items:center;border:1px solid rgba(63,86,65,.2);border-radius:70% 30% 65% 35%;transform:rotate(-13deg);font:400 22px var(--serif);font-style:normal;color:var(--moss)}.leaf-picks button:nth-child(2) i{transform:rotate(7deg);border-radius:35% 65% 38% 62%}.leaf-picks button:nth-child(3) i{transform:rotate(-2deg);border-radius:55% 45% 52% 48%}.leaf-picks span{font:12px var(--serif);color:var(--mist)}.leaf-result{grid-column:2;margin-top:-46px;padding:16px 18px;border-top:1px solid var(--line);font:17px/1.7 var(--serif);color:var(--ink-soft)}.scene-random-page{grid-column:2;justify-self:start;margin-top:10px;border:0;border-bottom:1px solid var(--line-strong);padding:8px 0;background:none;color:var(--moss);font:13px var(--serif);cursor:pointer}.scene-poetry{padding:78px 0;display:grid;grid-template-columns:minmax(280px,.78fr) minmax(360px,1.22fr);gap:70px;align-items:center}.scene-poetry .rule-link{display:inline-block;margin-top:18px}.scene-poetry-preview{min-height:360px;position:relative;display:grid;place-items:center;border:1px solid rgba(63,86,65,.13);background:linear-gradient(145deg,rgba(248,245,237,.42),rgba(222,231,220,.24));overflow:hidden}.scene-poetry-preview::before,.scene-poetry-preview::after{content:'';position:absolute;border:1px solid rgba(85,117,107,.11);border-radius:50%;pointer-events:none}.scene-poetry-preview::before{width:240px;height:240px;right:-96px;top:-112px}.scene-poetry-preview::after{width:150px;height:150px;left:-66px;bottom:-74px}.scene-poetry-preview :global(.poem-scene){width:min(520px,88%);height:auto;position:relative;z-index:1}.scene-poetry-preview>small{position:absolute;left:18px;bottom:15px;z-index:2;color:var(--mist);font:8px var(--serif);letter-spacing:.08em}
+@media(max-width:850px){.scenes-hero{grid-template-columns:1fr;min-height:0;padding:60px 0}.scenes-herb{min-height:350px}.scenes-index{grid-template-columns:repeat(2,1fr)}.scene-wreath,.scene-leaves,.scene-poetry{grid-template-columns:1fr;gap:32px}.leaf-result,.scene-random-page{grid-column:1;margin-top:0}.scene-poetry-preview{min-height:300px}}
+@media(max-width:560px){.scenes-index{grid-template-columns:1fr 1fr}.scenes-hero h1{font-size:82px}.wreath-stage{width:min(260px,78vw)}.wreath-sprig{width:108px}.leaf-picks{grid-template-columns:1fr}.leaf-picks button{min-height:130px;grid-template-columns:70px auto}.leaf-picks i{width:54px;height:70px}}
 @media(prefers-reduced-motion:reduce){.wreath-stage,.wreath-sprig,.leaf-picks button{transition:none}}
 </style>

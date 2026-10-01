@@ -2,7 +2,6 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import BotanicalSprig from '../../components/BotanicalSprig.astro';
 import HerbDivider from '../../components/HerbDivider.astro';
-import QuoteSlip from '../../components/QuoteSlip.astro';
 import GardenWayfinder from '../../components/GardenWayfinder.astro';
 import { getCollection } from 'astro:content';
 import { gardenUrl, seasonOf, titleOf } from '../../lib/content';
@@ -42,13 +41,17 @@ const searchIndex = entries.map((entry) => ({
     </header>
 
     <div class="garden-opening-composition">
-      <QuoteSlip quote="锁得住花的形，窃不来花的香。" source="芳洲 · 卷首" />
+      <div class="garden-pocket-note">
+        <small>卷首 / 001</small>
+        <p>先写下来。至于它算诗、算小札，等以后再争。</p>
+        <i aria-hidden="true">⌁</i>
+      </div>
       <div class="garden-field-note">
         <span class="seal-mark" aria-hidden="true">芳</span>
-        <p><b>草木不必整齐。</b><br />有的开花，有的只是长了一片新叶；有的甚至只是被风吹歪了一点。</p>
-        <small>FIELD NOTE / 001</small>
+        <p><b>有的页认真得很。</b><br />有的只是半夜忽然想到一句。都算数。</p>
+        <small>FIELD NOTE / 002</small>
       </div>
-      <BotanicalSprig variant="ruo" label={true} class="garden-opening-herb" />
+      <BotanicalSprig variant="ruo" class="garden-opening-herb" />
     </div>
 
     {pinnedEntry && (
@@ -82,7 +85,7 @@ const searchIndex = entries.map((entry) => ({
         <button class="garden-wander" type="button" data-garden-wander>
           <span aria-hidden="true">↝</span>
           <b>随风一页</b>
-          <small>不按热度</small>
+          <small>随手翻开</small>
         </button>
       </div>
     </section>
@@ -120,7 +123,7 @@ const searchIndex = entries.map((entry) => ({
       <div class="tag-section-head">
         <p class="eyebrow">Index by scent · 香径</p>
         <h2 class="section-heading" id="tags-title">循着标签走</h2>
-        <p>标签像草间的小径。循着一个词拐进去，也许会碰见另一段完全不同的天气。</p>
+        <p>一个词拐出一条小径。走进去，常会碰见很久以前的另一场天气。</p>
       </div>
       <div class="tag-herbarium">
         <button class="tag-specimen tag-specimen-all is-active" type="button" data-garden-tag="" aria-pressed="true"><small>00</small><b>全部</b><i aria-hidden="true"></i></button>

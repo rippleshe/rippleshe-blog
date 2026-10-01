@@ -164,14 +164,14 @@ async function assertCanHideFromPublicFolio(source, ref) {
   const data = await readFolios();
   const normalized = String(ref || '').replace(/\.md$/i, '');
   const folio = data.folios.find((entry) => entry.publish !== false && (entry.items || []).some((item) => item.source === source && String(item.ref).replace(/\.md$/i, '') === normalized));
-  if (folio) throw new Error(`这项内容正在公开册页《${folio.title}》里。先把册页设为未展示，或从册页移出这项内容。`);
+  if (folio) throw new Error(`《${folio.title}》还在日录里夹着这项内容。先把它从册页抽出来，或先收起整张册页。`);
 }
 
 async function assertNotBoundToFolio(source, ref) {
   const data = await readFolios();
   const normalized = String(ref || '').replace(/\.md$/i, '');
   const folio = data.folios.find((entry) => (entry.items || []).some((item) => item.source === source && String(item.ref).replace(/\.md$/i, '') === normalized));
-  if (folio) throw new Error(`这项内容还装订在《${folio.title}》里。先从册页移出，再删除原内容。`);
+  if (folio) throw new Error(`《${folio.title}》还夹着这项内容。先从那一页抽出来。`);
 }
 
 export async function removeLibraryItem(id) {
@@ -387,8 +387,8 @@ async function ensureFolioItemsVisible(items) {
   const libraryMap = new Map(library.items.map((item) => [item.id, item]));
   const noteMap = new Map(notes.map((note) => [String(note.id).replace(/\.md$/i, ''), note]));
   for (const item of items) {
-    if (item.source === 'library' && libraryMap.get(item.ref)?.publish === false) throw new Error('要把册页放进日录，其中的素材需要先设为“站内展示”；或者先把册页设为未展示。');
-    if (item.source === 'garden' && noteMap.get(item.ref)?.publish === false) throw new Error('要把册页放进日录，其中的文字需要先公开；或者先把册页设为未展示。');
+    if (item.source === 'library' && libraryMap.get(item.ref)?.publish === false) throw new Error('这张册页里还有一项素材没有上架。把它放回藏册，或先收起册页。');
+    if (item.source === 'garden' && noteMap.get(item.ref)?.publish === false) throw new Error('这张册页里还有一篇文字没有公开。把它放回芳洲，或先收起册页。');
   }
 }
 
@@ -399,7 +399,7 @@ function ensureFolioItemsAvailable(data, items, ignoreId = '') {
     for (const item of folio.items || []) used.set(`${item.source}:${String(item.ref).replace(/\.md$/i, '')}`, folio.title);
   }
   const conflict = items.find((item) => used.has(`${item.source}:${item.ref}`));
-  if (conflict) throw new Error(`这项内容已经装订在《${used.get(`${conflict.source}:${conflict.ref}`)}》里。先从原册页移出，再收进新的册页。`);
+  if (conflict) throw new Error(`这项已经夹在《${used.get(`${conflict.source}:${conflict.ref}`)}》里。先从那一页抽出来。`);
 }
 
 export async function createFolio(input) {

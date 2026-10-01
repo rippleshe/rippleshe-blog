@@ -18,13 +18,13 @@ const ciCount = poems.filter((p) => p.data.kind === '词').length;
       <div>
         <p class="eyebrow">Poetry gallery · 芳洲侧廊</p>
         <h1>诗廊</h1>
-        <p>诗和词从芳洲里单独拐进一条窄廊。文字仍是原来的文字，只在旁边添一幅会轻轻活动的小景。</p>
+        <p>诗和词从芳洲拐进一条窄廊。月影、细雨和水纹在旁边停一停，字仍旧自己走路。</p>
         <div class="poetry-counts"><span><b>{poems.length}</b><small>总页</small></span><span><b>{poemCount}</b><small>诗</small></span><span><b>{ciCount}</b><small>词</small></span></div>
       </div>
       <div class="poetry-hero-herb" aria-hidden="true"><BotanicalSprig variant="ruo" /><i></i><i></i><i></i><small>WORDS / WEATHER / WATER</small></div>
     </header>
 
-    <HerbDivider label="一首一景 · one poem, one scene" />
+    <HerbDivider label="字旁有风 · poetry" />
 
     <section class="poetry-grid" aria-label="诗词展廊">
       {poems.map((entry, index) => (
@@ -40,7 +40,7 @@ const ciCount = poems.filter((p) => p.data.kind === '词').length;
       ))}
     </section>
 
-    <div class="poetry-tail"><BotanicalSprig variant="lan" /><p>有些句子留在纸上，有些句子像天气。廊走到尽头，仍旧回到芳洲。</p><a class="rule-link" href="/garden/">回芳洲</a></div>
+    <div class="poetry-tail"><BotanicalSprig variant="lan" /><p>廊走到尽头，风从纸边出去；回头时，芳洲还在原处。</p><a class="rule-link" href="/garden/">回芳洲</a></div>
     <GardenWayfinder current="garden" />
   </div>
 </BaseLayout>

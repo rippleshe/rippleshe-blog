@@ -1,57 +1,56 @@
 ---
 import ChuciGlyph from './ChuciGlyph.astro';
-interface Props {
-  path?: string;
-}
+
+interface Props { path?: string; }
 const currentPath = Astro.props.path ?? Astro.url.pathname;
 const zone = currentPath.startsWith('/garden/') ? 'garden'
   : currentPath.startsWith('/collection/') ? 'collection'
   : currentPath.startsWith('/works/') ? 'works'
-  : currentPath.startsWith('/about') || currentPath.startsWith('/now') || currentPath.startsWith('/uses') || currentPath.startsWith('/resume') ? 'about'
   : currentPath.startsWith('/guestbook') || currentPath.startsWith('/visitors') ? 'guestbook'
   : currentPath.startsWith('/scenes/') ? 'scenes'
+  : currentPath.startsWith('/life/') ? 'life'
+  : currentPath.startsWith('/about') || currentPath.startsWith('/now') || currentPath.startsWith('/uses') || currentPath.startsWith('/resume') ? 'about'
   : 'home';
 
 const palettes = {
-  home: { left:'秋兰', leftVariant:'lan', right:'杜若', rightVariant:'ruo', line:'纫秋兰以为佩 · 采芳洲兮杜若' },
-  garden: { left:'蕙', leftVariant:'hui', right:'女萝', rightVariant:'vine', line:'又树蕙之百亩 · 被薜荔兮带女萝' },
-  collection: { left:'芰荷', leftVariant:'lotus', right:'薜荔', rightVariant:'vine', line:'制芰荷以为衣兮 · 被薜荔兮带女萝' },
-  works: { left:'木兰', leftVariant:'magnolia', right:'申椒', rightVariant:'pepper', line:'朝搴阰之木兰兮 · 杂申椒与菌桂兮' },
-  about: { left:'杜若', leftVariant:'ruo', right:'秋兰', rightVariant:'lan', line:'采芳洲兮杜若 · 纫秋兰以为佩' },
-  guestbook: { left:'杜若', leftVariant:'ruo', right:'女萝', rightVariant:'vine', line:'采芳洲兮杜若 · 被薜荔兮带女萝' },
-  scenes: { left:'薜荔', leftVariant:'vine', right:'秋菊', rightVariant:'chrys', line:'被薜荔兮带女萝 · 夕餐秋菊之落英' },
+  home: ['lan','ruo'],
+  garden: ['hui','vine'],
+  collection: ['lotus','vine'],
+  works: ['magnolia','pepper'],
+  guestbook: ['ruo','vine'],
+  scenes: ['vine','chrys'],
+  life: ['ruo','lan'],
+  about: ['ruo','lan'],
 } as const;
-const copy = palettes[zone];
-type GlyphVariant = 'lan' | 'ruo' | 'lotus' | 'vine' | 'magnolia' | 'pepper' | 'chrys' | 'hui';
-const leftVariant = copy.leftVariant as GlyphVariant;
-const rightVariant = copy.rightVariant as GlyphVariant;
+type GlyphVariant = 'lan'|'ruo'|'lotus'|'vine'|'magnolia'|'pepper'|'chrys'|'hui';
+const [leftVariant, rightVariant] = palettes[zone] as readonly GlyphVariant[];
 ---
-<div class={`chuci-ambient chuci-zone-${zone}`} aria-hidden="true" data-chuci-ambient>
-  <div class="chuci-edge chuci-edge-left">
-    <ChuciGlyph variant={leftVariant} compact={true} class="ambient-glyph ambient-glyph-left" />
-    <span>{copy.left}</span>
-  </div>
-
-  <div class="chuci-edge chuci-edge-right">
-    <ChuciGlyph variant={rightVariant} compact={true} class="ambient-glyph ambient-glyph-right" />
-    <span>{copy.right}</span>
-  </div>
-
-  <div class="chuci-whisper"><i></i><span>{copy.line}</span><i></i></div>
+<div class={`chuci-ambient chuci-zone-${zone}`} aria-hidden="true">
+  <div class="chuci-edge chuci-edge-left"><ChuciGlyph variant={leftVariant} compact={true} class="ambient-glyph" /></div>
+  <div class="chuci-edge chuci-edge-right"><ChuciGlyph variant={rightVariant} compact={true} class="ambient-glyph" /></div>
+  <i class="chuci-ground chuci-ground-a"></i>
+  <i class="chuci-ground chuci-ground-b"></i>
 </div>
 
 <style>
-.chuci-ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;color:var(--moss);--ambient-opacity:.16}
-.chuci-edge{position:absolute;top:122px;width:176px;height:min(64vh,610px);opacity:var(--ambient-opacity);transition:opacity .35s ease,filter .35s ease;mix-blend-mode:multiply;display:flex;align-items:flex-start;justify-content:center}
-.chuci-edge-left{left:max(6px,calc((100vw - 1180px)/2 - 178px))}.chuci-edge-right{right:max(5px,calc((100vw - 1180px)/2 - 178px))}
-.chuci-edge :global(.ambient-glyph){width:166px;opacity:1;transform-origin:center center}.chuci-edge :global(.ambient-glyph svg){width:100%;height:auto;overflow:visible}.chuci-edge-right :global(.ambient-glyph){transform:rotate(3deg)}.chuci-zone-works .chuci-edge-right :global(.ambient-glyph){transform:rotate(-4deg)}.chuci-zone-collection .chuci-edge-left :global(.ambient-glyph){transform:rotate(-3deg)}
-.chuci-edge>span{position:absolute;bottom:7px;color:rgba(63,86,65,.64);font:8px/1 var(--serif);letter-spacing:.16em;writing-mode:vertical-rl}.chuci-edge-left>span{left:7px}.chuci-edge-right>span{right:7px}
-.chuci-whisper{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:12px;max-width:min(680px,72vw);opacity:.28;color:var(--ink-soft);font:8px/1.4 var(--serif);letter-spacing:.1em;white-space:nowrap}.chuci-whisper i{width:44px;height:1px;background:linear-gradient(90deg,transparent,var(--line-strong))}.chuci-whisper i:last-child{transform:scaleX(-1)}
-.has-js .chuci-edge-left :global(.ambient-glyph){animation:chuci-breathe-left 12s ease-in-out infinite alternate}.has-js .chuci-edge-right :global(.ambient-glyph){animation:chuci-breathe-right 14s ease-in-out infinite alternate}
-.chuci-zone-works{--ambient-opacity:.105}.chuci-zone-collection{--ambient-opacity:.14}.chuci-zone-guestbook{--ambient-opacity:.18}.chuci-zone-scenes{--ambient-opacity:.12}.chuci-zone-garden{--ambient-opacity:.13}
-html[data-day-phase='dusk'] .chuci-ambient{filter:sepia(.06)}html[data-day-phase='night'] .chuci-ambient{--ambient-opacity:.11;filter:saturate(.75)}
-@keyframes chuci-breathe-left{from{translate:0 0;rotate:-.5deg}to{translate:0 -5px;rotate:1deg}}@keyframes chuci-breathe-right{from{translate:0 0;rotate:.7deg}to{translate:0 4px;rotate:-1deg}}
-@media(max-width:1450px){.chuci-edge{width:128px;--ambient-opacity:.1}.chuci-edge-left{left:-33px}.chuci-edge-right{right:-31px}.chuci-whisper{display:none}}
-@media(max-width:1180px){.chuci-edge{display:none}}
+.chuci-ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;color:var(--moss);--ambient-opacity:.115}
+.chuci-edge{position:absolute;top:116px;width:176px;height:min(64vh,610px);opacity:var(--ambient-opacity);mix-blend-mode:multiply}
+.chuci-edge-left{left:max(4px,calc((100vw - 1180px)/2 - 188px))}
+.chuci-edge-right{right:max(4px,calc((100vw - 1180px)/2 - 188px))}
+.chuci-edge :global(.ambient-glyph){width:168px;opacity:1;transform-origin:center center}
+.chuci-edge :global(.ambient-glyph svg){width:100%;height:auto;overflow:visible}
+.chuci-edge-left :global(.ambient-glyph){transform:rotate(-2deg)}
+.chuci-edge-right :global(.ambient-glyph){transform:rotate(3deg)}
+.chuci-zone-works{--ambient-opacity:.085}.chuci-zone-collection{--ambient-opacity:.11}.chuci-zone-guestbook{--ambient-opacity:.13}.chuci-zone-scenes{--ambient-opacity:.095}.chuci-zone-garden{--ambient-opacity:.105}.chuci-zone-life{--ambient-opacity:.09}
+.chuci-ground{position:absolute;bottom:24px;width:150px;height:42px;border-bottom:1px solid rgba(63,86,65,.12);border-radius:50%}
+.chuci-ground-a{left:4vw;transform:rotate(-2deg)}.chuci-ground-b{right:5vw;transform:rotate(2deg)}
+.has-js .chuci-edge-left :global(.ambient-glyph){animation:chuci-breathe-left 13s ease-in-out infinite alternate}
+.has-js .chuci-edge-right :global(.ambient-glyph){animation:chuci-breathe-right 15s ease-in-out infinite alternate}
+html[data-day-phase='dusk'] .chuci-ambient{filter:sepia(.05)}
+html[data-day-phase='night'] .chuci-ambient{--ambient-opacity:.085;filter:saturate(.72)}
+@keyframes chuci-breathe-left{from{translate:0 0;rotate:-.5deg}to{translate:0 -4px;rotate:.8deg}}
+@keyframes chuci-breathe-right{from{translate:0 0;rotate:.6deg}to{translate:0 4px;rotate:-.8deg}}
+@media(max-width:1450px){.chuci-edge{width:126px;opacity:.075}.chuci-edge-left{left:-42px}.chuci-edge-right{right:-38px}}
+@media(max-width:1180px){.chuci-edge{display:none}.chuci-ground{opacity:.55}}
 @media(prefers-reduced-motion:reduce){.chuci-edge :global(.ambient-glyph){animation:none!important}}
 </style>
