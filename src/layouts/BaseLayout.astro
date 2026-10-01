@@ -3,6 +3,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import ChuciAmbient from '../components/ChuciAmbient.astro';
 import GlobalImageViewer from '../components/GlobalImageViewer.astro';
+import QuickPalette from '../components/QuickPalette.astro';
 import '../styles/global.css';
 import '../styles/portal.css';
 import '../styles/viewer.css';
@@ -58,6 +59,7 @@ const ogImageURL = new URL(image, siteUrl);
     <main id="content"><slot /></main>
     <Footer />
     <GlobalImageViewer />
+    <QuickPalette />
     <div class="site-ripple-layer" aria-hidden="true"></div>
     <script is:inline>
       document.documentElement.classList.add('has-js');

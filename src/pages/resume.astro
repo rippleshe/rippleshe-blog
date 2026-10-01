@@ -93,10 +93,21 @@ import PageFolioHeader from '../components/PageFolioHeader.astro';
     </section>
 
     <section class="resume-print-note">
-      <span>PROFESSIONAL CONTACT</span>
-      <p>如需探讨学术研究合作、系统工程交流或技术咨询，欢迎通过 GitHub @rippleshe 取得联络。</p>
+      <div class="print-note-content">
+        <span>PROFESSIONAL CONTACT</span>
+        <p>如需探讨学术研究合作、系统工程交流或技术咨询，欢迎通过 GitHub @rippleshe 取得联络。</p>
+      </div>
+      <button type="button" class="resume-print-action-btn" id="resume-print-btn">
+        <span>🖨 打印或导出为标准 PDF 简历</span>
+      </button>
     </section>
   </div>
+
+  <script is:inline>
+    document.getElementById('resume-print-btn')?.addEventListener('click', () => {
+      window.print();
+    });
+  </script>
 </BaseLayout>
 
 <style>
@@ -141,6 +152,56 @@ import PageFolioHeader from '../components/PageFolioHeader.astro';
     margin: 0;
     opacity: 0.85;
   }
+  .resume-print-note {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .resume-print-action-btn {
+    background: transparent;
+    border: 1px solid var(--line-strong);
+    color: var(--moss);
+    font-size: 12px;
+    font-family: var(--sans);
+    padding: 6px 14px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .resume-print-action-btn:hover {
+    background: var(--moss);
+    color: #fff;
+  }
+
+  @media print {
+    @page {
+      size: A4;
+      margin: 15mm 20mm;
+    }
+    :global(body) {
+      background: #fff !important;
+      color: #000 !important;
+    }
+    :global(.site-header),
+    :global(.site-footer),
+    :global(.site-ripple-layer),
+    :global(.herb-divider),
+    :global(.resume-print-action-btn) {
+      display: none !important;
+    }
+    .resume-page-v2 {
+      padding: 0 !important;
+      max-width: 100% !important;
+    }
+    .resume-section {
+      break-inside: avoid;
+    }
+  }
+
   @media (max-width: 640px) {
     .resume-skills-grid {
       grid-template-columns: 1fr;

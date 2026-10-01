@@ -35,7 +35,16 @@ const galleryRatioOf = (item: (typeof photos)[number]) => {
     <HerbDivider label="光落成页 · photographs" />
 
     <section class="collection-section" aria-labelledby="photo-gallery-title">
-      <div class="collection-section-head"><div><p class="eyebrow">Light & Shadows · 影像谱系</p><h2 id="photo-gallery-title">影像</h2></div><p>行旅记录与光影存证。湖湘晨昏、江流微澜与草木物候。</p></div>
+      <div class="collection-section-head">
+        <div>
+          <p class="eyebrow">Light & Shadows · 影像谱系</p>
+          <h2 id="photo-gallery-title">影像</h2>
+        </div>
+        <div class="collection-head-actions">
+          <p>行旅记录与光影存证。湖湘晨昏、江流微澜与草木物候。</p>
+          <button type="button" class="slideshow-start-btn" id="start-slideshow-btn">◇ 开启全景漫游</button>
+        </div>
+      </div>
       <div class="collection-gallery">
         {photos.map((item, index) => (
           <figure id={`media-${item.id}`} class={`collection-photo collection-photo-${item.gallerySize || fallbackGallerySizes[index % fallbackGallerySizes.length]} collection-ratio-${galleryRatioOf(item)} collection-photo-${item.display || 'cover'}`}>
@@ -52,6 +61,7 @@ const galleryRatioOf = (item: (typeof photos)[number]) => {
             >
               <img src={item.thumb || item.src} alt={item.title} loading={index < 4 ? 'eager' : 'lazy'} />
               <span class="collection-photo-index">{String(index + 1).padStart(2, '0')}</span>
+              <span class="collection-film-tone">OPTICAL / 湖湘物候</span>
               <span class="collection-photo-view">全屏检视</span>
             </a>
             <figcaption><div><b>{item.title}</b><time>{formatLibraryDate(item.date)}</time></div>{item.tags.length > 0 && <span>{item.tags.join(' · ')}</span>}</figcaption>
@@ -82,7 +92,50 @@ const galleryRatioOf = (item: (typeof photos)[number]) => {
     <GardenWayfinder current="collection" />
   </div>
 
+  <script is:inline>
+    document.getElementById('start-slideshow-btn')?.addEventListener('click', () => {
+      const firstPhoto = document.querySelector('[data-lightbox-group="collection"]');
+      if (firstPhoto) firstPhoto.click();
+    });
+  </script>
+
   <style>
+    .collection-head-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .slideshow-start-btn {
+      background: transparent;
+      border: 1px solid var(--line-strong);
+      color: var(--moss);
+      font-size: 11px;
+      font-family: var(--sans);
+      padding: 4px 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .slideshow-start-btn:hover {
+      background: var(--moss);
+      color: #fff;
+    }
+    .collection-film-tone {
+      position: absolute;
+      left: 10px;
+      bottom: 10px;
+      font-size: 9px;
+      color: var(--mist);
+      background: rgba(248, 245, 237, 0.85);
+      padding: 2px 6px;
+      letter-spacing: 0.05em;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+    .collection-photo-link:hover .collection-film-tone {
+      opacity: 1;
+    }
     .collection-photo{scroll-margin-top:34px;transition:box-shadow .35s ease,background .35s ease,transform .25s ease}
     .collection-photo:target{background:rgba(125,146,120,.055);box-shadow:0 0 0 1px rgba(63,86,65,.24),0 18px 44px rgba(53,55,42,.07)}
     .collection-photo:hover {

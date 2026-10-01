@@ -11,40 +11,109 @@ const poems = (await getCollection('garden', ({ data }) => data.publish && (data
   .sort((a,b) => b.data.date.valueOf() - a.data.date.valueOf());
 const poemCount = poems.filter((p) => p.data.kind === '诗').length;
 const ciCount = poems.filter((p) => p.data.kind === '词').length;
+
+function excerptOf(entry: typeof poems[0]) {
+  const lines = String(entry.body ?? '')
+    .split('\n')
+    .map(l => l.trim())
+    .filter(l => l && !l.startsWith('#') && !l.startsWith('---') && !l.startsWith('>'));
+  return lines.slice(0, 2).join('  ');
+}
 ---
-<BaseLayout title="诗廊" description="Rippleshe 的诗与词。每一首旁边，都长着一幅自己的小景。">
+<BaseLayout title="诗廊" description="Rippleshe 的古典诗词选集与声光意象展廊。">
   <div class="shell poetry-gallery">
     <header class="poetry-hero">
       <div>
-        <p class="eyebrow">Poetry gallery · 芳洲侧廊</p>
+        <p class="eyebrow">Classical Metre & Lyrics · 诗廊</p>
         <h1>诗廊</h1>
-        <p>诗和词从芳洲拐进一条窄廊。月影、细雨和水纹在旁边停一停，字仍旧自己走路。</p>
-        <div class="poetry-counts"><span><b>{poems.length}</b><small>总页</small></span><span><b>{poemCount}</b><small>诗</small></span><span><b>{ciCount}</b><small>词</small></span></div>
+        <p>格律谨饬，兴寄高远。收录古典诗章、绝句长律与长短句词牌，以声光意象再现诗境。</p>
+        <div class="poetry-counts">
+          <span><b>{poems.length}</b><small>总汇</small></span>
+          <span><b>{poemCount}</b><small>律绝诗篇</small></span>
+          <span><b>{ciCount}</b><small>长短句词</small></span>
+        </div>
       </div>
-      <div class="poetry-hero-herb" aria-hidden="true"><BotanicalSprig variant="ruo" /><i></i><i></i><i></i><small>WORDS / WEATHER / WATER</small></div>
+      <div class="poetry-hero-herb" aria-hidden="true">
+        <BotanicalSprig variant="ruo" />
+        <i></i><i></i><i></i>
+        <small>POETRY / METRE / SCENES</small>
+      </div>
     </header>
 
-    <HerbDivider label="字旁有风 · poetry" />
+    <HerbDivider label="诗篇展廊 · classical works" />
 
     <section class="poetry-grid" aria-label="诗词展廊">
-      {poems.map((entry, index) => (
-        <a class="poetry-card" href={gardenUrl(entry)} data-kind={entry.data.kind}>
-          <div class="poetry-visual"><PoemScene title={titleOf(entry)} tags={entry.data.tags} index={index} /></div>
-          <div class="poetry-card-copy">
-            <div class="poetry-meta"><span>{String(index+1).padStart(2,'0')}</span><time datetime={entry.data.date.toISOString()}>{formatDate(entry.data.date)}</time></div>
-            <h2>{titleOf(entry)}</h2>
-            <div class="poetry-tags">{entry.data.tags.filter((tag) => tag !== '美雨浪漫').slice(0,3).map((tag) => <small>#{tag}</small>)}</div>
-            <span class="poetry-open">翻开这一页 ↗</span>
-          </div>
-        </a>
-      ))}
+      {poems.map((entry, index) => {
+        const excerpt = excerptOf(entry);
+        return (
+          <a class="poetry-card" href={gardenUrl(entry)} data-kind={entry.data.kind}>
+            <div class="poetry-visual">
+              <PoemScene title={titleOf(entry)} tags={entry.data.tags} index={index} />
+            </div>
+            <div class="poetry-card-copy">
+              <div class="poetry-meta">
+                <span class="poetry-idx-tag">{entry.data.kind === '词' ? '词牌' : '古风'} · {String(index+1).padStart(2,'0')}</span>
+                <time datetime={entry.data.date.toISOString()}>{formatDate(entry.data.date)}</time>
+              </div>
+              <h2>{titleOf(entry)}</h2>
+              {excerpt && <p class="poetry-excerpt">{excerpt}</p>}
+              <div class="poetry-tags">
+                {entry.data.tags.filter((tag) => tag !== '美雨浪漫').slice(0,3).map((tag) => <small>#{tag}</small>)}
+              </div>
+              <span class="poetry-open">启阅全章 ↗</span>
+            </div>
+          </a>
+        );
+      })}
     </section>
 
-    <div class="poetry-tail"><BotanicalSprig variant="lan" /><p>廊走到尽头，风从纸边出去；回头时，芳洲还在原处。</p><a class="rule-link" href="/garden/">回芳洲</a></div>
+    <div class="poetry-tail">
+      <BotanicalSprig variant="lan" />
+      <div>
+        <strong>文字落纸，余韵不绝。</strong>
+        <p>诗词篇目存录于此，更多山水行记与随笔篇章可循径回溯。</p>
+      </div>
+      <a class="rule-link" href="/garden/">返回芳洲篇目 ↗</a>
+    </div>
     <GardenWayfinder current="garden" />
   </div>
 </BaseLayout>
 
 <style>
-.poetry-gallery{padding-top:34px}.poetry-hero{min-height:570px;display:grid;grid-template-columns:1fr .82fr;gap:80px;align-items:center;border-bottom:1px solid var(--line)}.poetry-hero h1{margin:8px 0 20px;font:400 clamp(78px,10vw,140px)/.82 var(--serif);letter-spacing:-.075em}.poetry-hero>div:first-child>p:last-of-type{max-width:40rem;color:var(--ink-soft);font:17px/1.85 var(--serif)}.poetry-counts{margin-top:34px;display:flex;gap:30px}.poetry-counts span{min-width:66px;padding-top:8px;border-top:1px solid var(--line);display:grid}.poetry-counts b{font:400 24px var(--serif);color:var(--moss)}.poetry-counts small{color:var(--mist);font-size:7px;letter-spacing:.08em}.poetry-hero-herb{min-height:430px;position:relative;display:grid;place-items:center}.poetry-hero-herb .botanical-sprig{width:260px;color:var(--moss);opacity:.42;transform:rotate(8deg)}.poetry-hero-herb>i{position:absolute;left:50%;top:50%;border:1px solid rgba(79,112,93,.13);border-radius:50%;transform:translate(-50%,-50%)}.poetry-hero-herb>i:nth-of-type(1){width:150px;height:150px}.poetry-hero-herb>i:nth-of-type(2){width:240px;height:240px}.poetry-hero-herb>i:nth-of-type(3){width:330px;height:330px}.poetry-hero-herb small{position:absolute;right:6%;bottom:9%;color:var(--mist);font-size:7px;letter-spacing:.14em}.poetry-grid{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid var(--line-strong);border-left:1px solid var(--line);margin-bottom:100px}.poetry-card{min-height:470px;display:grid;grid-template-columns:1.08fr .92fr;border-right:1px solid var(--line);border-bottom:1px solid var(--line);transition:background .25s ease}.poetry-card:hover{background:rgba(125,146,120,.045)}.poetry-card:hover .poem-scene{transform:scale(1.015)}.poetry-visual{min-height:310px;padding:28px 16px 18px;display:grid;place-items:center;border-right:1px solid rgba(63,86,65,.1);overflow:hidden}.poetry-visual .poem-scene{transition:transform .45s ease}.poetry-card-copy{padding:26px 24px;display:flex;flex-direction:column}.poetry-meta{display:flex;justify-content:space-between;color:var(--mist);font-size:7px;letter-spacing:.08em}.poetry-meta span{color:var(--seal)}.poetry-card h2{margin:64px 0 18px;font:400 clamp(26px,3vw,39px)/1.1 var(--serif);letter-spacing:-.04em}.poetry-tags{display:flex;gap:8px;flex-wrap:wrap}.poetry-tags small{color:var(--sage);font-size:7px}.poetry-open{margin-top:auto;padding-top:18px;border-top:1px solid var(--line);color:var(--moss);font:11px var(--serif)}.poetry-card[data-kind='词'] .poetry-meta span{color:#75856f}.poetry-tail{margin:0 auto 68px;max-width:620px;display:grid;grid-template-columns:110px 1fr;gap:26px;align-items:center}.poetry-tail .botanical-sprig{width:100px;color:var(--moss);opacity:.36}.poetry-tail p{margin:0;color:var(--ink-soft);font:15px/1.8 var(--serif)}.poetry-tail .rule-link{grid-column:2}@media(max-width:980px){.poetry-grid{grid-template-columns:1fr}.poetry-hero{grid-template-columns:1fr;gap:20px;padding:60px 0}.poetry-hero-herb{min-height:330px}}@media(max-width:620px){.poetry-card{grid-template-columns:1fr}.poetry-visual{border-right:0;border-bottom:1px solid rgba(63,86,65,.1);min-height:250px}.poetry-card h2{margin-top:34px}.poetry-hero h1{font-size:82px}.poetry-tail{grid-template-columns:80px 1fr}.poetry-tail .botanical-sprig{width:74px}}
+.poetry-gallery{padding-top:34px}
+.poetry-hero{min-height:520px;display:grid;grid-template-columns:1fr .82fr;gap:80px;align-items:center;border-bottom:1px solid var(--line)}
+.poetry-hero h1{margin:8px 0 20px;font:400 clamp(72px,9vw,130px)/.85 var(--serif);letter-spacing:-.06em}
+.poetry-hero>div:first-child>p:last-of-type{max-width:40rem;color:var(--ink-soft);font:16px/1.85 var(--serif)}
+.poetry-counts{margin-top:34px;display:flex;gap:30px}
+.poetry-counts span{min-width:76px;padding-top:8px;border-top:1px solid var(--line);display:grid}
+.poetry-counts b{font:400 24px var(--serif);color:var(--moss)}
+.poetry-counts small{color:var(--mist);font-size:var(--font-micro);letter-spacing:.08em}
+.poetry-hero-herb{min-height:410px;position:relative;display:grid;place-items:center}
+.poetry-hero-herb .botanical-sprig{width:240px;color:var(--moss);opacity:.42;transform:rotate(8deg)}
+.poetry-hero-herb>i{position:absolute;left:50%;top:50%;border:1px solid rgba(79,112,93,.13);border-radius:50%;transform:translate(-50%,-50%)}
+.poetry-hero-herb>i:nth-of-type(1){width:150px;height:150px}
+.poetry-hero-herb>i:nth-of-type(2){width:240px;height:240px}
+.poetry-hero-herb>i:nth-of-type(3){width:330px;height:330px}
+.poetry-hero-herb small{position:absolute;right:6%;bottom:9%;color:var(--mist);font-size:var(--font-micro);letter-spacing:.12em}
+.poetry-grid{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid var(--line-strong);border-left:1px solid var(--line);margin-bottom:100px}
+.poetry-card{min-height:450px;display:grid;grid-template-columns:1fr 1fr;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:rgba(255,255,255,0.3);transition:background .25s ease, transform .25s ease}
+.poetry-card:hover{background:rgba(125,146,120,.055);transform:translateY(-2px)}
+.poetry-card:hover .poem-scene{transform:scale(1.02)}
+.poetry-visual{min-height:300px;padding:24px 16px;display:grid;place-items:center;border-right:1px solid rgba(63,86,65,.1);overflow:hidden}
+.poetry-visual .poem-scene{transition:transform .45s ease}
+.poetry-card-copy{padding:26px 24px;display:flex;flex-direction:column}
+.poetry-meta{display:flex;justify-content:space-between;color:var(--mist);font-size:var(--font-micro);letter-spacing:.08em}
+.poetry-idx-tag{color:var(--seal);font-family:var(--serif)}
+.poetry-card[data-kind='词'] .poetry-idx-tag{color:var(--moss)}
+.poetry-card h2{margin:36px 0 12px;font:400 clamp(24px,2.6vw,34px)/1.15 var(--serif);letter-spacing:-.03em;color:var(--ink)}
+.poetry-excerpt{margin:0 0 16px;font:13px/1.8 var(--serif);color:var(--ink-soft);opacity:0.85;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.poetry-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:auto}
+.poetry-tags small{color:var(--sage);font-size:var(--font-micro)}
+.poetry-open{margin-top:18px;padding-top:14px;border-top:1px dashed var(--line);color:var(--moss);font:12px var(--serif);display:inline-flex;align-items:center;gap:4px}
+.poetry-tail{margin:0 auto 68px;max-width:680px;display:grid;grid-template-columns:90px 1fr auto;gap:24px;align-items:center;padding:28px;border:1px solid var(--line);background:rgba(248,245,237,.35)}
+.poetry-tail .botanical-sprig{width:80px;color:var(--moss);opacity:.36}
+.poetry-tail strong{display:block;font-family:var(--serif);font-size:16px;color:var(--ink);margin-bottom:4px}
+.poetry-tail p{margin:0;color:var(--ink-soft);font:13px/1.65 var(--serif)}
+@media(max-width:980px){.poetry-grid{grid-template-columns:1fr}.poetry-hero{grid-template-columns:1fr;gap:20px;padding:50px 0}.poetry-hero-herb{min-height:300px}.poetry-tail{grid-template-columns:1fr}}
+@media(max-width:620px){.poetry-card{grid-template-columns:1fr}.poetry-visual{border-right:0;border-bottom:1px solid rgba(63,86,65,.1);min-height:220px}.poetry-card h2{margin-top:20px}}
 </style>

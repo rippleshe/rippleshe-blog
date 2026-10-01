@@ -16,6 +16,7 @@ const projects = [
     href: '/works/sciplot/',
     kind: 'VISUALIZATION SYSTEM',
     badge: 'CORE SYSTEM',
+    highlights: ['Nature/IEEE 出版级排版规范', '45+ 经典学术图表家族', '1200 DPI 无损矢量管线'],
     tech: ['Python', 'Matplotlib', 'Publication Standard', 'Vector Pipeline'],
     glyph: 'plot' as const,
   },
@@ -28,6 +29,7 @@ const projects = [
     href: 'https://github.com/rippleshe/PanView',
     kind: 'DESKTOP APPLICATION',
     badge: 'OPEN SOURCE',
+    highlights: ['Rust 核心 + 极速跨平台 GUI', 'LaTeX / Markdown 双向即时渲染', '零配置 Pandoc 工具链绑定'],
     tech: ['Tauri', 'Rust / Web', 'Pandoc Engine', 'Desktop UI'],
     glyph: 'window' as const,
   },
@@ -40,6 +42,7 @@ const projects = [
     href: 'https://github.com/rippleshe/NeteaseDL',
     kind: 'STREAM UTILITY',
     badge: 'TOOL SUITE',
+    highlights: ['无损音质链路智能解析', '自动化 ID3v2 标签与封面嵌入', '现代化 REST 接口与 Web 界面'],
     tech: ['TypeScript', 'Node.js', 'Media Codec', 'REST API'],
     glyph: 'signal' as const,
   },
@@ -52,6 +55,7 @@ const projects = [
     href: 'https://github.com/rippleshe/IM',
     kind: 'MULTI-AGENT RL',
     badge: 'RESEARCH ARCH',
+    highlights: ['多智能体竞争与协同仿真环境', '可解释决策轨迹热力追踪', 'PyTorch 强化学习闭环支持'],
     tech: ['Python', 'PyTorch', 'Multi-Agent RL', 'Interpretability'],
     glyph: 'agents' as const,
   },
@@ -123,6 +127,12 @@ const projects = [
           </div>
 
           <p class="project-desc">{project.desc}</p>
+
+          <ul class="project-highlights-list" aria-label="核心工程亮点">
+            {project.highlights.map(hl => (
+              <li><span>{hl}</span></li>
+            ))}
+          </ul>
 
           <div class="project-footer-row">
             <div class="project-tech-tags" aria-label="技术栈">
@@ -248,6 +258,26 @@ const projects = [
     line-height: 1.7;
     color: var(--ink);
     opacity: 0.85;
+  }
+  .project-highlights-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+  }
+  .project-highlights-list li {
+    font-size: 11px;
+    color: var(--moss);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .project-highlights-list li::before {
+    content: '◇';
+    font-size: 9px;
+    color: var(--sage);
   }
   .project-footer-row {
     display: flex;

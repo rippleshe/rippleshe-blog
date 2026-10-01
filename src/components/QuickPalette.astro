@@ -1,0 +1,351 @@
+---
+---
+<dialog class="quick-palette-dialog" id="quick-palette-dialog" aria-label="全站键盘快捷键与时相罗盘">
+  <div class="quick-palette-shell">
+    <div class="quick-palette-head">
+      <div class="quick-palette-title">
+        <span class="seal-mark">枢</span>
+        <div>
+          <b>全站导航罗盘</b>
+          <small>QUICK NAVIGATION & DAY PHASES</small>
+        </div>
+      </div>
+      <button type="button" class="quick-palette-close" id="quick-palette-close" aria-label="关闭">ESC ✕</button>
+    </div>
+
+    <div class="quick-palette-body">
+      <!-- 快捷跳转 -->
+      <section class="palette-section">
+        <small class="palette-section-label">PLACES · 畛域跳转</small>
+        <div class="palette-items-grid">
+          <a href="/" class="palette-item" data-key="h">
+            <span class="palette-item-name">首页 · 山门主轴</span>
+            <kbd>G H</kbd>
+          </a>
+          <a href="/garden/" class="palette-item" data-key="g">
+            <span class="palette-item-name">芳洲 · 文澜篇目</span>
+            <kbd>G G</kbd>
+          </a>
+          <a href="/works/" class="palette-item" data-key="w">
+            <span class="palette-item-name">造物 · 工程研制录</span>
+            <kbd>G W</kbd>
+          </a>
+          <a href="/works/sciplot/" class="palette-item">
+            <span class="palette-item-name">SciPlot · 学术可视化体系</span>
+            <kbd>G S</kbd>
+          </a>
+          <a href="/collection/" class="palette-item" data-key="c">
+            <span class="palette-item-name">藏册 · 图志与手稿</span>
+            <kbd>G C</kbd>
+          </a>
+          <a href="/scenes/" class="palette-item">
+            <span class="palette-item-name">光景 · 交互意象录</span>
+            <kbd>G I</kbd>
+          </a>
+          <a href="/life/" class="palette-item">
+            <span class="palette-item-name">日录 · 岁时流水线</span>
+            <kbd>G L</kbd>
+          </a>
+          <a href="/guestbook/" class="palette-item" data-key="b">
+            <span class="palette-item-name">留字 · 水边客册</span>
+            <kbd>G B</kbd>
+          </a>
+        </div>
+      </section>
+
+      <!-- 岁时晨昏切换 -->
+      <section class="palette-section">
+        <small class="palette-section-label">DAY PHASE · 晨昏四相体验</small>
+        <div class="palette-phases-strip">
+          <button type="button" class="phase-btn" data-set-phase="dawn">
+            <span class="phase-color-dot dot-dawn"></span>
+            <b>晨曦</b>
+            <small>朝霞微润 · 按 1</small>
+          </button>
+          <button type="button" class="phase-btn" data-set-phase="day">
+            <span class="phase-color-dot dot-day"></span>
+            <b>白昼</b>
+            <small>晴窗墨新 · 按 2</small>
+          </button>
+          <button type="button" class="phase-btn" data-set-phase="dusk">
+            <span class="phase-color-dot dot-dusk"></span>
+            <b>暮色</b>
+            <small>落日金绯 · 按 3</small>
+          </button>
+          <button type="button" class="phase-btn" data-set-phase="night">
+            <span class="phase-color-dot dot-night"></span>
+            <b>星宵</b>
+            <small>墨玉静思 · 按 4</small>
+          </button>
+          <button type="button" class="phase-btn" data-set-phase="auto">
+            <span class="phase-color-dot dot-auto"></span>
+            <b>自动时序</b>
+            <small>随真实时钟 · 按 0</small>
+          </button>
+        </div>
+      </section>
+    </div>
+
+    <div class="quick-palette-foot">
+      <span>提示：随时按 <code>?</code> 唤起此面板 · 按 <code>/</code> 聚焦搜索</span>
+    </div>
+  </div>
+</dialog>
+
+<script is:inline>
+  (() => {
+    const dialog = document.getElementById('quick-palette-dialog');
+    const closeBtn = document.getElementById('quick-palette-close');
+    if (!dialog) return;
+
+    function openPalette() {
+      if (!dialog.open) {
+        dialog.showModal();
+        document.body.classList.add('palette-open');
+      }
+    }
+
+    function closePalette() {
+      if (dialog.open) {
+        dialog.close();
+        document.body.classList.remove('palette-open');
+      }
+    }
+
+    closeBtn?.addEventListener('click', closePalette);
+    dialog.addEventListener('click', (e) => {
+      if (e.target === dialog) closePalette();
+    });
+
+    // 快捷键时相切换
+    function setPhase(phase) {
+      if (phase === 'auto') {
+        delete document.documentElement.dataset.devPhaseOverride;
+        if (typeof paintDayPhase === 'function') paintDayPhase();
+      } else {
+        document.documentElement.dataset.devPhaseOverride = phase;
+        document.documentElement.dataset.dayPhase = phase;
+      }
+      try {
+        localStorage.setItem('rippleshe:userPhase', phase);
+      } catch {}
+    }
+
+    // 还原用户记忆的时相
+    try {
+      const savedPhase = localStorage.getItem('rippleshe:userPhase');
+      if (savedPhase && savedPhase !== 'auto') {
+        document.documentElement.dataset.devPhaseOverride = savedPhase;
+        document.documentElement.dataset.dayPhase = savedPhase;
+      }
+    } catch {}
+
+    document.querySelectorAll('[data-set-phase]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        setPhase(btn.dataset.setPhase);
+        closePalette();
+      });
+    });
+
+    // 全局快捷键监听
+    let keyBuffer = '';
+    let keyBufferTimer = null;
+
+    window.addEventListener('keydown', (e) => {
+      const activeTag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+      if (activeTag === 'input' || activeTag === 'textarea') return;
+
+      if (e.key === '?' || (e.key === 'k' && (e.metaKey || e.ctrlKey))) {
+        e.preventDefault();
+        if (dialog.open) closePalette(); else openPalette();
+        return;
+      }
+
+      if (dialog.open) {
+        if (e.key === '1') { setPhase('dawn'); closePalette(); }
+        if (e.key === '2') { setPhase('day'); closePalette(); }
+        if (e.key === '3') { setPhase('dusk'); closePalette(); }
+        if (e.key === '4') { setPhase('night'); closePalette(); }
+        if (e.key === '0') { setPhase('auto'); closePalette(); }
+        return;
+      }
+
+      // 连续按键导航：如 g h -> 首页
+      const key = e.key.toLowerCase();
+      keyBuffer += key;
+      clearTimeout(keyBufferTimer);
+      keyBufferTimer = setTimeout(() => { keyBuffer = ''; }, 600);
+
+      if (keyBuffer === 'gh') { location.href = '/'; }
+      else if (keyBuffer === 'gg') { location.href = '/garden/'; }
+      else if (keyBuffer === 'gw') { location.href = '/works/'; }
+      else if (keyBuffer === 'gs') { location.href = '/works/sciplot/'; }
+      else if (keyBuffer === 'gc') { location.href = '/collection/'; }
+      else if (keyBuffer === 'gi') { location.href = '/scenes/'; }
+      else if (keyBuffer === 'gl') { location.href = '/life/'; }
+      else if (keyBuffer === 'gb') { location.href = '/guestbook/'; }
+    });
+  })();
+</script>
+
+<style>
+  .palette-open {
+    overflow: hidden;
+  }
+  .quick-palette-dialog {
+    width: min(640px, calc(100vw - 32px));
+    max-height: calc(100vh - 48px);
+    margin: auto;
+    padding: 0;
+    border: 1px solid var(--line-strong);
+    background: transparent;
+    color: var(--ink);
+  }
+  .quick-palette-dialog::backdrop {
+    background: rgba(22, 26, 23, 0.72);
+    backdrop-filter: blur(8px);
+  }
+  .quick-palette-shell {
+    background: var(--paper-soft);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.25);
+    display: flex;
+    flex-direction: column;
+  }
+  .quick-palette-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--line);
+  }
+  .quick-palette-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .quick-palette-title b {
+    display: block;
+    font-size: 16px;
+    font-family: var(--serif);
+  }
+  .quick-palette-title small {
+    display: block;
+    font-size: 10px;
+    color: var(--mist);
+    letter-spacing: 0.08em;
+  }
+  .quick-palette-close {
+    background: transparent;
+    border: 1px solid var(--line);
+    padding: 4px 8px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .quick-palette-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+  }
+  .palette-section-label {
+    display: block;
+    font-size: var(--font-micro);
+    color: var(--sage);
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+  }
+  .palette-items-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .palette-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.3);
+    text-decoration: none;
+    color: var(--ink);
+    font-size: 13px;
+    transition: all 0.15s ease;
+  }
+  .palette-item:hover {
+    background: rgba(125, 146, 120, 0.12);
+    border-color: var(--moss);
+    transform: translateY(-1px);
+  }
+  .palette-item kbd {
+    font-size: 10px;
+    background: var(--paper-deep);
+    border: 1px solid var(--line);
+    padding: 2px 6px;
+    font-family: var(--sans);
+    color: var(--moss);
+  }
+  .palette-phases-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+  }
+  .phase-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 6px;
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    color: var(--ink);
+    transition: all 0.15s ease;
+  }
+  .phase-btn:hover {
+    background: rgba(125, 146, 120, 0.12);
+    border-color: var(--moss);
+  }
+  .phase-color-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-bottom: 6px;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+  .dot-dawn { background: #7f9989; }
+  .dot-day { background: #f3efe4; border-color: #3f5641; }
+  .dot-dusk { background: #d48b6f; }
+  .dot-night { background: #2a342c; }
+  .dot-auto { background: linear-gradient(135deg, #7f9989, #2a342c); }
+  .phase-btn b {
+    font-size: 12px;
+    font-family: var(--serif);
+  }
+  .phase-btn small {
+    font-size: 9px;
+    color: var(--mist);
+    margin-top: 2px;
+  }
+  .quick-palette-foot {
+    padding: 12px 20px;
+    border-top: 1px solid var(--line);
+    background: rgba(0, 0, 0, 0.02);
+    font-size: 11px;
+    color: var(--mist);
+  }
+  .quick-palette-foot code {
+    background: rgba(0,0,0,0.06);
+    padding: 1px 4px;
+    font-size: 10px;
+  }
+  @media (max-width: 600px) {
+    .palette-items-grid {
+      grid-template-columns: 1fr;
+    }
+    .palette-phases-strip {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

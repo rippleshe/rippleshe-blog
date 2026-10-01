@@ -231,20 +231,78 @@ sp.save('figure1_multimodal.pdf')</code></pre>
         <p>系统化覆盖从探索性数据分析、模型收敛诊断到论文主图呈现的全维度学术可视化需求。</p>
       </div>
 
-      <div class="families-grid">
+      <div class="matrix-filter-wrap">
+        <input type="search" class="chart-matrix-filter" id="chart-matrix-filter" placeholder="检索 45+ 图表族（如：雨云、桑基、火山、PCA、瀑布…）" />
+        <span class="matrix-filter-hint" id="matrix-filter-count">共 45+ 项全谱系</span>
+      </div>
+
+      <div class="families-grid" id="chart-families-grid">
         {chartFamilies.map((fam) => (
-          <div class="family-card">
+          <div class="family-card" data-category={fam.category}>
             <div class="family-head">
               <h3>{fam.category}</h3>
               <small>{fam.en}</small>
             </div>
             <ul class="family-list">
               {fam.charts.map((c) => (
-                <li><span>{c}</span></li>
+                <li data-chart-name={c}><span>{c}</span></li>
               ))}
             </ul>
           </div>
         ))}
+      </div>
+    </section>
+
+    <!-- 感知均匀色彩科学体系 -->
+    <section class="sciplot-section" aria-labelledby="palette-heading">
+      <div class="section-head">
+        <small class="eyebrow">COLOR SCIENCE · 感知色彩科学</small>
+        <h2 id="palette-heading">出版级感知均匀与色盲安全色板</h2>
+        <p>采用 CIELAB 与 CAM02-UCS 感知空间校准，确保灰度打印可读性与色觉障碍（CVD）友好。点击色块快速复制 HEX 代码。</p>
+      </div>
+
+      <div class="palettes-interactive-deck">
+        <div class="palette-swatch-group">
+          <div class="swatch-group-head">
+            <strong>Nature Discrete</strong>
+            <small>自然顶刊离散色系 · 6色</small>
+          </div>
+          <div class="swatch-strip">
+            {['#3F5641', '#D17A6E', '#4B7285', '#C49A45', '#6B5B95', '#88B04B'].map(hex => (
+              <button type="button" class="swatch-tile" style={`background-color: ${hex}`} data-copy-hex={hex} title={`复制 ${hex}`}>
+                <span>{hex}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div class="palette-swatch-group">
+          <div class="swatch-group-head">
+            <strong>Muted Scientific</strong>
+            <small>低饱和学术对比色系 · 5色</small>
+          </div>
+          <div class="swatch-strip">
+            {['#435343', '#8A5A4A', '#3B5B6D', '#9C7C38', '#5A6B7C'].map(hex => (
+              <button type="button" class="swatch-tile" style={`background-color: ${hex}`} data-copy-hex={hex} title={`复制 ${hex}`}>
+                <span>{hex}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div class="palette-swatch-group">
+          <div class="swatch-group-head">
+            <strong>CMYK Press Safe</strong>
+            <small>印刷四色油墨兼容 · 5色</small>
+          </div>
+          <div class="swatch-strip">
+            {['#2E4057', '#048A81', '#F4D35E', '#EE964B', '#F95738'].map(hex => (
+              <button type="button" class="swatch-tile" style={`background-color: ${hex}`} data-copy-hex={hex} title={`复制 ${hex}`}>
+                <span>{hex}</span>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
     </section>
 
@@ -344,6 +402,54 @@ sp.save('figure1_multimodal.pdf')</code></pre>
         if (layoutMode) layoutMode.dataset.mode = btn.dataset.col || 'single';
         if (gaugeTag) gaugeTag.textContent = btn.dataset.journal || '';
       });
+    });
+
+    // 复制色板 HEX
+    document.querySelectorAll('[data-copy-hex]').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const hex = btn.dataset.copyHex;
+        if (!hex) return;
+        try {
+          await navigator.clipboard.writeText(hex);
+          const span = btn.querySelector('span');
+          if (span) {
+            const orig = span.textContent;
+            span.textContent = 'COPIED';
+            setTimeout(() => { span.textContent = orig; }, 1500);
+          }
+        } catch (e) {
+          console.error(e);
+        }
+      });
+    });
+
+    // 45+ 图表家族实时检索过滤
+    const matrixInput = document.getElementById('chart-matrix-filter');
+    const matrixCount = document.getElementById('matrix-filter-count');
+    const chartItems = document.querySelectorAll('#chart-families-grid li');
+    const familyCards = document.querySelectorAll('#chart-families-grid .family-card');
+
+    matrixInput?.addEventListener('input', () => {
+      const q = matrixInput.value.trim().toLowerCase();
+      let matchedCount = 0;
+
+      chartItems.forEach(li => {
+        const name = (li.dataset.chartName || li.textContent || '').toLowerCase();
+        const matched = !q || name.includes(q);
+        li.style.display = matched ? '' : 'none';
+        li.style.color = q && matched ? 'var(--moss)' : '';
+        li.style.fontWeight = q && matched ? '600' : '';
+        if (matched) matchedCount += 1;
+      });
+
+      familyCards.forEach(card => {
+        const hasVisible = card.querySelector('li:not([style*="display: none"])');
+        card.style.display = hasVisible ? '' : 'none';
+      });
+
+      if (matrixCount) {
+        matrixCount.textContent = q ? `匹配到 ${matchedCount} 种图表` : '共 45+ 项全谱系';
+      }
     });
 
     copyInstall?.addEventListener('click', async () => {
@@ -696,6 +802,93 @@ sp.save('figure1_multimodal.pdf')</code></pre>
     font-size: 12px;
     line-height: 1.65;
     font-family: Consolas, Monaco, monospace;
+  }
+  .matrix-filter-wrap {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    padding: 10px 16px;
+    background: rgba(248, 245, 237, 0.45);
+    border: 1px solid var(--line);
+    flex-wrap: wrap;
+  }
+  .chart-matrix-filter {
+    flex: 1;
+    min-width: 260px;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink);
+    font-size: 12px;
+    font-family: var(--sans);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .chart-matrix-filter:focus {
+    border-color: var(--moss);
+  }
+  .matrix-filter-hint {
+    font-size: var(--font-micro);
+    color: var(--sage);
+    letter-spacing: 0.08em;
+  }
+  .palettes-interactive-deck {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .palette-swatch-group {
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.5);
+    padding: 16px;
+  }
+  .swatch-group-head {
+    margin-bottom: 12px;
+  }
+  .swatch-group-head strong {
+    display: block;
+    font-size: 14px;
+    font-family: var(--serif);
+    color: var(--ink);
+  }
+  .swatch-group-head small {
+    display: block;
+    font-size: 10px;
+    color: var(--mist);
+  }
+  .swatch-strip {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .swatch-tile {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 6px 10px;
+    border: 0;
+    cursor: pointer;
+    transition: transform 0.15s ease, filter 0.15s ease;
+  }
+  .swatch-tile:hover {
+    transform: scale(1.02);
+    filter: brightness(1.05);
+  }
+  .swatch-tile span {
+    font-size: 10px;
+    font-family: Consolas, monospace;
+    color: #fff;
+    background: rgba(0,0,0,0.35);
+    padding: 1px 5px;
+    border-radius: 2px;
+  }
+  @media (max-width: 820px) {
+    .palettes-interactive-deck {
+      grid-template-columns: 1fr;
+    }
   }
   .families-grid {
     display: grid;

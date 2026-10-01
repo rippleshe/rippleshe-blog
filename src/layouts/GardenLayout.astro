@@ -55,6 +55,13 @@ const hasToc = tocHeadings.length >= 2;
   <!-- 顶部阅读进度条 -->
   <div class="reading-progress-bar" id="reading-progress-bar" aria-hidden="true"></div>
 
+  <!-- 阅读书签记忆恢复浮条 -->
+  <div class="reading-resume-banner" id="reading-resume-banner" hidden>
+    <span>上次研读至 <b id="resume-percent">--%</b></span>
+    <button type="button" id="resume-jump-btn">恢复位置 ↗</button>
+    <button type="button" id="resume-dismiss-btn" aria-label="关闭">✕</button>
+  </div>
+
   <!-- 水印与侧向水波指示器 -->
   <div class="reading-watermark" data-reading-watermark aria-hidden="true"><i></i><span></span></div>
 
@@ -89,6 +96,9 @@ const hasToc = tocHeadings.length >= 2;
               <button type="button" id="font-decrease" title="缩小字号" aria-label="缩小字号">A-</button>
               <button type="button" id="font-increase" title="放大字号" aria-label="放大字号">A+</button>
             </div>
+            <button type="button" class="reading-action-btn" id="zen-toggle-btn" title="切换专注模式">
+              <span>沉浸</span>
+            </button>
             <button type="button" class="reading-action-btn" id="copy-article-link">
               <span>分享此篇</span>
             </button>
@@ -185,8 +195,47 @@ const hasToc = tocHeadings.length >= 2;
           marker.style.setProperty('--reading-progress', String(progress));
           marker.dataset.complete = progress > 0.985 ? 'true' : 'false';
         }
+
+        // 保存书签位置
+        try {
+          if (progress > 0.05 && progress < 0.95) {
+            localStorage.setItem(`rippleshe:bm:${location.pathname}`, String(window.scrollY));
+          } else if (progress >= 0.95) {
+            localStorage.removeItem(`rippleshe:bm:${location.pathname}`);
+          }
+        } catch {}
         ticking = false;
       };
+
+      // 检查书签恢复
+      const resumeBanner = document.getElementById('reading-resume-banner');
+      const resumePercent = document.getElementById('resume-percent');
+      const resumeJump = document.getElementById('resume-jump-btn');
+      const resumeDismiss = document.getElementById('resume-dismiss-btn');
+      try {
+        const savedY = Number(localStorage.getItem(`rippleshe:bm:${location.pathname}`) || '0');
+        if (savedY > 300 && resumeBanner) {
+          const totalH = article.offsetHeight || 1;
+          const p = Math.min(99, Math.max(1, Math.round((savedY / totalH) * 100)));
+          if (resumePercent) resumePercent.textContent = `${p}%`;
+          resumeBanner.hidden = false;
+          resumeJump?.addEventListener('click', () => {
+            window.scrollTo({ top: savedY, behavior: 'smooth' });
+            resumeBanner.hidden = true;
+          });
+          resumeDismiss?.addEventListener('click', () => {
+            resumeBanner.hidden = true;
+          });
+        }
+      } catch {}
+
+      // 沉浸模式切换
+      const zenBtn = document.getElementById('zen-toggle-btn');
+      zenBtn?.addEventListener('click', () => {
+        const isZen = document.body.classList.toggle('zen-mode-active');
+        zenBtn.classList.toggle('active', isZen);
+        showToast(isZen ? '已开启沉浸模式' : '已退出沉浸模式');
+      });
 
       const onRequest = () => {
         if (!ticking) {
@@ -423,6 +472,44 @@ const hasToc = tocHeadings.length >= 2;
     }
     .font-scale-control button:hover {
       background: rgba(125, 146, 120, 0.15);
+    }
+    .reading-resume-banner {
+      position: fixed;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 105;
+      background: rgba(248, 245, 237, 0.95);
+      border: 1px solid var(--line-strong);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      padding: 6px 14px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--ink);
+    }
+    .reading-resume-banner[hidden] { display: none; }
+    .reading-resume-banner b { color: var(--moss); }
+    .reading-resume-banner button {
+      background: transparent;
+      border: 0;
+      color: var(--moss);
+      font-size: 11px;
+      cursor: pointer;
+      font-family: var(--sans);
+      text-decoration: underline;
+    }
+    .zen-toggle-btn.active {
+      background: var(--moss) !important;
+      color: #fff !important;
+    }
+    :global(body.zen-mode-active .site-header),
+    :global(body.zen-mode-active .site-footer),
+    :global(body.zen-mode-active .reading-watermark),
+    :global(body.zen-mode-active .reading-sticky-toc),
+    :global(body.zen-mode-active .reading-botanical) {
+      display: none !important;
     }
     .reading-action-btn {
       background: transparent;

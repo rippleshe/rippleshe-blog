@@ -78,13 +78,23 @@ for (const item of all) {
 
     <HerbDivider label="沿月而下 · newest first" />
 
+    <div class="timeline-filter-bar">
+      <span class="timeline-filter-label">TYPE FILTER · 类别过滤</span>
+      <div class="timeline-filters">
+        <button type="button" class="timeline-type-btn active" data-type="all">全部 ({all.length})</button>
+        <button type="button" class="timeline-type-btn" data-type="文字">文字 ({all.filter(i=>i.type==='文字').length})</button>
+        <button type="button" class="timeline-type-btn" data-type="影像">影像 ({all.filter(i=>i.type==='影像').length})</button>
+        <button type="button" class="timeline-type-btn" data-type="文档">文档 ({all.filter(i=>i.type==='文档').length})</button>
+      </div>
+    </div>
+
     <div class="timeline-stream">
       {[...groups.entries()].map(([month, items], monthIndex) => (
-        <section class="timeline-month-group">
+        <section class="timeline-month-group" data-month-group>
           <aside><span>{String(monthIndex + 1).padStart(2, '0')}</span><h2>{month}</h2></aside>
           <div class="timeline-items">
             {items.map((item) => (
-              <a class={`timeline-entry timeline-entry-${item.type === '影像' ? 'photo' : item.type === '文档' ? 'document' : item.type === '册页' ? 'folio' : 'text'}`} href={item.href} target={item.type === '文档' ? '_blank' : undefined}>
+              <a class={`timeline-entry timeline-entry-${item.type === '影像' ? 'photo' : item.type === '文档' ? 'document' : item.type === '册页' ? 'folio' : 'text'}`} href={item.href} target={item.type === '文档' ? '_blank' : undefined} data-entry-type={item.type}>
                 <time>{formatLibraryDate(item.date).slice(5)}</time>
                 {'thumb' in item && item.thumb ? <img src={item.thumb} alt="" loading="lazy" /> : <span class="timeline-symbol" aria-hidden="true">{item.type === '文字' ? '文' : item.type === '册页' ? '册' : '纸'}</span>}
                 <div><small>{item.type} · {item.kind}</small><h3>{item.title}</h3>{item.tags.length > 0 && <p>{item.tags.join(' · ')}</p>}</div>
@@ -96,7 +106,14 @@ for (const item of all) {
       ))}
     </div>
 
-    <div class="timeline-end"><BotanicalSprig variant="lan" /><p>翻到尽头，水还在往前。旧月份只是收起了声响。</p><a class="rule-link" href="/collection/">去看藏册</a></div>
+    <div class="timeline-end">
+      <BotanicalSprig variant="lan" />
+      <div>
+        <strong>岁序周行，日录长新。</strong>
+        <p>往昔篇什皆入册，水波流转处，岁月自留痕。</p>
+      </div>
+      <a class="rule-link" href="/collection/">查看图志藏册 ↗</a>
+    </div>
     <GardenWayfinder current="life" />
   </div>
   <script is:inline>
@@ -104,5 +121,76 @@ for (const item of all) {
     document.querySelector('#timeline-day').textContent = String(now.getDate()).padStart(2,'0');
     document.querySelector('#timeline-month').textContent = `${String(now.getMonth()+1).padStart(2,'0')} 月`;
     document.querySelector('#timeline-year').textContent = String(now.getFullYear());
+
+    // 类型过滤逻辑
+    const typeBtns = document.querySelectorAll('.timeline-type-btn');
+    const entries = document.querySelectorAll('.timeline-entry[data-entry-type]');
+    const monthGroups = document.querySelectorAll('[data-month-group]');
+
+    typeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        typeBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filterType = btn.dataset.type;
+
+        entries.forEach(entry => {
+          const matched = filterType === 'all' || entry.dataset.entryType === filterType;
+          entry.style.display = matched ? '' : 'none';
+        });
+
+        monthGroups.forEach(group => {
+          const visible = group.querySelector('.timeline-entry:not([style*="display: none"])');
+          group.style.display = visible ? '' : 'none';
+        });
+      });
+    });
   </script>
+
+  <style>
+    .timeline-filter-bar {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 20px 0 32px;
+      padding: 10px 16px;
+      border: 1px solid var(--line);
+      background: rgba(248, 245, 237, 0.4);
+      flex-wrap: wrap;
+    }
+    .timeline-filter-label {
+      font-size: var(--font-micro);
+      color: var(--sage);
+      letter-spacing: 0.08em;
+    }
+    .timeline-filters {
+      display: flex;
+      gap: 8px;
+    }
+    .timeline-type-btn {
+      background: transparent;
+      border: 1px solid var(--line);
+      font-size: 11px;
+      font-family: var(--sans);
+      padding: 3px 10px;
+      color: var(--ink-soft);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .timeline-type-btn.active {
+      background: var(--moss);
+      color: #fff;
+      border-color: var(--moss);
+    }
+    .timeline-end strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 17px;
+      margin-bottom: 4px;
+    }
+    .timeline-end p {
+      margin: 0;
+      font-size: 13px;
+      color: var(--ink-soft);
+    }
+  </style>
 </BaseLayout>
